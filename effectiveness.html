@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Effectiveness Monitoring — 3-Month Tracking</title>
+  <title>Effectiveness Monitoring — CMS</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
   <style>
@@ -16,6 +16,175 @@
       margin: 0;
       background: var(--bg);
     }
+    
+    .eff-container {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    
+    @media (max-width: 1100px) {
+      .eff-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Structured table styling resembling the requested layout */
+    .eff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    .eff-table th, .eff-table td {
+      border: 1px solid var(--border2);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: middle;
+      color: var(--text);
+    }
+    
+    .eff-table th {
+      background: var(--bg2);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--text2);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--rad);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .sidebar-user {
+      margin-top: auto;
+      padding: 12px 16px;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .sidebar-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .sidebar-user-role {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    /* Modals styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease-in-out;
+      z-index: 1100;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rad-lg);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    
+    .modal-overlay.show .modal-card {
+      transform: translateY(0) scale(1);
+    }
+    
+    .modal-header {
+      padding: 14px 20px;
+      background: var(--bg2);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-footer {
+      padding: 12px 20px;
+      background: var(--bg2);
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Style primary button light blue when disabled */
+    .btn-primary:disabled {
+      background-color: var(--accent-light) !important;
+      color: rgba(24, 95, 165, 0.5) !important;
+      border: 1.5px solid rgba(24, 95, 165, 0.15) !important;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -26,45 +195,56 @@
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#dashboard'"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#all-requests'"><i class="ti ti-list-check"></i> All Requests</div>
-      <!-- L1 expandable group -->
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+        <i class="ti ti-list-check"></i> All Requests
+      </div>
       <div class="nav-group open" id="l1-nav-group">
-        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+        <div class="nav-item active" style="cursor:pointer;" onclick="toggleL1Group(event)">
           <i class="ti ti-file-plus"></i>
-          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <span style="flex:1;">L1</span>
           <i class="ti ti-chevron-right nav-chevron"></i>
         </div>
         <div class="nav-sub-items">
           <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
-          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
-        </div>
-      </div>
-      <div class="nav-item active" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
-      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
-        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
-        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
-        
-        <!-- Notifications Dropdown inside Sidebar -->
-        <div id="notif-dropdown" style="display: none; position: absolute; bottom: 35px; left: 10px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 250px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease; text-align: left;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
-            <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
-            <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
-          </div>
-          <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
-            <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="ti ti-file-plus" style="font-size: 14px;"></i>
-            </div>
-            <div style="flex: 1;">
-              <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
-              <div style="font-size: 11px; color: var(--text2); margin-top: 2px; white-space: normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
-              <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
-            </div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3
           </div>
         </div>
       </div>
-
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i
+          class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
+          class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item"
+        style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;"
+        onclick="toggleNotifications(event)">
+        <span style="display:flex;align-items:center;gap:8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge"
+          style="background:var(--danger);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:auto;">1</span>
+        <div id="notif-dropdown"
+          style="display:none;position:absolute;bottom:35px;left:10px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--rad);box-shadow:0 6px 16px rgba(0,0,0,0.12);width:250px;padding:12px;z-index:110;text-align:left;">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);padding-bottom:6px;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:600;color:var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)"
+              style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:500;">Mark read</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;">
+            <div
+              style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="ti ti-file-plus" style="font-size:14px;"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3;">New Request Created</div>
+              <div style="font-size:11px;color:var(--text2);margin-top:2px;white-space:normal;">Change Request
+                4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="sidebar-user">
         <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
         <div>
@@ -73,106 +253,656 @@
         </div>
       </div>
     </div>
+    
     <div class="main-content">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
-        <div>
-          <div class="page-title">Effectiveness — <span class="mini-id" style="font-size:16px;">4M-2026-243</span>
+      <div class="page-title">Effectiveness Monitoring</div>
+      <div class="page-sub">Add observations and track 3-month post-implementation effectiveness logs.</div>
+      
+      <div class="eff-container">
+        <!-- Add Effectiveness Log Form Card -->
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-title" style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+            <span><i class="ti ti-chart-bar" style="margin-right: 6px; color: var(--accent);"></i>Add Monitoring Log</span>
           </div>
-          <div class="page-sub" style="margin-bottom:0;">Gauge R&amp;R Study · Quality Dept · 3-month monitoring
+          
+          <form id="addEffForm" onsubmit="event.preventDefault(); handleAddEff();">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="form-group">
+                <label class="form-label" for="changeNo">4M Change No <span class="required">*</span></label>
+                <input class="form-input" id="changeNo" type="text" placeholder="e.g. 4M-2026-243" required disabled />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="reqDate">Requested Date <span class="required">*</span></label>
+                <input class="form-input" id="reqDate" type="text" placeholder="e.g. 16 May" required disabled />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="context">Context of Change <span class="required">*</span></label>
+                <input class="form-input" id="context" type="text" placeholder="e.g. Gauge R&R Study" required disabled />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="startDate">Change Date Start <span class="required">*</span></label>
+                <input class="form-input" id="startDate" type="text" placeholder="e.g. 17 May" required disabled />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="monthWise">Month Wise (Calendar Date) <span class="required">*</span></label>
+                <input class="form-input" id="monthWise" type="month" required disabled />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="remarks">Observation Remarks <span class="required">*</span></label>
+                <textarea class="form-textarea" id="remarks" placeholder="Enter evaluation results..." required disabled></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="attachment">Attachment</label>
+                <input class="form-input" id="attachment" type="text" placeholder="e.g. evidence-log.pdf" disabled />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="effStatus">Effectiveness Status <span class="required">*</span></label>
+                <select class="form-select" id="effStatus" required disabled>
+                  <option value="" disabled selected>Select Status</option>
+                  <option value="Effectiveness Ok">Effectiveness Ok</option>
+                  <option value="Effectiveness Not Ok">Effectiveness Not Ok</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="qaApproval">QA Approval <span class="required">*</span></label>
+                <select class="form-select" id="qaApproval" required disabled>
+                  <option value="" disabled selected>Select QA Decision</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              
+              <div style="margin-top: 8px;">
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-primary" id="submitBtn" type="submit" style="flex: 1; justify-content: center; height: 38px;" disabled>
+                    <i class="ti ti-plus"></i> Add Log Entry
+                  </button>
+                  <button type="button" class="btn btn-outline" style="display: none; height: 38px;" id="cancelEditBtn" onclick="cancelEditing()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Table & Search -->
+        <div style="display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0;">
+          <!-- Search & Filter Card -->
+          <div class="card" style="padding: 12px; margin-bottom: 0;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <div style="flex: 1; position: relative;">
+                <input class="form-input" id="searchEff" placeholder="Search by change no or context..." onkeyup="filterEff()" style="padding-left: 32px;" />
+                <i class="ti ti-search" style="position: absolute; left: 10px; top: 9px; color: var(--text3); font-size: 15px;"></i>
+              </div>
+              <select class="form-select" id="filterStatus" onchange="filterEff()" style="width: 150px;">
+                <option value="All">All Statuses</option>
+                <option value="Effectiveness Ok">Effectiveness Ok</option>
+                <option value="Effectiveness Not Ok">Effectiveness Not Ok</option>
+              </select>
+              <select class="form-select" id="filterMonth" onchange="filterEff()" style="width: 150px;">
+                <option value="All">All Months</option>
+              </select>
+              <button class="btn btn-outline" onclick="resetToDefaults()" title="Reset to standard logs">
+                <i class="ti ti-rotate"></i> Reset
+              </button>
+            </div>
           </div>
-        </div>
-        <span class="badge badge-approved"
-          style="padding: 6px 14px; font-size: 13px; margin-top: 4px;">Effective</span>
-      </div>
-      <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px;">
-        <div class="stat-card">
-          <div class="stat-label">Monitor Period</div>
-          <div class="stat-value" style="font-size:22px;">3 Months</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Months Completed</div>
-          <div class="stat-value" style="font-size:22px;color:var(--success);">2 / 3</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">QA Status</div>
-          <div class="stat-value" style="font-size:22px;color:var(--teal);">Verified</div>
-        </div>
-      </div>
-      <div class="card" style="margin-bottom:0;">
-        <div class="card-title">Monthly monitoring log</div>
-        <div class="eff-month done">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div class="eff-month-title" style="color:var(--success);">Month 1 — March 2026</div>
-            <span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i> QA
-              Approved</span>
-          </div>
-          <div class="eff-month-body" style="color:var(--success);">Gauge repeatability improved by 14%. No
-            defects in controlled batch. Implementation consistent across all shifts.</div>
-          <div style="font-size:12px;color:var(--teal);margin-top:5px;font-family:var(--mono);">📎
-            gauge-rr-mar26.pdf</div>
-        </div>
-        <div class="eff-month done">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div class="eff-month-title" style="color:var(--success);">Month 2 — April 2026</div>
-            <span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i> QA
-              Approved</span>
-          </div>
-          <div class="eff-month-body" style="color:var(--success);">Zero repeat defects. Gauge R&amp;R score: 8.2%
-            (within 10% threshold). Training compliance 100%.</div>
-          <div style="font-size:12px;color:var(--teal);margin-top:5px;font-family:var(--mono);">📎
-            gauge-rr-apr26.pdf</div>
-        </div>
-        <div class="eff-month pending">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <div class="eff-month-title" style="color:var(--text2);">Month 3 — May 2026</div>
-            <span class="badge badge-pending">Awaiting input</span>
-          </div>
-          <div class="form-group" style="margin-bottom:8px;">
-            <textarea class="form-textarea" style="min-height:48px;"
-              placeholder="Enter monthly observation remarks..."></textarea>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn btn-outline" style="font-size:13px;padding:6px 12px;"><i class="ti ti-upload"></i>
-              Upload evidence</button>
-            <button class="btn btn-primary" style="font-size:13px;padding:6px 12px;"><i class="ti ti-send"></i>
-              Submit</button>
+          
+          <!-- Table Card -->
+          <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 0; display: flex; flex-direction: column; min-height: 0; flex: 1; background: var(--bg);">
+            <div style="overflow-x: auto; overflow-y: auto; flex: 1; min-height: 0;">
+              <table class="eff-table" id="effTable">
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="vertical-align: middle; padding-left: 12px; border-bottom: 1px solid var(--border2);">4M Change No</th>
+                    <th rowspan="2" style="vertical-align: middle; border-bottom: 1px solid var(--border2);">Requested Date</th>
+                    <th rowspan="2" style="vertical-align: middle; border-bottom: 1px solid var(--border2);">Context of Change</th>
+                    <th rowspan="2" style="vertical-align: middle; border-bottom: 1px solid var(--border2);">Change Date Start</th>
+                    <th colspan="5" style="text-align: center; border-bottom: 1px solid var(--border2);">Effectiveness Monitoring</th>
+                    <th rowspan="2" style="vertical-align: middle; text-align: right; padding-right: 12px; width: 60px; border-bottom: 1px solid var(--border2);">Actions</th>
+                  </tr>
+                  <tr>
+                    <th style="border-bottom: 1px solid var(--border2);">Month Wise</th>
+                    <th style="border-bottom: 1px solid var(--border2);">Remarks</th>
+                    <th style="border-bottom: 1px solid var(--border2);">Attachment</th>
+                    <th style="border-bottom: 1px solid var(--border2);">Status</th>
+                    <th style="border-bottom: 1px solid var(--border2);">QA Approval</th>
+                  </tr>
+                </thead>
+                <tbody id="effTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal for Deleting Row -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">Delete Log Record</span>
+        <button class="modal-close-btn" onclick="closeDeleteModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" style="padding-top: 24px; padding-bottom: 24px;">
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--danger-light); color: var(--danger); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+            <i class="ti ti-alert-triangle"></i>
+          </div>
+          <div>
+            <div style="font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 4px;">Are you sure?</div>
+            <div style="color: var(--text2); font-size: 13px; line-height: 1.4;" id="deleteModalMsg">This action will delete the monitoring entry permanently.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Resetting Defaults -->
+  <div id="resetModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">Reset Demo Logs</span>
+        <button class="modal-close-btn" onclick="closeResetModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" style="padding-top: 24px; padding-bottom: 24px;">
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--warn-light); color: var(--warn); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+            <i class="ti ti-rotate"></i>
+          </div>
+          <div>
+            <div style="font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 4px;">Reset Monitoring Records?</div>
+            <div style="color: var(--text2); font-size: 13px; line-height: 1.4;">This will restore effectiveness monitoring entries back to demo defaults. Custom entries will be lost.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeResetModal()">Cancel</button>
+        <button class="btn btn-primary" style="background: var(--warn); border-color: var(--warn);" id="confirmResetBtn">Reset Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="ti ti-circle-check"></i>
+    <span id="toastMessage">Log entry added!</span>
+  </div>
+
   <script>
-    function toggleL1Group(event) {
-      if (event) event.stopPropagation();
-      const group = document.getElementById('l1-nav-group');
-      if (group) group.classList.toggle('open');
+    // Initial effectiveness monitoring logs
+    const defaultLogs = [
+      {
+        id: "EFF-001",
+        changeNo: "4M-2026-243",
+        reqDate: "2026-05-16",
+        context: "Gauge R&R Study",
+        startDate: "2026-05-17",
+        monthWise: "2026-05",
+        remarks: "Gauge repeatability improved by 14%. Zero repeat defects. Implementation consistent.",
+        attachment: "gauge-rr-may26.pdf",
+        status: "Effectiveness Ok",
+        qaApproval: "Approved"
+      },
+      {
+        id: "EFF-002",
+        changeNo: "4M-2026-248",
+        reqDate: "2026-05-20",
+        context: "Welding Line A Setup Change",
+        startDate: "2026-05-21",
+        monthWise: "2026-05",
+        remarks: "Zero alignment issues reported in shift logs. Production output exceeds threshold.",
+        attachment: "weld-test.png",
+        status: "Effectiveness Ok",
+        qaApproval: "Approved"
+      },
+      {
+        id: "EFF-003",
+        changeNo: "4M-2026-244",
+        reqDate: "2026-05-17",
+        context: "Operator Training Schedule",
+        startDate: "2026-05-18",
+        monthWise: "2026-05",
+        remarks: "Evidence of training incomplete for Operator B. Training records missing.",
+        attachment: "training-log.pdf",
+        status: "Effectiveness Not Ok",
+        qaApproval: "Rejected"
+      }
+    ];
+
+    let editingLogId = null;
+
+    // Format Month Wise value (e.g. "2026-05" -> "May 2026")
+    function formatMonthWise(val) {
+      if (!val) return "-";
+      if (/^[A-Za-z]+\s+\d{4}$/.test(val)) return val;
+      const parts = val.split("-");
+      if (parts.length === 2) {
+        const year = parts[0];
+        const month = parseInt(parts[1], 10);
+        const date = new Date(year, month - 1, 1);
+        if (!isNaN(date.getTime())) {
+          return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+        }
+      }
+      return val;
     }
 
-    function toggleNotifications(event) {
-      event.stopPropagation();
-      const dropdown = document.getElementById('notif-dropdown');
-      if (dropdown) {
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    // Convert any format to YYYY-MM for month input fields
+    function getMonthInputVal(val) {
+      if (!val) return "";
+      if (/^\d{4}-\d{2}$/.test(val)) return val;
+      const parts = val.split(/\s+/);
+      if (parts.length === 2) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let monthIdx = monthNames.findIndex(m => m.toLowerCase() === parts[0].toLowerCase());
+        if (monthIdx === -1) {
+          monthIdx = shortMonthNames.findIndex(m => m.toLowerCase() === parts[0].toLowerCase());
+        }
+        const year = parts[1];
+        if (monthIdx !== -1 && /^\d{4}$/.test(year)) {
+          const monthStr = String(monthIdx + 1).padStart(2, '0');
+          return `${year}-${monthStr}`;
+        }
+      }
+      return "";
+    }
+
+    // Load logs from localStorage
+    function getLogs() {
+      const stored = localStorage.getItem("cms_effectiveness");
+      if (!stored) {
+        localStorage.setItem("cms_effectiveness", JSON.stringify(defaultLogs));
+        return defaultLogs;
+      }
+      return JSON.parse(stored);
+    }
+
+    // Save logs to localStorage
+    function saveLogs(logs) {
+      localStorage.setItem("cms_effectiveness", JSON.stringify(logs));
+    }
+
+    // Render table rows
+    function renderLogs(logsList = null) {
+      const logs = logsList || getLogs();
+      const tbody = document.getElementById("effTableBody");
+      tbody.innerHTML = "";
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" style="text-align: center; padding: 40px; color: var(--text3);">
+              <i class="ti ti-chart-bar" style="font-size: 32px; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+              No effectiveness monitoring entries found. Add one on the left.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      logs.forEach(log => {
+        // Status tag
+        const isStatusOk = log.status === "Effectiveness Ok";
+        const statusBadgeClass = isStatusOk ? "badge-approved" : "badge-rejected";
+        const statusStyle = isStatusOk 
+          ? "background: var(--success-light); color: var(--success);" 
+          : "background: var(--danger-light); color: var(--danger);";
+
+        // QA Badge
+        const isQaApproved = log.qaApproval === "Approved";
+        const qaBadgeClass = isQaApproved ? "badge-approved" : "badge-rejected";
+
+        // Format dates
+        const formatDate = (dateStr) => {
+          if (!dateStr) return "-";
+          const d = new Date(dateStr);
+          if (isNaN(d.getTime())) return dateStr;
+          return d.toLocaleDateString("en-GB", { day: 'numeric', month: 'short' });
+        };
+
+        const isEditingThis = editingLogId === log.id;
+        const tr = document.createElement("tr");
+        if (isEditingThis) {
+          tr.style.backgroundColor = "var(--accent-light)";
+        }
+        tr.style.cursor = "pointer";
+        tr.onclick = (e) => {
+          // Skip if clicking the delete button
+          if (e.target.closest('button') || e.target.closest('.ti-trash')) return;
+          selectRowForEdit(log.id);
+        };
+
+        tr.innerHTML = `
+          <td style="padding-left: 12px;"><span class="mini-id" style="font-family: var(--mono); font-size: 11px;">${log.changeNo}</span></td>
+          <td>${formatDate(log.reqDate)}</td>
+          <td>${log.context}</td>
+          <td>${formatDate(log.startDate)}</td>
+          <td><span style="font-weight: 500;">${formatMonthWise(log.monthWise)}</span></td>
+          <td style="max-width: 220px; line-height: 1.4; font-size: 12px; color: var(--text2);">${log.remarks}</td>
+          <td>
+            ${log.attachment 
+              ? `<span style="font-family: var(--mono); font-size: 11px; color: var(--teal); display: flex; align-items: center; gap: 4px;">📎 ${log.attachment}</span>` 
+              : `<span style="color: var(--text3); font-size: 11px;">None</span>`
+            }
+          </td>
+          <td><span class="badge ${statusBadgeClass}" style="${statusStyle}">${log.status}</span></td>
+          <td><span class="badge ${qaBadgeClass}">${log.qaApproval}</span></td>
+          <td style="text-align: right; padding-right: 12px;">
+            <button class="btn btn-outline" style="padding: 4px 8px; border: none; background: transparent;" onclick="deleteLog('${log.id}')" title="Delete Log Record">
+              <i class="ti ti-trash" style="color: var(--danger); font-size: 15px;"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Select row for editing, populate form, disable first 4 inputs
+    function selectRowForEdit(id) {
+      const logs = getLogs();
+      const log = logs.find(l => l.id === id);
+      if (!log) return;
+
+      editingLogId = id;
+      
+      const changeNoEl = document.getElementById("changeNo");
+      const reqDateEl = document.getElementById("reqDate");
+      const contextEl = document.getElementById("context");
+      const startDateEl = document.getElementById("startDate");
+      
+      changeNoEl.value = log.changeNo;
+      changeNoEl.disabled = true;
+      reqDateEl.value = log.reqDate;
+      reqDateEl.disabled = true;
+      contextEl.value = log.context;
+      contextEl.disabled = true;
+      startDateEl.value = log.startDate;
+      startDateEl.disabled = true;
+
+      // Enable the remaining 5 fields and the submit button
+      document.getElementById("monthWise").disabled = false;
+      document.getElementById("remarks").disabled = false;
+      document.getElementById("attachment").disabled = false;
+      document.getElementById("effStatus").disabled = false;
+      document.getElementById("qaApproval").disabled = false;
+      document.getElementById("submitBtn").disabled = false;
+
+      // Populate values
+      document.getElementById("monthWise").value = getMonthInputVal(log.monthWise);
+      document.getElementById("remarks").value = log.remarks;
+      document.getElementById("attachment").value = log.attachment || "";
+      document.getElementById("effStatus").value = log.status;
+      document.getElementById("qaApproval").value = log.qaApproval;
+
+      document.getElementById("submitBtn").innerHTML = `<i class="ti ti-device-floppy"></i> Save Changes`;
+      document.getElementById("cancelEditBtn").style.display = "block";
+
+      renderLogs();
+    }
+
+    // Cancel edit mode (disables everything)
+    function cancelEditing() {
+      editingLogId = null;
+      
+      document.getElementById("addEffForm").reset();
+      
+      // Disable all form fields and the submit button
+      document.getElementById("changeNo").disabled = true;
+      document.getElementById("reqDate").disabled = true;
+      document.getElementById("context").disabled = true;
+      document.getElementById("startDate").disabled = true;
+      document.getElementById("monthWise").disabled = true;
+      document.getElementById("remarks").disabled = true;
+      document.getElementById("attachment").disabled = true;
+      document.getElementById("effStatus").disabled = true;
+      document.getElementById("qaApproval").disabled = true;
+      document.getElementById("submitBtn").disabled = true;
+
+      document.getElementById("submitBtn").innerHTML = `<i class="ti ti-plus"></i> Add Log Entry`;
+      document.getElementById("cancelEditBtn").style.display = "none";
+
+      renderLogs();
+    }
+
+    // Add or Edit an entry
+    function handleAddEff() {
+      const changeNoEl = document.getElementById("changeNo");
+      const reqDateEl = document.getElementById("reqDate");
+      const contextEl = document.getElementById("context");
+      const startDateEl = document.getElementById("startDate");
+      const monthWiseEl = document.getElementById("monthWise");
+      const remarksEl = document.getElementById("remarks");
+      const attachmentEl = document.getElementById("attachment");
+      const statusEl = document.getElementById("effStatus");
+      const qaApprovalEl = document.getElementById("qaApproval");
+
+      const changeNo = changeNoEl.value.trim();
+      const reqDate = reqDateEl.value;
+      const context = contextEl.value.trim();
+      const startDate = startDateEl.value;
+      const monthWise = monthWiseEl.value.trim();
+      const remarks = remarksEl.value.trim();
+      const attachment = attachmentEl.value.trim();
+      const status = statusEl.value;
+      const qaApproval = qaApprovalEl.value;
+
+      if (!changeNo || !reqDate || !context || !startDate || !monthWise || !remarks || !status || !qaApproval) return;
+
+      const logs = getLogs();
+
+      if (editingLogId) {
+        // Edit mode - update existing entry
+        const index = logs.findIndex(l => l.id === editingLogId);
+        if (index !== -1) {
+          logs[index].monthWise = monthWise;
+          logs[index].remarks = remarks;
+          logs[index].attachment = attachment;
+          logs[index].status = status;
+          logs[index].qaApproval = qaApproval;
+          
+          saveLogs(logs);
+          showToast(`Updated entry for ${changeNo}`);
+        }
+        cancelEditing();
+      } else {
+        // Add mode - create new entry
+        const nextId = "EFF-" + String(Date.now()).substring(7);
+        const newLog = {
+          id: nextId,
+          changeNo,
+          reqDate,
+          context,
+          startDate,
+          monthWise,
+          remarks,
+          attachment,
+          status,
+          qaApproval
+        };
+        logs.unshift(newLog);
+        saveLogs(logs);
+        
+        document.getElementById("addEffForm").reset();
+        statusEl.selectedIndex = 0;
+        qaApprovalEl.selectedIndex = 0;
+        
+        showToast(`Log entry added for ${changeNo}`);
+      }
+
+      populateMonthFilter();
+      filterEff();
+    }
+
+    // Dynamically populate the Month filter dropdown options
+    function populateMonthFilter() {
+      const logs = getLogs();
+      const filterMonth = document.getElementById("filterMonth");
+      if (!filterMonth) return;
+      const currentSelected = filterMonth.value;
+
+      // Extract unique months
+      const uniqueMonths = new Set();
+      logs.forEach(log => {
+        if (log.monthWise) {
+          uniqueMonths.add(formatMonthWise(log.monthWise));
+        }
+      });
+
+      // Sort months chronologically
+      const sortedMonths = Array.from(uniqueMonths).sort((a, b) => {
+        const dA = new Date(a);
+        const dB = new Date(b);
+        return dA - dB;
+      });
+
+      // Rebuild options
+      filterMonth.innerHTML = '<option value="All">All Months</option>';
+      sortedMonths.forEach(m => {
+        const option = document.createElement("option");
+        option.value = m;
+        option.textContent = m;
+        filterMonth.appendChild(option);
+      });
+
+      // Restore selected value if it still exists
+      if (Array.from(filterMonth.options).some(opt => opt.value === currentSelected)) {
+        filterMonth.value = currentSelected;
+      } else {
+        filterMonth.value = "All";
       }
     }
 
-    function clearNotif(event) {
-      event.stopPropagation();
-      const badge = document.getElementById('sidebar-notif-badge');
-      if (badge) {
-        badge.style.display = 'none';
-      }
-      const dropdown = document.getElementById('notif-dropdown');
-      if (dropdown) {
-        dropdown.style.display = 'none';
-      }
+    let logIdToDelete = null;
+
+    // Trigger delete custom modal
+    function deleteLog(id) {
+      const logs = getLogs();
+      const log = logs.find(l => l.id === id);
+      if (!log) return;
+
+      logIdToDelete = id;
+      document.getElementById("deleteModalMsg").innerText = `This action will permanently delete the monitoring entry for Change No: ${log.changeNo}.`;
+      document.getElementById("deleteModal").classList.add("show");
     }
 
-    window.addEventListener('click', () => {
-      const dropdown = document.getElementById('notif-dropdown');
-      if (dropdown) {
-        dropdown.style.display = 'none';
+    function closeDeleteModal() {
+      document.getElementById("deleteModal").classList.remove("show");
+      logIdToDelete = null;
+    }
+
+    // Filter logs list on search keyup, filterStatus, and filterMonth change
+    function filterEff() {
+      const query = document.getElementById("searchEff").value.toLowerCase();
+      const statusFilter = document.getElementById("filterStatus").value;
+      const monthFilter = document.getElementById("filterMonth").value;
+      const allLogs = getLogs();
+
+      const filtered = allLogs.filter(log => {
+        const matchesQuery = log.changeNo.toLowerCase().includes(query) || 
+                             log.context.toLowerCase().includes(query) ||
+                             log.remarks.toLowerCase().includes(query);
+        const matchesStatus = statusFilter === "All" || log.status === statusFilter;
+        
+        const formattedLogMonth = formatMonthWise(log.monthWise);
+        const matchesMonth = monthFilter === "All" || formattedLogMonth === monthFilter;
+
+        return matchesQuery && matchesStatus && matchesMonth;
+      });
+
+      renderLogs(filtered);
+    }
+
+    // Reset default logs list
+    function resetToDefaults() {
+      document.getElementById("resetModal").classList.add("show");
+    }
+
+    function closeResetModal() {
+      document.getElementById("resetModal").classList.remove("show");
+    }
+
+    // Show floating toast
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMessage = document.getElementById("toastMessage");
+      toastMessage.textContent = message;
+      toast.classList.add("show");
+      
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    // Modal action click listeners
+    document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+      if (!logIdToDelete) return;
+      
+      let logs = getLogs();
+      const logToDelete = logs.find(l => l.id === logIdToDelete);
+      logs = logs.filter(l => l.id !== logIdToDelete);
+      saveLogs(logs);
+      
+      populateMonthFilter();
+
+      if (logIdToDelete === editingLogId) {
+        cancelEditing();
+      } else {
+        filterEff();
       }
+      
+      closeDeleteModal();
+      showToast(`Deleted entry: ${logToDelete ? logToDelete.changeNo : logIdToDelete}`);
+    });
+
+    document.getElementById("confirmResetBtn").addEventListener("click", () => {
+      localStorage.removeItem("cms_effectiveness");
+      document.getElementById("searchEff").value = "";
+      document.getElementById("filterStatus").value = "All";
+      const filterMonthEl = document.getElementById("filterMonth");
+      if (filterMonthEl) filterMonthEl.value = "All";
+      populateMonthFilter();
+      cancelEditing();
+      closeResetModal();
+      showToast("Restored default demo records");
+    });
+
+    // Keyboard and click outside to exit modals
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeDeleteModal();
+        closeResetModal();
+      }
+    });
+
+    document.querySelectorAll(".modal-overlay").forEach(overlay => {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          closeDeleteModal();
+          closeResetModal();
+        }
+      });
+    });
+
+    // Initial load
+    window.addEventListener("DOMContentLoaded", () => {
+      populateMonthFilter();
+      renderLogs();
     });
   </script>
 </body>

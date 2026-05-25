@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Creation — User Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+    
+    .users-container {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    
+    @media (max-width: 1024px) {
+      .users-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--rad);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .user-avatar-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-name-text {
+      font-weight: 500;
+      color: var(--text);
+    }
+    
+    .user-email-text {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    
+    .sidebar-user {
+      margin-top: auto;
+      padding: 12px 16px;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .sidebar-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .sidebar-user-role {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    /* ── Custom Modals ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease-in-out;
+      z-index: 1100;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rad-lg);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    
+    .modal-overlay.show .modal-card {
+      transform: translateY(0) scale(1);
+    }
+    
+    .modal-header {
+      padding: 14px 20px;
+      background: var(--bg2);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .modal-footer {
+      padding: 12px 20px;
+      background: var(--bg2);
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .existing-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: var(--bg2);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rad);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+       <!-- Sidebar -->
+  <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+        <i class="ti ti-list-check"></i> All Requests
+      </div>
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item active" style="cursor:pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3
+          </div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i
+          class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
+          class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item"
+        style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;"
+        onclick="toggleNotifications(event)">
+        <span style="display:flex;align-items:center;gap:8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge"
+          style="background:var(--danger);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:auto;">1</span>
+        <div id="notif-dropdown"
+          style="display:none;position:absolute;bottom:35px;left:10px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--rad);box-shadow:0 6px 16px rgba(0,0,0,0.12);width:250px;padding:12px;z-index:110;text-align:left;">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);padding-bottom:6px;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:600;color:var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)"
+              style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:500;">Mark read</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;">
+            <div
+              style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="ti ti-file-plus" style="font-size:14px;"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3;">New Request Created</div>
+              <div style="font-size:11px;color:var(--text2);margin-top:2px;white-space:normal;">Change Request
+                4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
+        <div>
+          <div class="sidebar-user-name">Ramanan P</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="page-title">Account Creation</div>
+      <div class="page-sub">Create user accounts, assign roles, and manage system access for Plant A.</div>
+      
+      <div class="users-container">
+        <!-- Add User Form Card -->
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-title" style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+            <span><i class="ti ti-user-plus" style="margin-right: 6px; color: var(--accent);"></i>Create User Account</span>
+          </div>
+          
+          <form id="addUserForm" onsubmit="event.preventDefault(); handleAddUser();">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="form-group">
+                <label class="form-label" for="userName">Full Name <span class="required">*</span></label>
+                <input class="form-input" id="userName" type="text" placeholder="e.g. John Doe" required />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="userEmail">Email Address <span class="required">*</span></label>
+                <input class="form-input" id="userEmail" type="email" placeholder="e.g. john.doe@plant.com" required />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="userPassword">Password <span class="required">*</span></label>
+                <div style="display: flex; position: relative;">
+                  <input class="form-input" id="userPassword" type="password" placeholder="Min 6 characters" required style="padding-right: 36px;" />
+                  <button type="button" class="btn btn-outline" style="position: absolute; right: 0; top: 0; height: 100%; border: none; background: transparent; padding: 0 10px; color: var(--text3); cursor: pointer;" onclick="togglePasswordVisibility('userPassword', this)" title="Toggle Visibility">
+                    <i class="ti ti-eye"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="userRole">Role <span class="required">*</span></label>
+                <div style="display: flex; gap: 8px;">
+                  <select class="form-select" id="userRole" required style="flex: 1;">
+                    <!-- Dynamically populated -->
+                  </select>
+                  <button type="button" class="btn btn-outline" style="padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" onclick="addNewRole()" title="Add New Role">
+                    <i class="ti ti-plus"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="userDept">Department <span class="required">*</span></label>
+                <div style="display: flex; gap: 8px;">
+                  <select class="form-select" id="userDept" required style="flex: 1;">
+                    <!-- Dynamically populated -->
+                  </select>
+                  <button type="button" class="btn btn-outline" style="padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" onclick="addNewDept()" title="Add New Department">
+                    <i class="ti ti-plus"></i>
+                  </button>
+                </div>
+              </div>
+              
+
+              
+              <div style="margin-top: 8px;">
+                <button class="btn btn-primary" type="submit" style="width: 100%; justify-content: center; height: 38px;">
+                  <i class="ti ti-plus"></i> Create Account
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Users Table & Search -->
+        <div style="display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0;">
+          <!-- Search & Filter Card -->
+          <div class="card" style="padding: 12px; margin-bottom: 0;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+              <div style="flex: 1; position: relative;">
+                <input class="form-input" id="searchUser" placeholder="Search by name or email..." onkeyup="filterUsers()" style="padding-left: 32px;" />
+                <i class="ti ti-search" style="position: absolute; left: 10px; top: 9px; color: var(--text3); font-size: 15px;"></i>
+              </div>
+              <select class="form-select" id="filterRole" onchange="filterUsers()" style="width: 140px;">
+                <option value="All">All Roles</option>
+                <option value="Operator">Operator</option>
+                <option value="QA Team">QA Team</option>
+                <option value="HOD">HOD</option>
+                <option value="Admin">Admin</option>
+              </select>
+              <button class="btn btn-outline" onclick="resetToDefaults()" title="Reset to standard accounts">
+                <i class="ti ti-rotate"></i> Reset
+              </button>
+            </div>
+          </div>
+          
+          <!-- Users Table Card -->
+          <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 0; display: flex; flex-direction: column; min-height: 0; flex: 1; background: var(--bg);">
+            <div style="overflow-y: auto; flex: 1; min-height: 0;">
+              <table class="table" id="usersTable">
+                <thead>
+                  <tr style="position: sticky; top: 0; background: var(--bg); z-index: 10;">
+                    <th style="padding-left: 16px; width: 100px;">User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th style="text-align: right; padding-right: 16px; width: 60px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal for Adding Option (Role/Dept) -->
+  <div id="optionModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title" id="optionModalTitle">Add Option</span>
+        <button class="modal-close-btn" onclick="closeOptionModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" id="optionInputLabel" for="newOptionInput">Option Name</label>
+          <input class="form-input" id="newOptionInput" type="text" placeholder="e.g. Assembly" autocomplete="off" />
+          <div id="optionModalError" style="color: var(--danger); font-size: 12px; margin-top: 6px; display: none;"></div>
+        </div>
+        <div style="margin-top: 16px; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <label class="form-label" style="margin-bottom: 8px; display: block;">Existing Values</label>
+          <div id="existingOptionsList" style="display: flex; flex-wrap: wrap; gap: 6px; max-height: 100px; overflow-y: auto; padding: 2px;">
+            <!-- Dynamic chips populated on load -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeOptionModal()">Cancel</button>
+        <button class="btn btn-primary" id="saveOptionBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Deleting User -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">Delete Account</span>
+        <button class="modal-close-btn" onclick="closeDeleteModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" style="padding-top: 24px; padding-bottom: 24px;">
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--danger-light); color: var(--danger); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+            <i class="ti ti-alert-triangle"></i>
+          </div>
+          <div>
+            <div style="font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 4px;">Are you sure?</div>
+            <div style="color: var(--text2); font-size: 13px; line-height: 1.4;" id="deleteModalMsg">This action will delete the user account permanently.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Resetting Defaults -->
+  <div id="resetModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">Reset Demo Data</span>
+        <button class="modal-close-btn" onclick="closeResetModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" style="padding-top: 24px; padding-bottom: 24px;">
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--warn-light); color: var(--warn); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+            <i class="ti ti-rotate"></i>
+          </div>
+          <div>
+            <div style="font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 4px;">Reset Account Data?</div>
+            <div style="color: var(--text2); font-size: 13px; line-height: 1.4;">This will restore user accounts, roles, and departments to default values. Custom additions will be lost.</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeResetModal()">Cancel</button>
+        <button class="btn btn-primary" style="background: var(--warn); border-color: var(--warn);" id="confirmResetBtn">Reset Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="ti ti-circle-check"></i>
+    <span id="toastMessage">User added successfully!</span>
+  </div>
+
+  <script>
+    // Standard starting user list
+    const defaultUsers = [
+      { id: "USR-001", name: "Ramanan Prabakaran", email: "ramanan.p@plant.com", password: "password123", role: "Admin", dept: "Management", status: "Active" },
+      { id: "USR-002", name: "Priya Venkat", email: "priya.v@plant.com", password: "pass456", role: "HOD", dept: "PED Team", status: "Active" },
+      { id: "USR-003", name: "Kumar Selvam", email: "kumar.s@plant.com", password: "selvam789", role: "Operator", dept: "Assembly", status: "Active" },
+      { id: "USR-004", name: "Ravi QA", email: "ravi.qa@plant.com", password: "raviqa321", role: "QA Team", dept: "Quality", status: "Active" }
+    ];
+
+    const defaultRoles = ["Operator", "QA Team", "HOD", "Admin"];
+    const defaultDepts = ["Assembly", "Quality", "Production", "Maintenance", "PED Team", "Management"];
+
+    // Load users from localStorage
+    function getUsers() {
+      const stored = localStorage.getItem("cms_users");
+      if (!stored) {
+        localStorage.setItem("cms_users", JSON.stringify(defaultUsers));
+        return defaultUsers;
+      }
+      return JSON.parse(stored);
+    }
+
+    // Save users to localStorage
+    function saveUsers(users) {
+      localStorage.setItem("cms_users", JSON.stringify(users));
+    }
+
+    // Load roles from localStorage
+    function getRoles() {
+      const stored = localStorage.getItem("cms_roles");
+      if (!stored) {
+        localStorage.setItem("cms_roles", JSON.stringify(defaultRoles));
+        return defaultRoles;
+      }
+      return JSON.parse(stored);
+    }
+
+    // Save roles to localStorage
+    function saveRoles(roles) {
+      localStorage.setItem("cms_roles", JSON.stringify(roles));
+    }
+
+    // Load depts from localStorage
+    function getDepts() {
+      const stored = localStorage.getItem("cms_depts");
+      if (!stored) {
+        localStorage.setItem("cms_depts", JSON.stringify(defaultDepts));
+        return defaultDepts;
+      }
+      return JSON.parse(stored);
+    }
+
+    // Save depts to localStorage
+    function saveDepts(depts) {
+      localStorage.setItem("cms_depts", JSON.stringify(depts));
+    }
+
+    // Populate roles and departments in form and filter dropdowns
+    function populateDropdowns() {
+      const roles = getRoles();
+      const depts = getDepts();
+
+      // Form Role dropdown
+      const userRoleSelect = document.getElementById("userRole");
+      const currentRole = userRoleSelect.value;
+      userRoleSelect.innerHTML = `<option value="" disabled ${!currentRole ? 'selected' : ''}>Select Role</option>`;
+      roles.forEach(role => {
+        const opt = document.createElement("option");
+        opt.value = role;
+        opt.textContent = role;
+        if (role === currentRole) opt.selected = true;
+        userRoleSelect.appendChild(opt);
+      });
+
+      // Filter Role dropdown
+      const filterRoleSelect = document.getElementById("filterRole");
+      const currentFilterRole = filterRoleSelect.value;
+      filterRoleSelect.innerHTML = `<option value="All">All Roles</option>`;
+      roles.forEach(role => {
+        const opt = document.createElement("option");
+        opt.value = role;
+        opt.textContent = role;
+        if (role === currentFilterRole) opt.selected = true;
+        filterRoleSelect.appendChild(opt);
+      });
+
+      // Form Department dropdown
+      const userDeptSelect = document.getElementById("userDept");
+      const currentDept = userDeptSelect.value;
+      userDeptSelect.innerHTML = `<option value="" disabled ${!currentDept ? 'selected' : ''}>Select Department</option>`;
+      depts.forEach(dept => {
+        const opt = document.createElement("option");
+        opt.value = dept;
+        opt.textContent = dept;
+        if (dept === currentDept) opt.selected = true;
+        userDeptSelect.appendChild(opt);
+      });
+    }
+
+    let currentOptionType = ""; // "role" or "dept"
+
+    // Populate existing values list in optionModal
+    function populateExistingOptionsList() {
+      const container = document.getElementById("existingOptionsList");
+      container.innerHTML = "";
+      const list = currentOptionType === "role" ? getRoles() : getDepts();
+      
+      list.forEach(val => {
+        const chip = document.createElement("div");
+        chip.className = "existing-chip";
+        chip.style.display = "inline-flex";
+        chip.style.alignItems = "center";
+        chip.style.gap = "6px";
+        
+        chip.innerHTML = `
+          <span>${val}</span>
+          <i class="ti ti-x" style="cursor: pointer; font-size: 10px; color: var(--text3); transition: color 0.15s;" onclick="deleteOption('${val.replace(/'/g, "\\'")}')" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text3)'" title="Delete Option"></i>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    // Delete custom role or department option
+    function deleteOption(val) {
+      if (currentOptionType === "role") {
+        let roles = getRoles();
+        roles = roles.filter(r => r !== val);
+        saveRoles(roles);
+        populateDropdowns();
+        populateExistingOptionsList();
+        showToast(`Role "${val}" deleted`);
+      } else if (currentOptionType === "dept") {
+        let depts = getDepts();
+        depts = depts.filter(d => d !== val);
+        saveDepts(depts);
+        populateDropdowns();
+        populateExistingOptionsList();
+        showToast(`Department "${val}" deleted`);
+      }
+    }
+
+    // Add new role to dropdown
+    function addNewRole() {
+      currentOptionType = "role";
+      document.getElementById("optionModalTitle").innerText = "Add New Role";
+      document.getElementById("optionInputLabel").innerText = "Role Name";
+      const input = document.getElementById("newOptionInput");
+      input.placeholder = "e.g. Planning Engineer";
+      input.value = "";
+      document.getElementById("optionModalError").style.display = "none";
+      populateExistingOptionsList();
+      document.getElementById("optionModal").classList.add("show");
+      setTimeout(() => input.focus(), 150);
+    }
+
+    // Add new department to dropdown
+    function addNewDept() {
+      currentOptionType = "dept";
+      document.getElementById("optionModalTitle").innerText = "Add New Department";
+      document.getElementById("optionInputLabel").innerText = "Department Name";
+      const input = document.getElementById("newOptionInput");
+      input.placeholder = "e.g. Maintenance B";
+      input.value = "";
+      document.getElementById("optionModalError").style.display = "none";
+      populateExistingOptionsList();
+      document.getElementById("optionModal").classList.add("show");
+      setTimeout(() => input.focus(), 150);
+    }
+
+    function closeOptionModal() {
+      document.getElementById("optionModal").classList.remove("show");
+    }
+
+    // Calculate avatar letters and color theme based on role
+    function getAvatarInfo(name, role) {
+      const parts = name.trim().split(/\s+/);
+      let initials = "";
+      if (parts.length > 0 && parts[0]) {
+        initials += parts[0][0].toUpperCase();
+        if (parts.length > 1 && parts[parts.length - 1]) {
+          initials += parts[parts.length - 1][0].toUpperCase();
+        }
+      }
+      if (!initials) initials = "U";
+      
+      let bgClass = "av-blue";
+      if (role === "Admin") bgClass = "av-accent";
+      else if (role === "HOD") bgClass = "av-purple";
+      else if (role === "QA Team") bgClass = "av-green";
+      else if (role === "Operator") bgClass = "av-teal";
+      
+      return { initials, bgClass };
+    }
+
+    // Get badge class based on role name
+    function getRoleBadgeClass(role) {
+      if (role === "Admin") return "badge-rejected"; // uses red
+      if (role === "HOD") return "badge-review"; // uses purple
+      if (role === "QA Team") return "badge-approved"; // uses green
+      return "badge-closed"; // uses teal
+    }
+
+    // Render table rows
+    function renderUsers(usersList = null) {
+      const users = usersList || getUsers();
+      const tbody = document.getElementById("usersTableBody");
+      tbody.innerHTML = "";
+
+      if (users.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 40px; color: var(--text3);">
+              <i class="ti ti-users" style="font-size: 32px; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+              No user accounts found. Add one on the left.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      users.forEach(user => {
+        const { initials, bgClass } = getAvatarInfo(user.name, user.role);
+        
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="padding-left: 16px;"><span style="font-family: var(--mono); font-size: 11px; color: var(--text2);">${user.id}</span></td>
+          <td>
+            <div class="user-avatar-cell">
+              <div class="avatar ${bgClass}" style="width: 32px; height: 32px; font-size: 11px;">${initials}</div>
+              <span class="user-name-text">${user.name}</span>
+            </div>
+          </td>
+          <td><span style="color: var(--text2);">${user.email}</span></td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span id="pwd-${user.id}" style="font-family: var(--mono); font-size: 13px; color: var(--text2);">••••••••</span>
+              <button class="btn btn-outline" style="padding: 2px 4px; border: none; background: transparent; color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center;" onclick="toggleTablePassword('${user.id}', '${(user.password || 'password123').replace(/'/g, "\\'")}', this)" title="Show/Hide Password">
+                <i class="ti ti-eye" style="font-size: 12px;"></i>
+              </button>
+            </div>
+          </td>
+          <td><span class="badge ${getRoleBadgeClass(user.role)}">${user.role}</span></td>
+          <td>${user.dept}</td>
+          <td><span class="badge badge-approved" style="background: var(--success-light); color: var(--success);">${user.status}</span></td>
+          <td style="text-align: right; padding-right: 16px;">
+            <button class="btn btn-outline" style="padding: 4px 8px; border: none; background: transparent;" onclick="deleteUser('${user.id}')" title="Remove Account">
+              <i class="ti ti-trash" style="color: var(--danger); font-size: 15px;"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Add a new user to list
+    function handleAddUser() {
+      const nameEl = document.getElementById("userName");
+      const emailEl = document.getElementById("userEmail");
+      const pwdEl = document.getElementById("userPassword");
+      const roleEl = document.getElementById("userRole");
+      const deptEl = document.getElementById("userDept");
+
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const password = pwdEl.value;
+      const role = roleEl.value;
+      const dept = deptEl.value;
+
+      if (!name || !email || !password || !role || !dept) return;
+
+      const users = getUsers();
+      
+      // Calculate next USR sequential ID number
+      let nextIdNum = 1;
+      if (users.length > 0) {
+        const idNumbers = users.map(u => {
+          const m = u.id.match(/\d+/);
+          return m ? parseInt(m[0]) : 0;
+        });
+        nextIdNum = Math.max(...idNumbers) + 1;
+      }
+      const newId = `USR-${String(nextIdNum).padStart(3, "0")}`;
+
+      const newUser = {
+        id: newId,
+        name,
+        email,
+        password,
+        role,
+        dept,
+        status: "Active"
+      };
+
+      users.unshift(newUser);
+      saveUsers(users);
+      
+      // Reset input fields
+      nameEl.value = "";
+      emailEl.value = "";
+      pwdEl.value = "";
+      roleEl.selectedIndex = 0;
+      deptEl.selectedIndex = 0;
+      
+      // Re-filter and render
+      filterUsers();
+      
+      // Show confirmation toast
+      showToast(`Created account for ${name}`);
+    }
+
+    let userIdToDelete = null;
+    function deleteUser(id) {
+      const users = getUsers();
+      const user = users.find(u => u.id === id);
+      if (!user) return;
+
+      userIdToDelete = id;
+      document.getElementById("deleteModalMsg").innerText = `This action will permanently delete the user account for ${user.name} (${user.email}).`;
+      document.getElementById("deleteModal").classList.add("show");
+    }
+
+    function closeDeleteModal() {
+      document.getElementById("deleteModal").classList.remove("show");
+      userIdToDelete = null;
+    }
+
+    // Live search & role filtering
+    function filterUsers() {
+      const query = document.getElementById("searchUser").value.toLowerCase();
+      const roleFilter = document.getElementById("filterRole").value;
+      const allUsers = getUsers();
+
+      const filtered = allUsers.filter(user => {
+        const matchesQuery = user.name.toLowerCase().includes(query) || 
+                             user.email.toLowerCase().includes(query) ||
+                             user.dept.toLowerCase().includes(query);
+        const matchesRole = roleFilter === "All" || user.role === roleFilter;
+        return matchesQuery && matchesRole;
+      });
+
+      renderUsers(filtered);
+    }
+
+    // Reset database to default mock values (using custom modal)
+    function resetToDefaults() {
+      document.getElementById("resetModal").classList.add("show");
+    }
+
+    function closeResetModal() {
+      document.getElementById("resetModal").classList.remove("show");
+    }
+
+    // Show floating toast
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMessage = document.getElementById("toastMessage");
+      toastMessage.textContent = message;
+      toast.classList.add("show");
+      
+      // Clear timeout if clicked or auto-hide after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    // Event listener bindings for custom modals
+    document.getElementById("saveOptionBtn").addEventListener("click", () => {
+      const input = document.getElementById("newOptionInput");
+      const val = input.value.trim();
+      const errorDiv = document.getElementById("optionModalError");
+
+      if (!val) {
+        errorDiv.innerText = "Name cannot be empty.";
+        errorDiv.style.display = "block";
+        return;
+      }
+
+      if (currentOptionType === "role") {
+        const roles = getRoles();
+        if (roles.some(r => r.toLowerCase() === val.toLowerCase())) {
+          errorDiv.innerText = "This role already exists.";
+          errorDiv.style.display = "block";
+          return;
+        }
+        roles.push(val);
+        saveRoles(roles);
+        populateDropdowns();
+        document.getElementById("userRole").value = val;
+        showToast(`Role "${val}" added successfully`);
+      } else if (currentOptionType === "dept") {
+        const depts = getDepts();
+        if (depts.some(d => d.toLowerCase() === val.toLowerCase())) {
+          errorDiv.innerText = "This department already exists.";
+          errorDiv.style.display = "block";
+          return;
+        }
+        depts.push(val);
+        saveDepts(depts);
+        populateDropdowns();
+        document.getElementById("userDept").value = val;
+        showToast(`Department "${val}" added successfully`);
+      }
+
+      closeOptionModal();
+    });
+
+    document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+      if (!userIdToDelete) return;
+      
+      let users = getUsers();
+      const userToDelete = users.find(u => u.id === userIdToDelete);
+      users = users.filter(u => u.id !== userIdToDelete);
+      saveUsers(users);
+      filterUsers();
+      closeDeleteModal();
+      showToast(`Deleted account: ${userToDelete ? userToDelete.name : userIdToDelete}`);
+    });
+
+    document.getElementById("confirmResetBtn").addEventListener("click", () => {
+      localStorage.removeItem("cms_users");
+      localStorage.removeItem("cms_roles");
+      localStorage.removeItem("cms_depts");
+      document.getElementById("searchUser").value = "";
+      document.getElementById("filterRole").value = "All";
+      populateDropdowns();
+      renderUsers();
+      closeResetModal();
+      showToast("Restored default demo data");
+    });
+
+    // Close modal when hitting escape or clicking overlay
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeOptionModal();
+        closeDeleteModal();
+        closeResetModal();
+      }
+    });
+
+    document.querySelectorAll(".modal-overlay").forEach(overlay => {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          closeOptionModal();
+          closeDeleteModal();
+          closeResetModal();
+        }
+      });
+    });
+
+    // Toggle password input visibility
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector("i");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.className = "ti ti-eye-off";
+      } else {
+        input.type = "password";
+        icon.className = "ti ti-eye";
+      }
+    }
+
+    // Toggle table password row visibility
+    function toggleTablePassword(userId, password, btn) {
+      const pwdSpan = document.getElementById(`pwd-${userId}`);
+      const icon = btn.querySelector("i");
+      if (pwdSpan.textContent === "••••••••") {
+        pwdSpan.textContent = password;
+        icon.className = "ti ti-eye-off";
+      } else {
+        pwdSpan.textContent = "••••••••";
+        icon.className = "ti ti-eye";
+      }
+    }
+
+    // Initial load
+    window.addEventListener("DOMContentLoaded", () => {
+      populateDropdowns();
+      renderUsers();
+    });
+  </script>
+</body>
+</html>
