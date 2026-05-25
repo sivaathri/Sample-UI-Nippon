@@ -799,12 +799,68 @@
           </div>
         </div>
       </div>
+      <!-- Risk Analysis -->
+      <div class="card">
+        <div class="card-title">Risk Analysis</div>
+        <!-- Field 24: Risk Analysis -->
+        <div class="form-group" id="grp-risk">
+          <div class="form-label">Risk Analysis <span class="required">*</span></div>
+          <textarea class="form-textarea" id="inp-risk" rows="5"
+            placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
+          <div class="field-error" id="err-risk">Risk analysis is required.</div>
+        </div>
+        <!-- Upload Section -->
+        <div style="margin-top:16px;">
 
-      <div class="btn-row">
-        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-        <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: 4M
-          Categories</button>
+          <div class="form-label">
+            Upload Supporting Files
+          </div>
+
+          <div class="upload-box">
+
+            <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+            <button type="button" class="upload-btn" onclick="document.getElementById('inp-detail-files').click()">
+              <i class="ti ti-upload"></i>
+              Upload Image / PDF
+            </button>
+
+            <div class="upload-note">
+              Allowed: PDF, JPG, PNG | Max 5MB each
+            </div>
+
+            <!-- Preview -->
+            <div id="file-preview-list" style="margin-top:12px;"></div>
+
+          </div>
+
+        </div>
       </div>
+      <!-- SOP / WI / Control Plan / FMEA Upload -->
+      <div class="card">
+        <!-- Field 25: Update in SOP / WI / Control Plan / FMEA -->
+        <div class="form-group">
+          <div class="form-label">
+            Update in SOP / WI / Control Plan / FMEA
+            <span style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
+          </div>
+          <textarea class="form-textarea" id="inp-risk" rows="5"
+            placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
+          <label class="file-zone" for="file-sop">
+            <i class="ti ti-files file-zone-icon"></i>
+            <div>
+              <div class="file-zone-text"><strong>Click to upload</strong> updated documents</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX,
+                XLSX accepted</div>
+            </div>
+            <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
+              onchange="showFileName('file-sop','fname-sop')" />
+          </label>
+          <div class="file-name-display" id="fname-sop"></div>
+        </div>
+      </div>
+
+
     </div>
 
     <!-- ══════════════════════════════════════
@@ -865,17 +921,7 @@
            STEP 3 — Risk Analysis & Documents
       ══════════════════════════════════════ -->
     <div class="step-panel" id="panel-3">
-      <!-- Risk Analysis -->
-      <div class="card">
-        <div class="card-title">Risk Analysis</div>
-        <!-- Field 24: Risk Analysis -->
-        <div class="form-group" id="grp-risk">
-          <div class="form-label">Risk Analysis <span class="required">*</span></div>
-          <textarea class="form-textarea" id="inp-risk" rows="5"
-            placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
-          <div class="field-error" id="err-risk">Risk analysis is required.</div>
-        </div>
-      </div>
+
 
       <!-- Traceability -->
       <div class="card">
@@ -915,27 +961,6 @@
         </div>
       </div>
 
-      <!-- SOP / WI / Control Plan / FMEA Upload -->
-      <div class="card">
-        <!-- Field 25: Update in SOP / WI / Control Plan / FMEA -->
-        <div class="form-group">
-          <div class="form-label">
-            Update in SOP / WI / Control Plan / FMEA
-            <span style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
-          </div>
-          <label class="file-zone" for="file-sop">
-            <i class="ti ti-files file-zone-icon"></i>
-            <div>
-              <div class="file-zone-text"><strong>Click to upload</strong> updated documents</div>
-              <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX,
-                XLSX accepted</div>
-            </div>
-            <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
-              onchange="showFileName('file-sop','fname-sop')" />
-          </label>
-          <div class="file-name-display" id="fname-sop"></div>
-        </div>
-      </div>
 
       <!-- Effectiveness Monitoring -->
       <div class="card">
