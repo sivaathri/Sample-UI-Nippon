@@ -6,7 +6,37 @@
   <title>Reports — Export &amp; Analytics</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
+    /* Custom Flatpickr Theme matching Nippon UI */
+    .flatpickr-calendar {
+      background: var(--bg) !important;
+      border: 0.5px solid var(--border) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      border-radius: var(--rad-lg) !important;
+      font-family: var(--font) !important;
+    }
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.prevMonthDay.selected, .flatpickr-day.nextMonthDay.selected {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
+    }
+    .flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: var(--text) !important;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+    .flatpickr-day.today {
+      border-color: var(--accent-light) !important;
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
     body {
       height: 100vh;
       width: 100%;
@@ -25,11 +55,46 @@
         <div class="logo-mark">4M·CMS</div>
         <div class="logo-sub">Change Management</div>
       </div>
-      <div class="nav-section">Monitor</div>
-      <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item active"><i class="ti ti-report"></i> Reports</div>
-      <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#dashboard'"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#all-requests'"><i class="ti ti-list-check"></i> All Requests</div>
+      <!-- L1 expandable group -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
+        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
+        
+        <!-- Notifications Dropdown inside Sidebar -->
+        <div id="notif-dropdown" style="display: none; position: absolute; bottom: 35px; left: 10px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 250px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
+            <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 2px; white-space: normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="sidebar-user">
         <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
         <div>
@@ -57,17 +122,24 @@
             <div class="form-label">Department</div>
             <select class="form-select">
               <option>All Departments</option>
-              <option>Assembly</option>
-              <option>Quality</option>
+              <option>PED</option>
+              <option>QAD</option>
+              <option>PRODUCTION</option>
+              <option>MAINTENANCE</option>
+              <option>PC & L</option>
+              <option>MATERIALS</option>
+              <option>MARKETING</option>
+              <option>HR</option>
+              <option>SAFETY</option>
             </select>
           </div>
           <div class="form-group">
             <div class="form-label">Date from</div>
-            <input class="form-input" type="date" value="2026-04-01" />
+            <input class="form-input datepicker" type="text" placeholder="dd/mm/yyyy" value="01/04/2026" />
           </div>
           <div class="form-group">
             <div class="form-label">Date to</div>
-            <input class="form-input" type="date" value="2026-05-20" />
+            <input class="form-input datepicker" type="text" placeholder="dd/mm/yyyy" value="20/05/2026" />
           </div>
           <div class="form-group">
             <div class="form-label">Export format</div>
@@ -94,30 +166,50 @@
       <div class="card">
         <div class="card-title">Approval rate by department</div>
         <div style="margin-top:4px;">
-          <div class="progress-row"><span class="progress-label">Assembly</span>
+          <div class="progress-row"><span class="progress-label">PED</span>
             <div class="progress-track">
-              <div class="progress-fill" style="width:82%;background:var(--accent);"></div>
-            </div><span class="progress-val">82%</span>
+              <div class="progress-fill" style="width:78%;background:var(--accent);"></div>
+            </div><span class="progress-val">78%</span>
           </div>
-          <div class="progress-row"><span class="progress-label">Quality</span>
+          <div class="progress-row"><span class="progress-label">QAD</span>
             <div class="progress-track">
-              <div class="progress-fill" style="width:91%;background:var(--success);"></div>
-            </div><span class="progress-val">91%</span>
+              <div class="progress-fill" style="width:92%;background:var(--success);"></div>
+            </div><span class="progress-val">92%</span>
           </div>
-          <div class="progress-row"><span class="progress-label">Production</span>
+          <div class="progress-row"><span class="progress-label">PRODUCTION</span>
             <div class="progress-track">
               <div class="progress-fill" style="width:74%;background:var(--accent);"></div>
             </div><span class="progress-val">74%</span>
           </div>
-          <div class="progress-row"><span class="progress-label">Maintenance</span>
+          <div class="progress-row"><span class="progress-label">MAINTENANCE</span>
             <div class="progress-track">
-              <div class="progress-fill" style="width:63%;background:var(--warn);"></div>
-            </div><span class="progress-val">63%</span>
+              <div class="progress-fill" style="width:68%;background:var(--warn);"></div>
+            </div><span class="progress-val">68%</span>
           </div>
-          <div class="progress-row"><span class="progress-label">Logistics</span>
+          <div class="progress-row"><span class="progress-label">PC & L</span>
             <div class="progress-track">
-              <div class="progress-fill" style="width:88%;background:var(--success);"></div>
-            </div><span class="progress-val">88%</span>
+              <div class="progress-fill" style="width:85%;background:var(--success);"></div>
+            </div><span class="progress-val">85%</span>
+          </div>
+          <div class="progress-row"><span class="progress-label">MATERIALS</span>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:81%;background:var(--accent);"></div>
+            </div><span class="progress-val">81%</span>
+          </div>
+          <div class="progress-row"><span class="progress-label">MARKETING</span>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:89%;background:var(--success);"></div>
+            </div><span class="progress-val">89%</span>
+          </div>
+          <div class="progress-row"><span class="progress-label">HR</span>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:95%;background:var(--success);"></div>
+            </div><span class="progress-val">95%</span>
+          </div>
+          <div class="progress-row"><span class="progress-label">SAFETY</span>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:90%;background:var(--success);"></div>
+            </div><span class="progress-val">90%</span>
           </div>
         </div>
       </div>
@@ -141,5 +233,46 @@
       </div>
     </div>
   </div>
+  <script>
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function clearNotif(event) {
+      event.stopPropagation();
+      const badge = document.getElementById('sidebar-notif-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('click', () => {
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      flatpickr(".datepicker", {
+        dateFormat: "d/m/Y",
+        allowInput: true
+      });
+    });
+  </script>
 </body>
 </html>

@@ -25,11 +25,46 @@
         <div class="logo-mark">4M·CMS</div>
         <div class="logo-sub">Change Management</div>
       </div>
-      <div class="nav-section">Monitor</div>
-      <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
-      <div class="nav-item active"><i class="ti ti-shield-check"></i> Audit Log</div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#dashboard'"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#all-requests'"><i class="ti ti-list-check"></i> All Requests</div>
+      <!-- L1 expandable group -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
+        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
+        
+        <!-- Notifications Dropdown inside Sidebar -->
+        <div id="notif-dropdown" style="display: none; position: absolute; bottom: 35px; left: 10px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 250px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
+            <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 2px; white-space: normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="sidebar-user">
         <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
         <div>
@@ -66,7 +101,7 @@
             <div class="tl-dot done"><i class="ti ti-file" style="font-size:12px;"></i></div>
             <div class="tl-body">
               <div class="tl-title">L1 Submission — <span class="mini-id">4M-2026-248</span></div>
-              <div class="tl-meta">Kumar Selvam · Assembly · <span
+              <div class="tl-meta">Kumar Selvam · PED · <span
                   style="font-family:var(--mono);font-size:11px;">2026-05-20 08:47:31</span></div>
               <div class="tl-note">Categories: Machine, Method. Risk: Medium. Attachment: change-spec.pdf</div>
             </div>
@@ -103,7 +138,7 @@
             <div class="tl-dot done"><i class="ti ti-file-plus" style="font-size:12px;"></i></div>
             <div class="tl-body">
               <div class="tl-title">New request created — <span class="mini-id">4M-2026-243</span></div>
-              <div class="tl-meta">Anand K · Quality · <span
+              <div class="tl-meta">Anand K · QAD · <span
                   style="font-family:var(--mono);font-size:11px;">2026-05-16 10:05:19</span></div>
             </div>
           </div>
@@ -111,5 +146,39 @@
       </div>
     </div>
   </div>
+  <script>
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function clearNotif(event) {
+      event.stopPropagation();
+      const badge = document.getElementById('sidebar-notif-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('click', () => {
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

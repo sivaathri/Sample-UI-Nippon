@@ -7,7 +7,37 @@
   <title>Management Dashboard — KPIs, Charts &amp; Recent Requests</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
+    /* Custom Flatpickr Theme matching Nippon UI */
+    .flatpickr-calendar {
+      background: var(--bg) !important;
+      border: 0.5px solid var(--border) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      border-radius: var(--rad-lg) !important;
+      font-family: var(--font) !important;
+    }
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.prevMonthDay.selected, .flatpickr-day.nextMonthDay.selected {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
+    }
+    .flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: var(--text) !important;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+    .flatpickr-day.today {
+      border-color: var(--accent-light) !important;
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
     body {
       height: 100vh;
       width: 100%;
@@ -32,17 +62,45 @@
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
-      <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
-      <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
-      <div class="nav-section">Monitor</div>
-      <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
-      <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
-      <div class="nav-section">System</div>
-      <div class="nav-item"><i class="ti ti-users"></i> Users</div>
-      <div class="nav-item"><i class="ti ti-settings"></i> Settings</div>
+      <div class="nav-item active" style="cursor: pointer;" id="sidebar-dash-btn" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item" style="cursor: pointer;" id="sidebar-all-btn" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
+      <!-- L1 expandable group -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
+        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
+        
+        <!-- Notifications Dropdown inside Sidebar -->
+        <div id="notif-dropdown" style="display: none; position: absolute; bottom: 35px; left: 10px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 250px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
+            <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 2px; white-space: normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="sidebar-user">
         <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">A</div>
         <div>
@@ -52,18 +110,19 @@
       </div>
     </div>
     <div class="main-content">
+      <div id="dashboard-view">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
         <div>
           <div class="page-title">Overview</div>
-          <div class="page-sub">Plant A — May 2026 · All Departments</div>
+        
         </div>
         <div style="position: relative; z-index: 100;">
-          <div class="notification-bell" onclick="toggleNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
+          <div class="notification-bell" onclick="toggleHeaderNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
             <i class="ti ti-bell" style="font-size: 18px; color: var(--text2);"></i>
             <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--bg);">1</span>
           </div>
           <!-- Dropdown container -->
-          <div id="notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
+          <div id="header-notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
               <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
               <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
@@ -98,6 +157,11 @@
           <div class="stat-value" style="color:var(--warn);">2</div>
           <!-- <div class="stat-delta" style="color:var(--text3);">Awaiting action</div> -->
         </div>
+        <div class="stat-card">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value" style="color:var(--danger);">0</div>
+          <!-- <div class="stat-delta" style="color:var(--text3);">Needs review</div> -->
+        </div>
       </div>
       <div style="margin-bottom:12px;">
         <div class="card" style="padding: 14px 16px;">
@@ -129,29 +193,49 @@
                 <div class="chart-filter-bar" data-chart="dept" data-view="tab"></div>
                 <div class="chart-bars" style="height: 120px; padding-top: 10px;">
                   <div class="bar-wrap">
-                    <div class="bar-count">10</div>
-                    <div class="bar" style="height:70px;background:var(--accent);"></div>
-                    <div class="bar-label">PED</div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PED</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">6</div>
-                    <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
-                    <div class="bar-label">PROD</div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">QAD</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">4</div>
-                    <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
-                    <div class="bar-label">QA</div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PRODUCTION</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">8</div>
-                    <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
-                    <div class="bar-label">MAINT</div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MAINTENANCE</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">2</div>
-                    <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
-                    <div class="bar-label">PC & L</div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PC & L</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.75;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MATERIALS</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MARKETING</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.65;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">HR</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">SAFETY</div>
                   </div>
                 </div>
               </div>
@@ -307,20 +391,74 @@
                   </div>
                 </div>
                 <div class="chart-bars grouped-bars" style="height: 120px;">
+                  <!-- Jan-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jan-26</div>
+                  </div>
+                  <!-- Feb-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Feb-26</div>
+                  </div>
+                  <!-- Mar-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Mar-26</div>
+                  </div>
                   <!-- Apr-26 -->
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">8</div>
-                        <div class="bar" style="height:96px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">2</div>
-                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">3</div>
-                        <div class="bar" style="height:36px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">Apr-26</div>
@@ -329,16 +467,16 @@
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">7</div>
-                        <div class="bar" style="height:84px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">1</div>
-                        <div class="bar" style="height:12px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">4</div>
-                        <div class="bar" style="height:48px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">May-26</div>
@@ -347,16 +485,16 @@
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">9</div>
-                        <div class="bar" style="height:108px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">3</div>
-                        <div class="bar" style="height:36px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">2</div>
-                        <div class="bar" style="height:24px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">Jun-26</div>
@@ -365,16 +503,16 @@
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">8</div>
-                        <div class="bar" style="height:96px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">2</div>
-                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">3</div>
-                        <div class="bar" style="height:36px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">Jul-26</div>
@@ -383,16 +521,16 @@
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">7</div>
-                        <div class="bar" style="height:84px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">1</div>
-                        <div class="bar" style="height:12px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">1</div>
-                        <div class="bar" style="height:12px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">Aug-26</div>
@@ -401,19 +539,73 @@
                   <div class="group-wrap">
                     <div class="group-bars-row">
                       <div class="group-bar-sub">
-                        <div class="bar-count">9</div>
-                        <div class="bar" style="height:108px;background:#185FA5;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">2</div>
-                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
                       </div>
                       <div class="group-bar-sub">
-                        <div class="bar-count">2</div>
-                        <div class="bar" style="height:24px;background:#A3A29E;"></div>
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
                       </div>
                     </div>
                     <div class="bar-label" style="font-size:10px;margin-top:2px;">Sep-26</div>
+                  </div>
+                  <!-- Oct-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Oct-26</div>
+                  </div>
+                  <!-- Nov-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Nov-26</div>
+                  </div>
+                  <!-- Dec-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Dec-26</div>
                   </div>
                 </div>
               </div>
@@ -431,29 +623,49 @@
                   <div class="chart-filter-bar" data-chart="dept" data-view="grid"></div>
                   <div class="chart-bars" style="height: 80px; gap: 4px;">
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">10</div>
-                      <div class="bar" style="height:70px;background:var(--accent);"></div>
-                      <div class="bar-label" style="font-size:9px;">PED</div>
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PED</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">6</div>
-                      <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
-                      <div class="bar-label" style="font-size:9px;">PROD</div>
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">QAD</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">4</div>
-                      <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
-                      <div class="bar-label" style="font-size:9px;">QA</div>
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PRODUCTION</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">8</div>
-                      <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
-                      <div class="bar-label" style="font-size:9px;">MAINT</div>
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MAINTENANCE</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">2</div>
-                      <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
-                      <div class="bar-label" style="font-size:9px;">PC&L</div>
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PC & L</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.75;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MATERIALS</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MARKETING</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.65;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">HR</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">SAFETY</div>
                     </div>
                   </div>
                 </div>
@@ -619,20 +831,74 @@
                   </div>
                   <div class="chart-filter-bar" data-chart="status" data-view="grid"></div>
                   <div class="chart-bars grouped-bars" style="height: 70px; gap: 4px;">
+                    <!-- Jan -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jan</div>
+                    </div>
+                    <!-- Feb -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Feb</div>
+                    </div>
+                    <!-- Mar -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Mar</div>
+                    </div>
                     <!-- Apr -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">8</div>
-                          <div class="bar" style="height:56px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">2</div>
-                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">3</div>
-                          <div class="bar" style="height:21px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Apr</div>
@@ -641,16 +907,16 @@
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">7</div>
-                          <div class="bar" style="height:49px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">1</div>
-                          <div class="bar" style="height:7px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">4</div>
-                          <div class="bar" style="height:28px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">May</div>
@@ -659,16 +925,16 @@
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">9</div>
-                          <div class="bar" style="height:63px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">3</div>
-                          <div class="bar" style="height:21px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">2</div>
-                          <div class="bar" style="height:14px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Jun</div>
@@ -677,16 +943,16 @@
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">8</div>
-                          <div class="bar" style="height:56px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">2</div>
-                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">3</div>
-                          <div class="bar" style="height:21px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Jul</div>
@@ -695,16 +961,16 @@
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">7</div>
-                          <div class="bar" style="height:49px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">1</div>
-                          <div class="bar" style="height:7px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">1</div>
-                          <div class="bar" style="height:7px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Aug</div>
@@ -713,19 +979,73 @@
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">9</div>
-                          <div class="bar" style="height:63px;background:#185FA5;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">2</div>
-                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
                         </div>
                         <div class="group-bar-sub" style="width:7px;">
-                          <div class="bar-count" style="font-size:8px;">2</div>
-                          <div class="bar" style="height:14px;background:#A3A29E;"></div>
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
                         </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Sep</div>
+                    </div>
+                    <!-- Oct -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Oct</div>
+                    </div>
+                    <!-- Nov -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Nov</div>
+                    </div>
+                    <!-- Dec -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Dec</div>
                     </div>
                   </div>
                 </div>
@@ -745,49 +1065,127 @@
         <table class="table">
           <thead>
             <tr>
-              <th style="padding-left:14px;">Change No.</th>
+              <th style="padding-left:14px; width: 60px;">Sl. No.</th>
+              <th>Change No.</th>
+              <th>Machine No.</th>
               <th>Department</th>
-              <th>Category</th>
-              <th>Requested</th>
+              <th>Request Date</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
-              <td>Assembly</td>
-              <td><span class="tag tag-machine">Machine</span></td>
-              <td>20 May</td>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">1</td>
+              <td><span class="mini-id">4M-2026-248</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-1042</td>
+              <td>PED</td>
+              <td>20/05/2026</td>
               <td><span class="badge badge-pending">Pending L2</span></td>
             </tr>
             <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
-              <td>Quality</td>
-              <td><span class="tag tag-method">Method</span></td>
-              <td>19 May</td>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">2</td>
+              <td><span class="mini-id">4M-2026-247</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-0882</td>
+              <td>QAD</td>
+              <td>19/05/2026</td>
               <td><span class="badge badge-approved">Approved</span></td>
             </tr>
             <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
-              <td>Production</td>
-              <td><span class="tag tag-material">Material</span></td>
-              <td>18 May</td>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">3</td>
+              <td><span class="mini-id">4M-2026-246</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-0711</td>
+              <td>PRODUCTION</td>
+              <td>18/05/2026</td>
               <td><span class="badge badge-review">L3 Review</span></td>
             </tr>
             <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
-              <td>Maintenance</td>
-              <td><span class="tag tag-man">Man</span></td>
-              <td>17 May</td>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">4</td>
+              <td><span class="mini-id">4M-2026-244</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-0915</td>
+              <td>MAINTENANCE</td>
+              <td>17/05/2026</td>
               <td><span class="badge badge-rejected">Rejected</span></td>
             </tr>
             <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
-              <td>Logistics</td>
-              <td><span class="tag tag-measure">Measure</span></td>
-              <td>16 May</td>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">5</td>
+              <td><span class="mini-id">4M-2026-243</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-1042</td>
+              <td>PC & L</td>
+              <td>16/05/2026</td>
               <td><span class="badge badge-closed">Closed</span></td>
             </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> <!-- Closes #dashboard-view -->
+
+    <!-- All Requests View -->
+    <div id="all-requests-view" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+        <div>
+          <div class="page-title">All Change Requests</div>
+       
+        </div>
+      </div>
+      
+      <!-- Filter Bar -->
+      <div class="chart-filter-bar" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <div class="filter-select-wrap" style="flex: 2; min-width: 150px;">
+          <label>Search Query</label>
+          <input type="text" id="req-filter-search" class="filter-select" placeholder="Search ID, Dept, Person, Category..." style="padding: 2px 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1; min-width: 90px;">
+          <label>By Month</label>
+          <select class="filter-select" id="req-filter-month">
+            <option value="All">All Months</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="text" class="filter-select datepicker" id="req-filter-from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="text" class="filter-select datepicker" id="req-filter-to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Person</label>
+          <select class="filter-select" id="req-filter-person">
+            <option value="All">All Persons</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Process</label>
+          <select class="filter-select" id="req-filter-process">
+            <option value="All">All Processes</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By M/c no</label>
+          <select class="filter-select" id="req-filter-machine">
+            <option value="All">All Machines</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
+        <div style="padding:12px 14px 8px;border-bottom:0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <div class="card-title" style="margin-bottom:0;">All change requests <i class="ti ti-list-check" style="font-size:16px;color:var(--text3);"></i></div>
+          <div id="requests-count-badge" style="font-size: 11px; font-family: var(--mono); color: var(--text2); background: var(--bg2); padding: 2px 8px; border-radius: 12px; border: 0.5px solid var(--border);">Showing 0 of 0</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="padding-left:14px; width: 60px;">Sl. No.</th>
+              <th>Change No.</th>
+              <th>Machine No.</th>
+              <th>Department</th>
+              <th>Request Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="all-requests-table-body">
+            <!-- Dynamic rows will be inserted by JS -->
           </tbody>
         </table>
       </div>
@@ -796,7 +1194,7 @@
 
   <script>
     const people = ["Kumar Selvam", "Priya Venkat", "Ravi QA", "Rajesh Murthy", "Anand K", "Ramanan P"];
-    const depts = ["PED", "PROD", "QA", "MAINT", "PC&L"];
+    const depts = ["PED", "QAD", "PRODUCTION", "MAINTENANCE", "PC & L", "MATERIALS", "MARKETING", "HR", "SAFETY"];
     const processes = ["Winding", "Soldering", "EOL Testing", "Potting", "Loading"];
     const machines = ["MFG-MC-1042", "MFG-MC-0882", "MFG-MC-0711", "MFG-MC-0915"];
     const sixMs = ["Man", "Machine", "Method", "Materials", "Measure", "Nature"];
@@ -862,7 +1260,16 @@
     const changeRequests = generateMockData();
 
     function normalizeDept(d) {
-      return d.replace(/\s+/g, '').toUpperCase();
+      const normalized = d.replace(/\s+/g, '').toUpperCase();
+      if (normalized === 'PROD' || normalized === 'PRODUCTION') return 'PRODUCTION';
+      if (normalized === 'QA' || normalized === 'QUALITY' || normalized === 'QAD') return 'QAD';
+      if (normalized === 'MAINT' || normalized === 'MAINTENANCE') return 'MAINTENANCE';
+      if (normalized === 'ASSEMBLY' || normalized === 'PED') return 'PED';
+      if (normalized === 'LOGISTICS' || normalized === 'PC&L' || normalized === 'PCL') return 'PC&L';
+      if (normalized === 'MATERIALS' || normalized === 'MAT') return 'MATERIALS';
+      if (normalized === 'MARKETING' || normalized === 'MKTG') return 'MARKETING';
+      if (normalized === 'SAFETY' || normalized === 'SAFE') return 'SAFETY';
+      return normalized;
     }
 
     function matchProcess(label, processVal) {
@@ -911,11 +1318,11 @@
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>From Date</label>
-          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>To Date</label>
-          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Person</label>
@@ -953,11 +1360,11 @@
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>From Date</label>
-          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>To Date</label>
-          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Status</label>
@@ -984,8 +1391,8 @@
       const machineSelect = container.querySelector('select[data-filter="machine"]');
 
       const dateVal = dateSelect ? dateSelect.value : 'All';
-      const fromDateVal = fromDateInput ? fromDateInput.value : '';
-      const toDateVal = toDateInput ? toDateInput.value : '';
+      const fromDateVal = fromDateInput ? convertInputDate(fromDateInput.value) : '';
+      const toDateVal = toDateInput ? convertInputDate(toDateInput.value) : '';
       const personVal = personSelect ? personSelect.value : 'All';
       const processVal = processSelect ? processSelect.value : 'All';
       const machineVal = machineSelect ? machineSelect.value : 'All';
@@ -1170,12 +1577,30 @@
       }
     }
 
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
     function toggleNotifications(event) {
       event.stopPropagation();
       const dropdown = document.getElementById('notif-dropdown');
       if (dropdown) {
         dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
       }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) headerDropdown.style.display = 'none';
+    }
+
+    function toggleHeaderNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('header-notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+      const sidebarDropdown = document.getElementById('notif-dropdown');
+      if (sidebarDropdown) sidebarDropdown.style.display = 'none';
     }
 
     function clearNotif(event) {
@@ -1184,9 +1609,17 @@
       if (badge) {
         badge.style.display = 'none';
       }
+      const sidebarBadge = document.getElementById('sidebar-notif-badge');
+      if (sidebarBadge) {
+        sidebarBadge.style.display = 'none';
+      }
       const dropdown = document.getElementById('notif-dropdown');
       if (dropdown) {
         dropdown.style.display = 'none';
+      }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
       }
     }
 
@@ -1195,7 +1628,180 @@
       if (dropdown) {
         dropdown.style.display = 'none';
       }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
+      }
     });
+
+    function showView(viewId) {
+      const navItems = document.querySelectorAll('.sidebar .nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      document.getElementById('dashboard-view').style.display = 'none';
+      document.getElementById('all-requests-view').style.display = 'none';
+
+      if (viewId === 'dashboard') {
+        const dashBtn = document.getElementById('sidebar-dash-btn');
+        if (dashBtn) dashBtn.classList.add('active');
+        document.getElementById('dashboard-view').style.display = 'block';
+        if (window.location.hash !== '#dashboard') {
+          window.location.hash = 'dashboard';
+        }
+      } else if (viewId === 'all-requests') {
+        const reqBtn = document.getElementById('sidebar-all-btn');
+        if (reqBtn) reqBtn.classList.add('active');
+        document.getElementById('all-requests-view').style.display = 'block';
+        if (window.location.hash !== '#all-requests') {
+          window.location.hash = 'all-requests';
+        }
+      }
+    }
+
+    function convertInputDate(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('/');
+      if (parts.length !== 3) return '';
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatShortDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const year = parts[0];
+      const month = parts[1];
+      const day = parts[2];
+      return `${day}/${month}/${year}`;
+    }
+
+    function initAllRequestsView() {
+      const monthSel = document.getElementById('req-filter-month');
+      const personSel = document.getElementById('req-filter-person');
+      const processSel = document.getElementById('req-filter-process');
+      const machineSel = document.getElementById('req-filter-machine');
+
+      if (monthSel) {
+        monthSel.innerHTML = '<option value="All">All Months</option>' + 
+          months.map(m => `<option value="${m}">${m}</option>`).join('');
+      }
+      if (personSel) {
+        personSel.innerHTML = '<option value="All">All Persons</option>' + 
+          people.map(p => `<option value="${p}">${p}</option>`).join('');
+      }
+      if (processSel) {
+        processSel.innerHTML = '<option value="All">All Processes</option>' + 
+          processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
+      }
+      if (machineSel) {
+        machineSel.innerHTML = '<option value="All">All Machines</option>' + 
+          machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+      }
+
+      const inputs = [
+        document.getElementById('req-filter-search'),
+        document.getElementById('req-filter-month'),
+        document.getElementById('req-filter-from-date'),
+        document.getElementById('req-filter-to-date'),
+        document.getElementById('req-filter-person'),
+        document.getElementById('req-filter-process'),
+        document.getElementById('req-filter-machine')
+      ];
+
+      inputs.forEach(input => {
+        if (input) {
+          const eventType = input.tagName === 'INPUT' ? 'input' : 'change';
+          input.addEventListener(eventType, renderRequestsTable);
+        }
+      });
+
+      renderRequestsTable();
+    }
+
+    function renderRequestsTable() {
+      const searchVal = (document.getElementById('req-filter-search')?.value || '').toLowerCase().trim();
+      const monthVal = document.getElementById('req-filter-month')?.value || 'All';
+      const fromDateRaw = document.getElementById('req-filter-from-date')?.value || '';
+      const toDateRaw = document.getElementById('req-filter-to-date')?.value || '';
+      const fromDateVal = convertInputDate(fromDateRaw);
+      const toDateVal = convertInputDate(toDateRaw);
+      const personVal = document.getElementById('req-filter-person')?.value || 'All';
+      const processVal = document.getElementById('req-filter-process')?.value || 'All';
+      const machineVal = document.getElementById('req-filter-machine')?.value || 'All';
+
+      let filtered = changeRequests;
+
+      if (searchVal) {
+        filtered = filtered.filter(r => {
+          return r.id.toLowerCase().includes(searchVal) ||
+                 r.dept.toLowerCase().includes(searchVal) ||
+                 r.sixM.toLowerCase().includes(searchVal) ||
+                 r.person.toLowerCase().includes(searchVal) ||
+                 r.process.toLowerCase().includes(searchVal) ||
+                 r.machineNo.toLowerCase().includes(searchVal) ||
+                 r.status.toLowerCase().includes(searchVal);
+        });
+      }
+
+      if (monthVal !== 'All') {
+        filtered = filtered.filter(r => r.date === monthVal);
+      }
+      if (fromDateVal) {
+        filtered = filtered.filter(r => r.fullDate >= fromDateVal);
+      }
+      if (toDateVal) {
+        filtered = filtered.filter(r => r.fullDate <= toDateVal);
+      }
+      if (personVal !== 'All') {
+        filtered = filtered.filter(r => r.person === personVal);
+      }
+      if (processVal !== 'All') {
+        filtered = filtered.filter(r => r.process === processVal);
+      }
+      if (machineVal !== 'All') {
+        filtered = filtered.filter(r => r.machineNo === machineVal);
+      }
+
+      const countBadge = document.getElementById('requests-count-badge');
+      if (countBadge) {
+        countBadge.textContent = `Showing ${filtered.length} of ${changeRequests.length}`;
+      }
+
+      const tbody = document.getElementById('all-requests-table-body');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 24px 0; color: var(--text3); font-style: italic;">
+              No matching change requests found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((r, idx) => {
+        const catClass = r.sixM.toLowerCase() === 'materials' ? 'material' : r.sixM.toLowerCase();
+        let badgeClass = 'badge-pending';
+        if (r.status === 'Approved') badgeClass = 'badge-approved';
+        if (r.status === 'Rejected') badgeClass = 'badge-rejected';
+
+        return `
+          <tr>
+            <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">${idx + 1}</td>
+            <td><span class="mini-id">${r.id}</span></td>
+            <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">${r.machineNo}</td>
+            <td>${r.dept}</td>
+            <td>${formatShortDate(r.fullDate)}</td>
+            <td><span class="badge ${badgeClass}">${r.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       // Inject filters
@@ -1203,6 +1809,8 @@
       filterBars.forEach(bar => {
         const chartId = bar.getAttribute('data-chart');
         const viewType = bar.getAttribute('data-view');
+        if (!chartId) return; // Skip requests table filter bar
+        
         if (chartId === 'status') {
           bar.innerHTML = buildStatusFilterHTML();
         } else {
@@ -1225,8 +1833,29 @@
         updateChart(c, 'grid');
       });
 
-      // Initial trigger for the default active tab
-      switchChart('dept');
+      // Initialize all requests view
+      initAllRequestsView();
+
+      // Hash Routing
+      function handleHashRoute() {
+        if (window.location.hash === '#all-requests') {
+          showView('all-requests');
+        } else {
+          showView('dashboard');
+          switchChart('dept');
+        }
+      }
+      window.addEventListener('hashchange', handleHashRoute);
+      handleHashRoute();
+
+      // Initialize datepicker (Flatpickr) on all date inputs
+      flatpickr(".datepicker", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
     });
   </script>
 </body>
