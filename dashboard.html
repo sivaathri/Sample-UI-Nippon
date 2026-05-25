@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +17,13 @@
       margin: 0;
       background: var(--bg);
     }
+    @keyframes fadeInNotif {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
+
 <body>
   <div class="sidebar-layout">
     <div class="sidebar">
@@ -46,8 +52,35 @@
       </div>
     </div>
     <div class="main-content">
-      <div class="page-title">Overview</div>
-      <div class="page-sub">Plant A — May 2026 · All Departments</div>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
+        <div>
+          <div class="page-title">Overview</div>
+          <div class="page-sub">Plant A — May 2026 · All Departments</div>
+        </div>
+        <div style="position: relative; z-index: 100;">
+          <div class="notification-bell" onclick="toggleNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
+            <i class="ti ti-bell" style="font-size: 18px; color: var(--text2);"></i>
+            <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--bg);">1</span>
+          </div>
+          <!-- Dropdown container -->
+          <div id="notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+              <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
+              <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+                <div style="font-size: 11px; color: var(--text2); margin-top: 2px;">Change Request 4M-2026-248 awaits validation.</div>
+                <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="stat-grid">
         <div class="stat-card">
           <div class="stat-label">Total Requests</div>
@@ -55,7 +88,7 @@
           <!-- <div class="stat-delta delta-up"><i class="ti ti-trending-up" style="font-size:10px;"></i> +18 this
             month</div> -->
         </div>
-         <div class="stat-card">
+        <div class="stat-card">
           <div class="stat-label">Approved</div>
           <div class="stat-value" style="color:var(--success);">8</div>
           <!-- <div class="stat-delta delta-up">76% approval rate</div> -->
@@ -69,7 +102,8 @@
       <div style="margin-bottom:12px;">
         <div class="card" style="padding: 14px 16px;">
           <div class="card-header-tabs">
-            <div class="card-title" style="margin-bottom:0;">Plant Change Analytics <i class="ti ti-chart-bar" style="font-size:16px;color:var(--text3);margin-left:2px;"></i></div>
+            <div class="card-title" style="margin-bottom:0;">Plant Change Analytics <i class="ti ti-chart-bar"
+                style="font-size:16px;color:var(--text3);margin-left:2px;"></i></div>
             <div style="display:flex;align-items:center;gap:6px;">
               <div class="chart-tabs" id="analytics-tabs">
                 <button class="chart-tab active" data-chart="dept" onclick="switchChart('dept')">Department</button>
@@ -78,7 +112,9 @@
                 <button class="chart-tab" data-chart="monthly" onclick="switchChart('monthly')">Monthly</button>
                 <button class="chart-tab" data-chart="status" onclick="switchChart('status')">Approval Status</button>
               </div>
-              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px; height: 24px; display: inline-flex; align-items: center; gap: 3px;" onclick="toggleChartView()" id="view-mode-btn">
+              <button class="btn btn-outline"
+                style="padding: 4px 8px; font-size: 11px; height: 24px; display: inline-flex; align-items: center; gap: 3px;"
+                onclick="toggleChartView()" id="view-mode-btn">
                 <i class="ti ti-grid-dots" style="font-size:11px;"></i> Grid View
               </button>
             </div>
@@ -87,7 +123,7 @@
           <div class="analytics-container">
             <!-- Tab View -->
             <div id="analytics-tab-content">
-              
+
               <!-- Department Chart -->
               <div class="chart-view active" id="chart-dept">
                 <div class="chart-filter-bar" data-chart="dept" data-view="tab"></div>
@@ -194,29 +230,64 @@
                 <div class="chart-filter-bar" data-chart="monthly" data-view="tab"></div>
                 <div class="chart-bars" style="height: 120px; padding-top: 10px;">
                   <div class="bar-wrap">
-                    <div class="bar-count">3</div>
-                    <div class="bar" style="height:120px;background:var(--accent);"></div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.5;"></div>
+                    <div class="bar-label">Jan-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                    <div class="bar-label">Feb-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label">Mar-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
                     <div class="bar-label">Apr-26</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">2</div>
-                    <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
                     <div class="bar-label">May-26</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">1</div>
-                    <div class="bar" style="height:40px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
                     <div class="bar-label">Jun-26</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">2</div>
-                    <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
                     <div class="bar-label">Jul-26</div>
                   </div>
                   <div class="bar-wrap">
-                    <div class="bar-count">3</div>
-                    <div class="bar" style="height:120px;background:var(--accent);"></div>
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);"></div>
                     <div class="bar-label">Aug-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label">Sep-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                    <div class="bar-label">Oct-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">Nov-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                    <div class="bar-label">Dec-26</div>
                   </div>
                 </div>
               </div>
@@ -225,9 +296,15 @@
               <div class="chart-view" id="chart-status">
                 <div class="chart-filter-bar" data-chart="status" data-view="tab"></div>
                 <div class="chart-legend">
-                  <div class="legend-item"><div class="legend-dot" style="background:#185FA5;"></div> Approved</div>
-                  <div class="legend-item"><div class="legend-dot" style="background:#E27D2F;"></div> Rejected</div>
-                  <div class="legend-item"><div class="legend-dot" style="background:#A3A29E;"></div> Pending</div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#185FA5;"></div> Approved
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#E27D2F;"></div> Rejected
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#A3A29E;"></div> Pending
+                  </div>
                 </div>
                 <div class="chart-bars grouped-bars" style="height: 120px;">
                   <!-- Apr-26 -->
@@ -346,10 +423,11 @@
             <!-- Grid View -->
             <div id="analytics-grid-content" style="display: none;">
               <div class="charts-grid-layout">
-                
+
                 <!-- Mini Dept -->
                 <div class="mini-chart-card" id="grid-chart-dept">
-                  <div class="mini-chart-title">Department Wise Change <i class="ti ti-building" style="color:var(--text3);"></i></div>
+                  <div class="mini-chart-title">Department Wise Change <i class="ti ti-building"
+                      style="color:var(--text3);"></i></div>
                   <div class="chart-filter-bar" data-chart="dept" data-view="grid"></div>
                   <div class="chart-bars" style="height: 80px; gap: 4px;">
                     <div class="bar-wrap">
@@ -382,7 +460,8 @@
 
                 <!-- Mini Process -->
                 <div class="mini-chart-card" id="grid-chart-process">
-                  <div class="mini-chart-title">Process Wise Change <i class="ti ti-cpu" style="color:var(--text3);"></i></div>
+                  <div class="mini-chart-title">Process Wise Change <i class="ti ti-cpu"
+                      style="color:var(--text3);"></i></div>
                   <div class="chart-filter-bar" data-chart="process" data-view="grid"></div>
                   <div class="chart-bars" style="height: 80px; gap: 4px;">
                     <div class="bar-wrap">
@@ -415,7 +494,8 @@
 
                 <!-- Mini 6M -->
                 <div class="mini-chart-card" id="grid-chart-six-m">
-                  <div class="mini-chart-title">6M Category Change <i class="ti ti-sitemap" style="color:var(--text3);"></i></div>
+                  <div class="mini-chart-title">6M Category Change <i class="ti ti-sitemap"
+                      style="color:var(--text3);"></i></div>
                   <div class="chart-filter-bar" data-chart="six-m" data-view="grid"></div>
                   <div class="chart-bars" style="height: 80px; gap: 3px;">
                     <div class="bar-wrap">
@@ -453,33 +533,69 @@
 
                 <!-- Mini Monthly -->
                 <div class="mini-chart-card" id="grid-chart-monthly">
-                  <div class="mini-chart-title">Monthly Change <i class="ti ti-calendar-event" style="color:var(--text3);"></i></div>
+                  <div class="mini-chart-title">Monthly Change <i class="ti ti-calendar-event"
+                      style="color:var(--text3);"></i></div>
                   <div class="chart-filter-bar" data-chart="monthly" data-view="grid"></div>
-                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                  <div class="chart-bars" style="height: 80px; gap: 2px;">
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">3</div>
-                      <div class="bar" style="height:70px;background:var(--accent);"></div>
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.5;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jan</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                      <div class="bar-label" style="font-size:8px;">Feb</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:8px;">Mar</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
                       <div class="bar-label" style="font-size:8px;">Apr</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">2</div>
-                      <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
                       <div class="bar-label" style="font-size:8px;">May</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">1</div>
-                      <div class="bar" style="height:23px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
                       <div class="bar-label" style="font-size:8px;">Jun</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">2</div>
-                      <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
                       <div class="bar-label" style="font-size:8px;">Jul</div>
                     </div>
                     <div class="bar-wrap">
-                      <div class="bar-count" style="font-size:9px;">3</div>
-                      <div class="bar" style="height:70px;background:var(--accent);"></div>
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);"></div>
                       <div class="bar-label" style="font-size:8px;">Aug</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:8px;">Sep</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                      <div class="bar-label" style="font-size:8px;">Oct</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:8px;">Nov</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                      <div class="bar-label" style="font-size:8px;">Dec</div>
                     </div>
                   </div>
                 </div>
@@ -487,11 +603,18 @@
                 <!-- Mini Status (Full Width) -->
                 <div class="mini-chart-card full-width" id="grid-chart-status">
                   <div class="mini-chart-title" style="margin-bottom: 4px;">
-                    <span>Overall Change Approval Status <i class="ti ti-clipboard-check" style="color:var(--text3);"></i></span>
+                    <span>Overall Change Approval Status <i class="ti ti-clipboard-check"
+                        style="color:var(--text3);"></i></span>
                     <div style="display: flex; gap: 8px; font-size: 9px; font-family: var(--mono);">
-                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#185FA5;border-radius:50%;"></span> Appr</span>
-                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#E27D2F;border-radius:50%;"></span> Rej</span>
-                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#A3A29E;border-radius:50%;"></span> Pend</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#185FA5;border-radius:50%;"></span>
+                        Appr</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#E27D2F;border-radius:50%;"></span>
+                        Rej</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#A3A29E;border-radius:50%;"></span>
+                        Pend</span>
                     </div>
                   </div>
                   <div class="chart-filter-bar" data-chart="status" data-view="grid"></div>
@@ -499,54 +622,108 @@
                     <!-- Apr -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">8</div>
+                          <div class="bar" style="height:56px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">2</div>
+                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">3</div>
+                          <div class="bar" style="height:21px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Apr</div>
                     </div>
                     <!-- May -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">4</div><div class="bar" style="height:28px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">7</div>
+                          <div class="bar" style="height:49px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">1</div>
+                          <div class="bar" style="height:7px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">4</div>
+                          <div class="bar" style="height:28px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">May</div>
                     </div>
                     <!-- Jun -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">9</div>
+                          <div class="bar" style="height:63px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">3</div>
+                          <div class="bar" style="height:21px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">2</div>
+                          <div class="bar" style="height:14px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Jun</div>
                     </div>
                     <!-- Jul -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">8</div>
+                          <div class="bar" style="height:56px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">2</div>
+                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">3</div>
+                          <div class="bar" style="height:21px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Jul</div>
                     </div>
                     <!-- Aug -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">7</div>
+                          <div class="bar" style="height:49px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">1</div>
+                          <div class="bar" style="height:7px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">1</div>
+                          <div class="bar" style="height:7px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Aug</div>
                     </div>
                     <!-- Sep -->
                     <div class="group-wrap">
                       <div class="group-bars-row" style="gap:1px;">
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">9</div>
+                          <div class="bar" style="height:63px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">2</div>
+                          <div class="bar" style="height:14px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">2</div>
+                          <div class="bar" style="height:14px;background:#A3A29E;"></div>
+                        </div>
                       </div>
                       <div class="bar-label" style="font-size:8px;">Sep</div>
                     </div>
@@ -558,7 +735,7 @@
           </div>
 
         </div>
-      
+
       </div>
       <div class="card" style="margin-bottom:0;padding:0;overflow:hidden;">
         <div style="padding:12px 14px 8px;">
@@ -623,7 +800,7 @@
     const processes = ["Winding", "Soldering", "EOL Testing", "Potting", "Loading"];
     const machines = ["MFG-MC-1042", "MFG-MC-0882", "MFG-MC-0711", "MFG-MC-0915"];
     const sixMs = ["Man", "Machine", "Method", "Materials", "Measure", "Nature"];
-    const months = ["Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26"];
+    const months = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
     // Generate deterministic records using a simple pseudo-random generator
     function generateMockData() {
@@ -639,15 +816,35 @@
         const process = processes[Math.floor(random() * processes.length)];
         const machineNo = machines[Math.floor(random() * machines.length)];
         const sixM = sixMs[Math.floor(random() * sixMs.length)];
-        
+
         // Status probability: Approved (60%), Pending (25%), Rejected (15%)
         let statusVal = "Approved";
         const rStatus = random();
         if (rStatus > 0.75) statusVal = "Pending";
         else if (rStatus > 0.6) statusVal = "Rejected";
-        
+
         let month = months[Math.floor(random() * months.length)];
-        
+
+        // Generate deterministic day and map month string to two-digit month
+        const monthMap = {
+          "Jan-26": "01",
+          "Feb-26": "02",
+          "Mar-26": "03",
+          "Apr-26": "04",
+          "May-26": "05",
+          "Jun-26": "06",
+          "Jul-26": "07",
+          "Aug-26": "08",
+          "Sep-26": "09",
+          "Oct-26": "10",
+          "Nov-26": "11",
+          "Dec-26": "12"
+        };
+        const monthStr = monthMap[month];
+        const day = Math.floor(random() * 28) + 1;
+        const dayStr = day < 10 ? '0' + day : day;
+        const fullDate = `2026-${monthStr}-${dayStr}`;
+
         data.push({
           id: `4M-2026-${100 + i}`,
           person,
@@ -656,7 +853,8 @@
           machineNo,
           sixM,
           status: statusVal,
-          date: month
+          date: month,
+          fullDate: fullDate
         });
       }
       return data;
@@ -702,14 +900,22 @@
       const peopleOpt = people.map(p => `<option value="${p}">${p}</option>`).join('');
       const processesOpt = processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
       const machinesOpt = machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
-      
+
       return `
         <div class="filter-select-wrap">
-          <label>By Date</label>
+          <label>By Month</label>
           <select class="filter-select" data-filter="date">
             <option value="All">All Months</option>
             ${monthsOpt}
           </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Person</label>
@@ -739,11 +945,19 @@
       const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
       return `
         <div class="filter-select-wrap">
-          <label>By Date</label>
+          <label>By Month</label>
           <select class="filter-select" data-filter="date">
             <option value="All">All Months</option>
             ${monthsOpt}
           </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Status</label>
@@ -763,11 +977,15 @@
       if (!container) return;
 
       const dateSelect = container.querySelector('select[data-filter="date"]');
+      const fromDateInput = container.querySelector('input[data-filter="from-date"]');
+      const toDateInput = container.querySelector('input[data-filter="to-date"]');
       const personSelect = container.querySelector('select[data-filter="person"]');
       const processSelect = container.querySelector('select[data-filter="process"]');
       const machineSelect = container.querySelector('select[data-filter="machine"]');
 
       const dateVal = dateSelect ? dateSelect.value : 'All';
+      const fromDateVal = fromDateInput ? fromDateInput.value : '';
+      const toDateVal = toDateInput ? toDateInput.value : '';
       const personVal = personSelect ? personSelect.value : 'All';
       const processVal = processSelect ? processSelect.value : 'All';
       const machineVal = machineSelect ? machineSelect.value : 'All';
@@ -775,6 +993,12 @@
       let filtered = changeRequests;
       if (dateVal !== 'All') {
         filtered = filtered.filter(r => r.date === dateVal);
+      }
+      if (fromDateVal) {
+        filtered = filtered.filter(r => r.fullDate >= fromDateVal);
+      }
+      if (toDateVal) {
+        filtered = filtered.filter(r => r.fullDate <= toDateVal);
       }
       if (personVal !== 'All') {
         filtered = filtered.filter(r => r.person === personVal);
@@ -928,7 +1152,7 @@
         gridContent.style.display = 'block';
         tabsContainer.style.display = 'none';
         btn.innerHTML = '<i class="ti ti-layout-tab" style="font-size:13px;"></i> Tab View';
-        
+
         const gridBars = gridContent.querySelectorAll('.bar');
         gridBars.forEach(bar => {
           const h = bar.style.height;
@@ -941,10 +1165,37 @@
         gridContent.style.display = 'none';
         tabsContainer.style.display = 'flex';
         btn.innerHTML = '<i class="ti ti-grid-dots" style="font-size:13px;"></i> Grid View';
-        
+
         switchChart('dept');
       }
     }
+
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function clearNotif(event) {
+      event.stopPropagation();
+      const badge = document.getElementById('notif-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('click', () => {
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
       // Inject filters
@@ -957,10 +1208,11 @@
         } else {
           bar.innerHTML = buildFilterHTML();
         }
-        
+
         const selects = bar.querySelectorAll('.filter-select');
         selects.forEach(select => {
-          select.addEventListener('change', () => {
+          const eventType = select.tagName === 'INPUT' ? 'input' : 'change';
+          select.addEventListener(eventType, () => {
             updateChart(chartId, viewType);
           });
         });
@@ -978,4 +1230,5 @@
     });
   </script>
 </body>
+
 </html>
