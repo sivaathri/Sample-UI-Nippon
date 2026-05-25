@@ -144,6 +144,30 @@
       opacity: 0.85;
     }
 
+    .status-text {
+      font-size: 15px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    .approved {
+      background: #e8f9ee;
+      color: #1f9d55;
+    }
+
+    .pending {
+      background: #fff4db;
+      color: #d97706;
+    }
+
+    .rejected {
+      background: #ffe5e5;
+      color: #dc2626;
+    }
+
     /* ── File upload zone ── */
     .file-zone {
       border: 1.5px dashed var(--border2);
@@ -858,6 +882,87 @@
           </label>
           <div class="file-name-display" id="fname-sop"></div>
         </div>
+        <div class="form-label">User Dept HOD Approval <span class="required">*</span></div>
+        <textarea class="form-textarea" id="inp-risk" rows="5"
+          placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
+        <!-- Field 27: Customer Approval -->
+        <div class="form-group" id="grp-cust-approval">
+          <div class="form-label">Customer Approval Required <span class="required">*</span></div>
+          <select class="status-select form-select" id="sel-cust-approval">
+            <option value="">— Select —</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+          <div class="field-error" id="err-cust-approval">Please specify if customer approval is needed.</div>
+        </div>
+        <!-- Effectiveness Monitoring -->
+        <div class="card">
+          <!-- Field 28: Effectiveness Monitoring -->
+          <div class="form-group" id="grp-effectiveness">
+            <div class="form-label">Effectiveness Monitoring <span class="required">*</span></div>
+            <textarea class="form-textarea" id="inp-effectiveness" rows="4"
+              placeholder="How will effectiveness of this change be monitored and measured?…"></textarea>
+            <div class="field-error" id="err-effectiveness">Effectiveness monitoring details are required.</div>
+          </div>
+        </div>
+
+
+        <!-- Upload Section -->
+        <div style="margin-top:16px;">
+
+          <div class="form-label">
+            Upload Supporting Files
+          </div>
+
+          <div class="upload-box">
+
+            <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+            <button type="button" class="upload-btn" onclick="document.getElementById('inp-detail-files').click()">
+              <i class="ti ti-upload"></i>
+              Upload Image / PDF
+            </button>
+
+            <div class="upload-note">
+              Allowed: PDF, JPG, PNG | Max 5MB each
+            </div>
+
+            <!-- Preview -->
+            <div id="file-preview-list" style="margin-top:12px;"></div>
+
+          </div>
+
+        </div>
+        <div class="form-grid">
+          <!-- Field 29: L2 Approval Status -->
+          <div class="form-group" id="grp-l2-status">
+            <div class="form-label">
+              L2 Approval Status <span class="required">*</span>
+            </div>
+
+            <div class="status-text approved">Approved</div>
+            <!-- OR -->
+            <!-- <div class="status-text pending">Pending</div> -->
+            <!-- <div class="status-text rejected">Rejected</div> -->
+
+            <div class="field-error" id="err-l2-status">
+              L2 Approval status is required.
+            </div>
+          </div>
+
+          <!-- Field 30: L3 Approval Status -->
+          <div class="form-group" id="grp-l3-status">
+            <div class="form-label">
+              L3 Approval Status <span class="required">*</span>
+            </div>
+
+            <div class="status-text pending">Pending</div>
+
+            <div class="field-error" id="err-l3-status">
+              L3 Approval status is required.
+            </div>
+          </div>
+        </div>
       </div>
 
 
@@ -962,16 +1067,7 @@
       </div>
 
 
-      <!-- Effectiveness Monitoring -->
-      <div class="card">
-        <!-- Field 28: Effectiveness Monitoring -->
-        <div class="form-group" id="grp-effectiveness">
-          <div class="form-label">Effectiveness Monitoring <span class="required">*</span></div>
-          <textarea class="form-textarea" id="inp-effectiveness" rows="4"
-            placeholder="How will effectiveness of this change be monitored and measured?…"></textarea>
-          <div class="field-error" id="err-effectiveness">Effectiveness monitoring details are required.</div>
-        </div>
-      </div>
+
 
       <div class="btn-row">
         <button class="btn btn-outline" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Back</button>
@@ -1001,16 +1097,7 @@
             </select>
             <div class="field-error" id="err-hod">HOD Approval selection is required.</div>
           </div>
-          <!-- Field 27: Customer Approval -->
-          <div class="form-group" id="grp-cust-approval">
-            <div class="form-label">Customer Approval Required <span class="required">*</span></div>
-            <select class="status-select form-select" id="sel-cust-approval">
-              <option value="">— Select —</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-            <div class="field-error" id="err-cust-approval">Please specify if customer approval is needed.</div>
-          </div>
+
         </div>
       </div>
 
@@ -1019,32 +1106,7 @@
         <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
           Approval statuses are set by authorised reviewers. Select current status if pre-approved.
         </div>
-        <div class="form-grid">
-          <!-- Field 29: L2 Approval Status -->
-          <div class="form-group" id="grp-l2-status">
-            <div class="form-label">L2 Approval Status <span class="required">*</span></div>
-            <select class="status-select form-select" id="sel-l2-status">
-              <option value="">— Select Status —</option>
-              <option value="pending">⏳ Pending</option>
-              <option value="approved">✅ Approved</option>
-              <option value="rejected">❌ Rejected</option>
-              <option value="on_hold">🔒 On Hold</option>
-            </select>
-            <div class="field-error" id="err-l2-status">L2 Approval status is required.</div>
-          </div>
-          <!-- Field 30: L3 Approval Status -->
-          <div class="form-group" id="grp-l3-status">
-            <div class="form-label">L3 Approval Status <span class="required">*</span></div>
-            <select class="status-select form-select" id="sel-l3-status">
-              <option value="">— Select Status —</option>
-              <option value="pending">⏳ Pending</option>
-              <option value="approved">✅ Approved</option>
-              <option value="rejected">❌ Rejected</option>
-              <option value="on_hold">🔒 On Hold</option>
-            </select>
-            <div class="field-error" id="err-l3-status">L3 Approval status is required.</div>
-          </div>
-        </div>
+
       </div>
 
       <div class="btn-row">
