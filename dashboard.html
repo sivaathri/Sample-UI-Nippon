@@ -805,9 +805,51 @@
           <div class="page-sub">Plant A — May 2026 · Consolidated List</div>
         </div>
       </div>
+      
+      <!-- Filter Bar -->
+      <div class="chart-filter-bar" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <div class="filter-select-wrap" style="flex: 2; min-width: 150px;">
+          <label>Search Query</label>
+          <input type="text" id="req-filter-search" class="filter-select" placeholder="Search ID, Dept, Person, Category..." style="padding: 2px 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1; min-width: 90px;">
+          <label>By Month</label>
+          <select class="filter-select" id="req-filter-month">
+            <option value="All">All Months</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="date" class="filter-select" id="req-filter-from-date" style="padding: 0 4px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="date" class="filter-select" id="req-filter-to-date" style="padding: 0 4px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Person</label>
+          <select class="filter-select" id="req-filter-person">
+            <option value="All">All Persons</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Process</label>
+          <select class="filter-select" id="req-filter-process">
+            <option value="All">All Processes</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By M/c no</label>
+          <select class="filter-select" id="req-filter-machine">
+            <option value="All">All Machines</option>
+          </select>
+        </div>
+      </div>
+
       <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
-        <div style="padding:12px 14px 8px;border-bottom:0.5px solid var(--border);">
+        <div style="padding:12px 14px 8px;border-bottom:0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
           <div class="card-title" style="margin-bottom:0;">Recent change requests <i class="ti ti-list-check" style="font-size:16px;color:var(--text3);"></i></div>
+          <div id="requests-count-badge" style="font-size: 11px; font-family: var(--mono); color: var(--text2); background: var(--bg2); padding: 2px 8px; border-radius: 12px; border: 0.5px solid var(--border);">Showing 0 of 0</div>
         </div>
         <table class="table">
           <thead>
@@ -819,42 +861,8 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
-              <td>Assembly</td>
-              <td><span class="tag tag-machine">Machine</span></td>
-              <td>20 May</td>
-              <td><span class="badge badge-pending">Pending L2</span></td>
-            </tr>
-            <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
-              <td>Quality</td>
-              <td><span class="tag tag-method">Method</span></td>
-              <td>19 May</td>
-              <td><span class="badge badge-approved">Approved</span></td>
-            </tr>
-            <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
-              <td>Production</td>
-              <td><span class="tag tag-material">Material</span></td>
-              <td>18 May</td>
-              <td><span class="badge badge-review">L3 Review</span></td>
-            </tr>
-            <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
-              <td>Maintenance</td>
-              <td><span class="tag tag-man">Man</span></td>
-              <td>17 May</td>
-              <td><span class="badge badge-rejected">Rejected</span></td>
-            </tr>
-            <tr>
-              <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
-              <td>Logistics</td>
-              <td><span class="tag tag-measure">Measure</span></td>
-              <td>16 May</td>
-              <td><span class="badge badge-closed">Closed</span></td>
-            </tr>
+          <tbody id="all-requests-table-body">
+            <!-- Dynamic rows will be inserted by JS -->
           </tbody>
         </table>
       </div>
@@ -1286,12 +1294,146 @@
       }
     }
 
+    function formatShortDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const day = parseInt(parts[2], 10);
+      const monthIdx = parseInt(parts[1], 10) - 1;
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${day} ${monthNames[monthIdx]}`;
+    }
+
+    function initAllRequestsView() {
+      const monthSel = document.getElementById('req-filter-month');
+      const personSel = document.getElementById('req-filter-person');
+      const processSel = document.getElementById('req-filter-process');
+      const machineSel = document.getElementById('req-filter-machine');
+
+      if (monthSel) {
+        monthSel.innerHTML = '<option value="All">All Months</option>' + 
+          months.map(m => `<option value="${m}">${m}</option>`).join('');
+      }
+      if (personSel) {
+        personSel.innerHTML = '<option value="All">All Persons</option>' + 
+          people.map(p => `<option value="${p}">${p}</option>`).join('');
+      }
+      if (processSel) {
+        processSel.innerHTML = '<option value="All">All Processes</option>' + 
+          processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
+      }
+      if (machineSel) {
+        machineSel.innerHTML = '<option value="All">All Machines</option>' + 
+          machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+      }
+
+      const inputs = [
+        document.getElementById('req-filter-search'),
+        document.getElementById('req-filter-month'),
+        document.getElementById('req-filter-from-date'),
+        document.getElementById('req-filter-to-date'),
+        document.getElementById('req-filter-person'),
+        document.getElementById('req-filter-process'),
+        document.getElementById('req-filter-machine')
+      ];
+
+      inputs.forEach(input => {
+        if (input) {
+          const eventType = input.tagName === 'INPUT' ? 'input' : 'change';
+          input.addEventListener(eventType, renderRequestsTable);
+        }
+      });
+
+      renderRequestsTable();
+    }
+
+    function renderRequestsTable() {
+      const searchVal = (document.getElementById('req-filter-search')?.value || '').toLowerCase().trim();
+      const monthVal = document.getElementById('req-filter-month')?.value || 'All';
+      const fromDateVal = document.getElementById('req-filter-from-date')?.value || '';
+      const toDateVal = document.getElementById('req-filter-to-date')?.value || '';
+      const personVal = document.getElementById('req-filter-person')?.value || 'All';
+      const processVal = document.getElementById('req-filter-process')?.value || 'All';
+      const machineVal = document.getElementById('req-filter-machine')?.value || 'All';
+
+      let filtered = changeRequests;
+
+      if (searchVal) {
+        filtered = filtered.filter(r => {
+          return r.id.toLowerCase().includes(searchVal) ||
+                 r.dept.toLowerCase().includes(searchVal) ||
+                 r.sixM.toLowerCase().includes(searchVal) ||
+                 r.person.toLowerCase().includes(searchVal) ||
+                 r.process.toLowerCase().includes(searchVal) ||
+                 r.machineNo.toLowerCase().includes(searchVal) ||
+                 r.status.toLowerCase().includes(searchVal);
+        });
+      }
+
+      if (monthVal !== 'All') {
+        filtered = filtered.filter(r => r.date === monthVal);
+      }
+      if (fromDateVal) {
+        filtered = filtered.filter(r => r.fullDate >= fromDateVal);
+      }
+      if (toDateVal) {
+        filtered = filtered.filter(r => r.fullDate <= toDateVal);
+      }
+      if (personVal !== 'All') {
+        filtered = filtered.filter(r => r.person === personVal);
+      }
+      if (processVal !== 'All') {
+        filtered = filtered.filter(r => r.process === processVal);
+      }
+      if (machineVal !== 'All') {
+        filtered = filtered.filter(r => r.machineNo === machineVal);
+      }
+
+      const countBadge = document.getElementById('requests-count-badge');
+      if (countBadge) {
+        countBadge.textContent = `Showing ${filtered.length} of ${changeRequests.length}`;
+      }
+
+      const tbody = document.getElementById('all-requests-table-body');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 24px 0; color: var(--text3); font-style: italic;">
+              No matching change requests found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const catClass = r.sixM.toLowerCase() === 'materials' ? 'material' : r.sixM.toLowerCase();
+        let badgeClass = 'badge-pending';
+        if (r.status === 'Approved') badgeClass = 'badge-approved';
+        if (r.status === 'Rejected') badgeClass = 'badge-rejected';
+
+        return `
+          <tr>
+            <td style="padding-left:14px;"><span class="mini-id">${r.id}</span></td>
+            <td>${r.dept}</td>
+            <td><span class="tag tag-${catClass}">${r.sixM}</span></td>
+            <td>${formatShortDate(r.fullDate)}</td>
+            <td><span class="badge ${badgeClass}">${r.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // Inject filters
       const filterBars = document.querySelectorAll('.chart-filter-bar');
       filterBars.forEach(bar => {
         const chartId = bar.getAttribute('data-chart');
         const viewType = bar.getAttribute('data-view');
+        if (!chartId) return; // Skip requests table filter bar
+        
         if (chartId === 'status') {
           bar.innerHTML = buildStatusFilterHTML();
         } else {
@@ -1316,6 +1458,9 @@
 
       // Initial trigger for the default active tab
       switchChart('dept');
+
+      // Initialize all requests view
+      initAllRequestsView();
     });
   </script>
 </body>
