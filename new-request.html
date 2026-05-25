@@ -410,12 +410,15 @@
               <div class="form-hint">Unique ID auto-assigned on submission</div>
             </div>
 
-            <!-- Field 3: Requested Date -->
-            <div class="form-group" id="grp-req-date">
-              <div class="form-label">Requested Date <span class="required">*</span></div>
-              <input class="form-input datepicker-past" id="inp-req-date" type="text" placeholder="dd/mm/yyyy"
-                autocomplete="off" />
-              <div class="field-error" id="err-req-date">Required. Cannot be a future date.</div>
+            <!-- Field 3: Requested Date (Auto — current date, readonly) -->
+            <div class="form-group">
+              <div class="form-label">Requested Date</div>
+              <div class="auto-field">
+                <i class="ti ti-calendar" style="font-size:15px;color:var(--accent);"></i>
+                <span id="auto-req-date-val">--/--/----</span>
+                <span class="auto-badge">Auto</span>
+              </div>
+              <div class="form-hint">Auto-captured: today's date</div>
             </div>
             <!-- Field 4: Time (Auto) -->
             <div class="form-group">
@@ -936,30 +939,28 @@
     updateTime();
     setInterval(updateTime, 30000);
 
-    /* ─── Flatpickr ─── */
-    document.addEventListener('DOMContentLoaded', () => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+    /* ─── Auto Requested Date display ─── */
+    (function setReqDate() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      document.getElementById('auto-req-date-val').textContent = `${dd}/${mm}/${yyyy}`;
+    })();
 
-      // Requested Date: no future dates, auto-filled with today
-      const reqDatePicker = flatpickr("#inp-req-date", {
-        dateFormat: "d/m/Y",
-        allowInput: true,
-        maxDate: today
-      });
-      // Use flatpickr's own API to set today — keeps calendar fully interactive
-      reqDatePicker.setDate(today, true);
-
-      // Implementation dates: any date
+    /* ─── Flatpickr — implementation dates only ─── */
+    (function initPickers() {
       flatpickr("#inp-impl-start", {
         dateFormat: "d/m/Y",
-        allowInput: true
+        allowInput: false,
+        disableMobile: false
       });
       flatpickr("#inp-close-date", {
         dateFormat: "d/m/Y",
-        allowInput: true
+        allowInput: false,
+        disableMobile: false
       });
-    });
+    })();
 
     /* ─── Chip toggle ─── */
     function toggleChip(id, cls) {
