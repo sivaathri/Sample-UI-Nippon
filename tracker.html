@@ -152,5 +152,33 @@
       </div>
     </div>
   </div>
+  <script>
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function clearNotif(event) {
+      event.stopPropagation();
+      const badge = document.getElementById('sidebar-notif-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('click', () => {
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
