@@ -748,6 +748,55 @@
               autocomplete="off" />
             <div class="field-error" id="err-close-date">Must be a date after the start date.</div>
           </div>
+          <!-- Part Traceability details (From changes) -->
+          <div>
+
+
+            <div class="form-label">Part Traceability details (To changes)</div>
+            <!-- Textarea -->
+            <textarea class="form-textarea" id="inp-detail-desc" rows="4"
+              placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
+
+            <!-- Bottom Info -->
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+
+              <div class="field-error" id="err-detail-desc" style="position:static;">
+                Minimum 20 characters required.
+              </div>
+
+              <div class="char-counter" id="cnt-detail-desc">
+                0 / 20 min
+              </div>
+
+            </div>
+
+            <!-- Upload Section -->
+            <div style="margin-top:16px;">
+
+              <div class="form-label">
+                Upload Supporting Files
+              </div>
+
+              <div class="upload-box">
+
+                <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+                <button type="button" class="upload-btn" onclick="document.getElementById('inp-detail-files').click()">
+                  <i class="ti ti-upload"></i>
+                  Upload Image / PDF
+                </button>
+
+                <div class="upload-note">
+                  Allowed: PDF, JPG, PNG | Max 5MB each
+                </div>
+
+                <!-- Preview -->
+                <div id="file-preview-list" style="margin-top:12px;"></div>
+
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
 
