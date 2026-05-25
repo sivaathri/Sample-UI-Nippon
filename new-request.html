@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>L1 Change Request Form — 4M·CMS</title>
-  <meta name="description" content="Submit a new 4M Change Request for Nippon. Fill in all required fields across the multi-step form.">
+  <meta name="description"
+    content="Submit a new 4M Change Request for Nippon. Fill in all required fields across the multi-step form.">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -14,41 +16,73 @@
     .flatpickr-calendar {
       background: var(--bg) !important;
       border: 0.5px solid var(--border) !important;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
       border-radius: var(--rad-lg) !important;
       font-family: var(--font) !important;
     }
-    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange,
-    .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover {
+
+    .flatpickr-day.selected,
+    .flatpickr-day.startRange,
+    .flatpickr-day.endRange,
+    .flatpickr-day.selected:hover,
+    .flatpickr-day.startRange:hover,
+    .flatpickr-day.endRange:hover {
       background: var(--accent) !important;
       border-color: var(--accent) !important;
       color: #fff !important;
     }
+
     .flatpickr-months .flatpickr-month,
     .flatpickr-current-month .flatpickr-monthDropdown-months,
-    .flatpickr-current-month input.cur-year { color: var(--text) !important; }
-    .flatpickr-day { color: var(--text2) !important; border-radius: var(--rad) !important; }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+
     .flatpickr-day.today {
       border-color: var(--accent-light) !important;
       background: var(--accent-light) !important;
       color: var(--accent) !important;
     }
-    .flatpickr-day.flatpickr-disabled { color: var(--text3) !important; opacity: 0.4; }
+
+    .flatpickr-day.flatpickr-disabled {
+      color: var(--text3) !important;
+      opacity: 0.4;
+    }
 
     body {
-      height: 100vh; width: 100%;
-      display: flex; flex-direction: column;
-      overflow: hidden; margin: 0;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
       background: var(--bg);
     }
 
     /* ── Step panels ── */
-    .step-panel { display: none; }
-    .step-panel.active { display: block; }
+    .step-panel {
+      display: none;
+    }
+
+    .step-panel.active {
+      display: block;
+    }
 
     /* ── 4M Checkbox chips ── */
-    .cat-chip { cursor: pointer; transition: all 0.15s; user-select: none; }
-    .cat-chip:hover { opacity: 0.85; }
+    .cat-chip {
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .cat-chip:hover {
+      opacity: 0.85;
+    }
 
     /* ── File upload zone ── */
     .file-zone {
@@ -62,14 +96,37 @@
       transition: border-color 0.15s, background 0.15s;
       background: var(--bg2);
     }
-    .file-zone:hover { border-color: var(--accent); background: var(--accent-light); }
-    .file-zone input[type="file"] { display: none; }
-    .file-zone-icon { font-size: 20px; color: var(--text3); flex-shrink: 0; }
-    .file-zone-text { font-size: 13px; color: var(--text2); }
-    .file-zone-text strong { color: var(--accent); font-weight: 500; }
+
+    .file-zone:hover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .file-zone input[type="file"] {
+      display: none;
+    }
+
+    .file-zone-icon {
+      font-size: 20px;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+
+    .file-zone-text {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .file-zone-text strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
     .file-name-display {
-      font-size: 12px; color: var(--success);
-      font-family: var(--mono); margin-top: 4px;
+      font-size: 12px;
+      color: var(--success);
+      font-family: var(--mono);
+      margin-top: 4px;
     }
 
     /* ── Auto fields ── */
@@ -82,30 +139,49 @@
       font-family: var(--mono);
       color: var(--text3);
       width: 100%;
-      display: flex; align-items: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .auto-field span { color: var(--text); font-weight: 500; }
+
+    .auto-field span {
+      color: var(--text);
+      font-weight: 500;
+    }
+
     .auto-badge {
       margin-left: auto;
-      font-size: 10px; font-family: var(--mono);
-      background: var(--accent-light); color: var(--accent);
-      padding: 2px 6px; border-radius: 4px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+      font-size: 10px;
+      font-family: var(--mono);
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
     }
 
     /* ── Error hint ── */
     .field-error {
-      font-size: 11px; color: var(--danger);
-      display: none; margin-top: 2px;
+      font-size: 11px;
+      color: var(--danger);
+      display: none;
+      margin-top: 2px;
       font-family: var(--mono);
     }
+
     .form-group.has-error .form-input,
     .form-group.has-error .form-select,
     .form-group.has-error .form-textarea {
       border-color: var(--danger) !important;
       background: var(--danger-light) !important;
     }
-    .form-group.has-error .field-error { display: block; }
+
+    .form-group.has-error .field-error {
+      display: block;
+    }
 
     /* ── Approval status badge selects ── */
     .status-select {
@@ -122,7 +198,9 @@
 
     /* ── Traceability row ── */
     .trace-row {
-      display: flex; flex-direction: column; gap: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     /* ── Submit success ── */
@@ -135,42 +213,72 @@
       padding: 40px 20px;
       text-align: center;
     }
-    .submit-success.show { display: flex; }
+
+    .submit-success.show {
+      display: flex;
+    }
+
     .success-icon {
-      width: 60px; height: 60px; border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       background: var(--success-light);
       color: var(--success);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 28px;
     }
 
     /* ── Char counter ── */
     .char-counter {
-      font-size: 11px; color: var(--text3);
-      font-family: var(--mono); text-align: right; margin-top: 2px;
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      text-align: right;
+      margin-top: 2px;
     }
-    .char-counter.warn { color: var(--warn); }
-    .char-counter.ok { color: var(--success); }
+
+    .char-counter.warn {
+      color: var(--warn);
+    }
+
+    .char-counter.ok {
+      color: var(--success);
+    }
 
     /* Responsive step-bar */
-    .step-bar { flex: 0 0 auto; }
+    .step-bar {
+      flex: 0 0 auto;
+    }
 
     /* ── Smooth transition on step changes ── */
     .step-panel {
       animation: fadeStep 0.18s ease;
     }
+
     @keyframes fadeStep {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ── Info hint text ── */
     .form-hint {
-      font-size: 11px; color: var(--text3);
-      font-family: var(--mono); margin-top: 2px;
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      margin-top: 2px;
     }
   </style>
 </head>
+
 <body>
   <div class="sidebar-layout">
     <!-- Sidebar -->
@@ -194,26 +302,37 @@
         </div>
         <div class="nav-sub-items">
           <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
-          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3
+          </div>
         </div>
       </div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
-      <div class="nav-item" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;" onclick="toggleNotifications(event)">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i
+          class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
+          class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item"
+        style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;"
+        onclick="toggleNotifications(event)">
         <span style="display:flex;align-items:center;gap:8px;"><i class="ti ti-bell"></i> Notifications</span>
-        <span id="sidebar-notif-badge" style="background:var(--danger);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:auto;">1</span>
-        <div id="notif-dropdown" style="display:none;position:absolute;bottom:35px;left:10px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--rad);box-shadow:0 6px 16px rgba(0,0,0,0.12);width:250px;padding:12px;z-index:110;text-align:left;">
-          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);padding-bottom:6px;margin-bottom:8px;">
+        <span id="sidebar-notif-badge"
+          style="background:var(--danger);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:auto;">1</span>
+        <div id="notif-dropdown"
+          style="display:none;position:absolute;bottom:35px;left:10px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--rad);box-shadow:0 6px 16px rgba(0,0,0,0.12);width:250px;padding:12px;z-index:110;text-align:left;">
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid var(--border);padding-bottom:6px;margin-bottom:8px;">
             <span style="font-size:12px;font-weight:600;color:var(--text);">Notifications</span>
-            <span onclick="clearNotif(event)" style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:500;">Mark read</span>
+            <span onclick="clearNotif(event)"
+              style="font-size:10px;color:var(--accent);cursor:pointer;font-weight:500;">Mark read</span>
           </div>
           <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;">
-            <div style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <div
+              style="background:var(--accent-light);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <i class="ti ti-file-plus" style="font-size:14px;"></i>
             </div>
             <div style="flex:1;">
               <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3;">New Request Created</div>
-              <div style="font-size:11px;color:var(--text2);margin-top:2px;white-space:normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size:11px;color:var(--text2);margin-top:2px;white-space:normal;">Change Request
+                4M-2026-248 awaits L2 validation.</div>
               <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">Just now</div>
             </div>
           </div>
@@ -269,16 +388,6 @@
         <div class="card">
           <div class="card-title">Identifiers</div>
           <div class="form-grid">
-            <!-- Field 2: 4M Change No (Auto Generated) -->
-            <div class="form-group">
-              <div class="form-label">4M Change No</div>
-              <div class="auto-field">
-                <i class="ti ti-hash" style="font-size:15px;color:var(--accent);"></i>
-                <span id="change-no-val">4M-2026-249</span>
-                <span class="auto-badge">Auto</span>
-              </div>
-              <div class="form-hint">Unique ID auto-assigned on submission</div>
-            </div>
             <!-- Field 1: Unit -->
             <div class="form-group" id="grp-unit">
               <div class="form-label">Unit <span class="required">*</span></div>
@@ -290,10 +399,22 @@
               </select>
               <div class="field-error" id="err-unit">Please select a unit.</div>
             </div>
+            <!-- Field 2: 4M Change No (Auto Generated) -->
+            <div class="form-group">
+              <div class="form-label">4M Change No</div>
+              <div class="auto-field">
+                <i class="ti ti-hash" style="font-size:15px;color:var(--accent);"></i>
+                <span id="change-no-val">1</span>
+                <span class="auto-badge">Auto</span>
+              </div>
+              <div class="form-hint">Unique ID auto-assigned on submission</div>
+            </div>
+
             <!-- Field 3: Requested Date -->
             <div class="form-group" id="grp-req-date">
               <div class="form-label">Requested Date <span class="required">*</span></div>
-              <input class="form-input datepicker-past" id="inp-req-date" type="text" placeholder="dd/mm/yyyy" autocomplete="off" />
+              <input class="form-input datepicker-past" id="inp-req-date" type="text" placeholder="dd/mm/yyyy"
+                autocomplete="off" />
               <div class="field-error" id="err-req-date">Required. Cannot be a future date.</div>
             </div>
             <!-- Field 4: Time (Auto) -->
@@ -350,7 +471,8 @@
             </div>
             <!-- Field 15: Machine No -->
             <div class="form-group">
-              <div class="form-label">Machine No <span style="color:var(--text3);font-size:10px;">(optional)</span></div>
+              <div class="form-label">Machine No <span style="color:var(--text3);font-size:10px;">(optional)</span>
+              </div>
               <input class="form-input" id="inp-machine-no" type="text" placeholder="e.g. MFG-MC-1042" />
             </div>
           </div>
@@ -376,7 +498,8 @@
               <textarea class="form-textarea" id="inp-detail-desc" rows="4"
                 placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
               <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div class="field-error" id="err-detail-desc" style="position:static;">Minimum 20 characters required.</div>
+                <div class="field-error" id="err-detail-desc" style="position:static;">Minimum 20 characters required.
+                </div>
                 <div class="char-counter" id="cnt-detail-desc">0 / 20 min</div>
               </div>
             </div>
@@ -417,13 +540,15 @@
             <!-- Field 20: Implement Date Start -->
             <div class="form-group" id="grp-impl-start">
               <div class="form-label">Implement / Change Date Start <span class="required">*</span></div>
-              <input class="form-input datepicker-any" id="inp-impl-start" type="text" placeholder="dd/mm/yyyy" autocomplete="off" />
+              <input class="form-input datepicker-any" id="inp-impl-start" type="text" placeholder="dd/mm/yyyy"
+                autocomplete="off" />
               <div class="field-error" id="err-impl-start">Implementation start date is required.</div>
             </div>
             <!-- Field 22: Change Date Close -->
             <div class="form-group" id="grp-close-date">
               <div class="form-label">Change Date Close <span class="required">*</span></div>
-              <input class="form-input datepicker-any" id="inp-close-date" type="text" placeholder="dd/mm/yyyy" autocomplete="off" />
+              <input class="form-input datepicker-any" id="inp-close-date" type="text" placeholder="dd/mm/yyyy"
+                autocomplete="off" />
               <div class="field-error" id="err-close-date">Must be a date after the start date.</div>
             </div>
           </div>
@@ -431,7 +556,8 @@
 
         <div class="btn-row">
           <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: 4M Categories</button>
+          <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: 4M
+            Categories</button>
         </div>
       </div>
 
@@ -442,7 +568,8 @@
         <div class="card">
           <div class="card-title">
             4M Change Categories <span class="required">*</span>
-            <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px;">At least one required</span>
+            <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px;">At least one
+              required</span>
           </div>
           <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
             Select all applicable 4M categories for this change
@@ -453,11 +580,13 @@
               <i class="ti ti-user"></i> Man
             </div>
             <!-- Field 6: Machine -->
-            <div class="cat-chip" id="chip-machine" onclick="toggleChip('chip-machine', 'sel-purple')" data-value="machine">
+            <div class="cat-chip" id="chip-machine" onclick="toggleChip('chip-machine', 'sel-purple')"
+              data-value="machine">
               <i class="ti ti-settings"></i> Machine
             </div>
             <!-- Field 7: Material -->
-            <div class="cat-chip" id="chip-material" onclick="toggleChip('chip-material', 'sel-teal')" data-value="material">
+            <div class="cat-chip" id="chip-material" onclick="toggleChip('chip-material', 'sel-teal')"
+              data-value="material">
               <i class="ti ti-package"></i> Material
             </div>
             <!-- Field 8: Method -->
@@ -465,7 +594,8 @@
               <i class="ti ti-git-branch"></i> Method
             </div>
             <!-- Field 9: Measurement -->
-            <div class="cat-chip" id="chip-measurement" onclick="toggleChip('chip-measurement', 'sel-green')" data-value="measurement">
+            <div class="cat-chip" id="chip-measurement" onclick="toggleChip('chip-measurement', 'sel-green')"
+              data-value="measurement">
               <i class="ti ti-ruler"></i> Measurement
             </div>
             <!-- Field 10: Mother Nature -->
@@ -473,13 +603,15 @@
               <i class="ti ti-leaf"></i> Mother Nature
             </div>
           </div>
-          <div class="field-error" id="err-categories" style="display:none;margin-top:8px;">At least one 4M category must be selected.</div>
+          <div class="field-error" id="err-categories" style="display:none;margin-top:8px;">At least one 4M category
+            must be selected.</div>
         </div>
 
         <div class="btn-row">
           <button class="btn btn-outline" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Back</button>
           <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(3)"><i class="ti ti-arrow-right"></i> Next: Risk &amp; Docs</button>
+          <button class="btn btn-primary" onclick="goStep(3)"><i class="ti ti-arrow-right"></i> Next: Risk &amp;
+            Docs</button>
         </div>
       </div>
 
@@ -505,15 +637,18 @@
           <div class="form-grid">
             <!-- Field 21: Part Traceability From Change -->
             <div class="form-group">
-              <div class="form-label">From Change <span style="color:var(--text3);font-size:10px;">(optional)</span></div>
+              <div class="form-label">From Change <span style="color:var(--text3);font-size:10px;">(optional)</span>
+              </div>
               <div class="trace-row">
                 <label class="file-zone" id="zone-trace-from" for="file-trace-from">
                   <i class="ti ti-upload file-zone-icon"></i>
                   <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
-                  <input type="file" id="file-trace-from" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="showFileName('file-trace-from','fname-trace-from')" />
+                  <input type="file" id="file-trace-from" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    onchange="showFileName('file-trace-from','fname-trace-from')" />
                 </label>
                 <div class="file-name-display" id="fname-trace-from"></div>
-                <input class="form-input" id="inp-trace-from-text" type="text" placeholder="Part no. / description before change…" />
+                <input class="form-input" id="inp-trace-from-text" type="text"
+                  placeholder="Part no. / description before change…" />
               </div>
             </div>
             <!-- Field 23: Part Traceability To Change -->
@@ -523,10 +658,12 @@
                 <label class="file-zone" id="zone-trace-to" for="file-trace-to">
                   <i class="ti ti-upload file-zone-icon"></i>
                   <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
-                  <input type="file" id="file-trace-to" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="showFileName('file-trace-to','fname-trace-to')" />
+                  <input type="file" id="file-trace-to" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                    onchange="showFileName('file-trace-to','fname-trace-to')" />
                 </label>
                 <div class="file-name-display" id="fname-trace-to"></div>
-                <input class="form-input" id="inp-trace-to-text" type="text" placeholder="Part no. / description after change…" />
+                <input class="form-input" id="inp-trace-to-text" type="text"
+                  placeholder="Part no. / description after change…" />
               </div>
             </div>
           </div>
@@ -538,15 +675,18 @@
           <div class="form-group">
             <div class="form-label">
               Update in SOP / WI / Control Plan / FMEA
-              <span style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
+              <span
+                style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
             </div>
             <label class="file-zone" for="file-sop">
               <i class="ti ti-files file-zone-icon"></i>
               <div>
                 <div class="file-zone-text"><strong>Click to upload</strong> updated documents</div>
-                <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX, XLSX accepted</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX,
+                  XLSX accepted</div>
               </div>
-              <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx" onchange="showFileName('file-sop','fname-sop')" />
+              <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
+                onchange="showFileName('file-sop','fname-sop')" />
             </label>
             <div class="file-name-display" id="fname-sop"></div>
           </div>
@@ -640,7 +780,8 @@
         <div class="btn-row">
           <button class="btn btn-outline" onclick="goStep(3)"><i class="ti ti-arrow-left"></i> Back</button>
           <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(5)"><i class="ti ti-arrow-right"></i> Next: Review &amp; Submit</button>
+          <button class="btn btn-primary" onclick="goStep(5)"><i class="ti ti-arrow-right"></i> Next: Review &amp;
+            Submit</button>
         </div>
       </div>
 
@@ -650,7 +791,8 @@
       <div class="step-panel" id="panel-5">
         <!-- Summary -->
         <div class="card" id="review-card">
-          <div class="card-title"><i class="ti ti-clipboard-check" style="color:var(--accent);margin-right:6px;"></i> Review Summary</div>
+          <div class="card-title"><i class="ti ti-clipboard-check" style="color:var(--accent);margin-right:6px;"></i>
+            Review Summary</div>
           <div id="review-summary" style="font-size:13px;color:var(--text2);line-height:1.7;">
             <!-- JS populated -->
           </div>
@@ -659,28 +801,36 @@
         <!-- Declaration -->
         <div class="card">
           <div style="display:flex;align-items:flex-start;gap:10px;">
-            <input type="checkbox" id="chk-declare" style="width:16px;height:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer;" />
+            <input type="checkbox" id="chk-declare"
+              style="width:16px;height:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer;" />
             <label for="chk-declare" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5;">
-              I declare that the information provided is accurate and complete. I understand that a unique 4M Change No. will be auto-assigned upon submission.
+              I declare that the information provided is accurate and complete. I understand that a unique 4M Change No.
+              will be auto-assigned upon submission.
             </label>
           </div>
-          <div class="field-error" id="err-declare" style="display:none;margin-top:6px;">You must accept the declaration to submit.</div>
+          <div class="field-error" id="err-declare" style="display:none;margin-top:6px;">You must accept the declaration
+            to submit.</div>
         </div>
 
         <!-- Submit success -->
         <div class="submit-success" id="submit-success">
           <div class="success-icon"><i class="ti ti-circle-check"></i></div>
           <div>
-            <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">Request Submitted Successfully</div>
-            <div style="font-size:13px;color:var(--text2);">Your 4M Change Request <strong id="success-id" style="color:var(--accent);font-family:var(--mono);"></strong> has been created and sent for L2 review.</div>
+            <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">Request Submitted
+              Successfully</div>
+            <div style="font-size:13px;color:var(--text2);">Your 4M Change Request <strong id="success-id"
+                style="color:var(--accent);font-family:var(--mono);"></strong> has been created and sent for L2 review.
+            </div>
           </div>
-          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'"><i class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
+          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'"><i
+              class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
         </div>
 
         <div class="btn-row" id="submit-btns">
           <button class="btn btn-outline" onclick="goStep(4)"><i class="ti ti-arrow-left"></i> Back</button>
           <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><i class="ti ti-send"></i> Submit Request</button>
+          <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><i class="ti ti-send"></i> Submit
+            Request</button>
         </div>
       </div>
 
@@ -689,14 +839,57 @@
 
   <style>
     /* Extra chip variants */
-    .cat-chip.sel-teal { border-color: var(--teal); background: var(--teal-light); color: var(--teal); }
-    .cat-chip.sel-warn { border-color: var(--warn); background: var(--warn-light); color: var(--warn); }
-    .cat-chip.sel-green { border-color: var(--success); background: var(--success-light); color: var(--success); }
-    .cat-chip.sel-red { border-color: var(--danger); background: var(--danger-light); color: var(--danger); }
-    .sidebar-user { padding: 12px 16px; border-top: 0.5px solid var(--border); margin-top: auto; display: flex; align-items: center; gap: 8px; }
-    .sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--text); }
-    .sidebar-user-role { font-size: 11px; color: var(--text3); }
-    .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; margin-bottom: 20px; }
+    .cat-chip.sel-teal {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .cat-chip.sel-warn {
+      border-color: var(--warn);
+      background: var(--warn-light);
+      color: var(--warn);
+    }
+
+    .cat-chip.sel-green {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .cat-chip.sel-red {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .sidebar-user {
+      padding: 12px 16px;
+      border-top: 0.5px solid var(--border);
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sidebar-user-role {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
   </style>
 
   <script>
@@ -726,7 +919,7 @@
     /* ─── Auto-generated 4M Change No ─── */
     function genChangeNo() {
       const year = new Date().getFullYear();
-      const num  = Math.floor(200 + Math.random() * 100);
+      const num = Math.floor(200 + Math.random() * 100);
       return `4M-${year}-${num}`;
     }
     const CHANGE_NO = genChangeNo();
@@ -736,8 +929,8 @@
     /* ─── Live Time ─── */
     function updateTime() {
       const now = new Date();
-      const hh = String(now.getHours()).padStart(2,'0');
-      const mm = String(now.getMinutes()).padStart(2,'0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
       document.getElementById('auto-time-val').textContent = `${hh}:${mm}`;
     }
     updateTime();
@@ -746,7 +939,7 @@
     /* ─── Flatpickr ─── */
     document.addEventListener('DOMContentLoaded', () => {
       const today = new Date();
-      today.setHours(0,0,0,0);
+      today.setHours(0, 0, 0, 0);
 
       // Requested Date: no future dates
       flatpickr("#inp-req-date", {
@@ -789,14 +982,14 @@
     /* ─── File upload ─── */
     function showFileName(inputId, displayId) {
       const files = document.getElementById(inputId).files;
-      const disp  = document.getElementById(displayId);
+      const disp = document.getElementById(displayId);
       if (files.length === 0) { disp.textContent = ''; return; }
       disp.textContent = [...files].map(f => f.name).join(', ');
     }
 
     /* ─── Char counters ─── */
     function attachCounter(textareaId, counterId, minLen) {
-      const ta  = document.getElementById(textareaId);
+      const ta = document.getElementById(textareaId);
       const cnt = document.getElementById(counterId);
       function update() {
         const len = ta.value.trim().length;
@@ -850,25 +1043,25 @@
     function validateStep(step) {
       let ok = true;
       if (step === 1) {
-        ok &= v('grp-unit',            document.getElementById('sel-unit').value !== '');
-        ok &= v('grp-req-date',        document.getElementById('inp-req-date').value.trim() !== '');
-        ok &= v('grp-req-dept',        document.getElementById('sel-req-dept').value !== '');
+        ok &= v('grp-unit', document.getElementById('sel-unit').value !== '');
+        ok &= v('grp-req-date', document.getElementById('inp-req-date').value.trim() !== '');
+        ok &= v('grp-req-dept', document.getElementById('sel-req-dept').value !== '');
         // Change Request By — required, alphabets only
         const reqBy = document.getElementById('inp-req-by').value.trim();
-        ok &= v('grp-req-by',          reqBy !== '' && /^[a-zA-Z\s.'-]+$/.test(reqBy));
-        ok &= v('grp-process-name',    document.getElementById('inp-process-name').value.trim() !== '');
-        ok &= v('grp-process-line',    document.getElementById('inp-process-line').value.trim() !== '');
-        ok &= v('grp-context',         document.getElementById('inp-context').value.trim().length >= 10);
-        ok &= v('grp-detail-desc',     document.getElementById('inp-detail-desc').value.trim().length >= 20);
-        ok &= v('grp-improvement-area',document.getElementById('sel-improvement-area').value !== '');
-        ok &= v('grp-perm-temp',       document.getElementById('sel-perm-temp').value !== '');
-        ok &= v('grp-impl-start',      document.getElementById('inp-impl-start').value.trim() !== '');
+        ok &= v('grp-req-by', reqBy !== '' && /^[a-zA-Z\s.'-]+$/.test(reqBy));
+        ok &= v('grp-process-name', document.getElementById('inp-process-name').value.trim() !== '');
+        ok &= v('grp-process-line', document.getElementById('inp-process-line').value.trim() !== '');
+        ok &= v('grp-context', document.getElementById('inp-context').value.trim().length >= 10);
+        ok &= v('grp-detail-desc', document.getElementById('inp-detail-desc').value.trim().length >= 20);
+        ok &= v('grp-improvement-area', document.getElementById('sel-improvement-area').value !== '');
+        ok &= v('grp-perm-temp', document.getElementById('sel-perm-temp').value !== '');
+        ok &= v('grp-impl-start', document.getElementById('inp-impl-start').value.trim() !== '');
         // Close date > start date
         const startVal = document.getElementById('inp-impl-start').value.trim();
         const closeVal = document.getElementById('inp-close-date').value.trim();
         let closeDateOk = closeVal !== '';
         if (closeDateOk && startVal !== '') {
-          const parseDate = s => { const [d,m,y] = s.split('/'); return new Date(`${y}-${m}-${d}`); };
+          const parseDate = s => { const [d, m, y] = s.split('/'); return new Date(`${y}-${m}-${d}`); };
           closeDateOk = parseDate(closeVal) > parseDate(startVal);
         }
         ok &= v('grp-close-date', closeDateOk);
@@ -878,13 +1071,13 @@
         document.getElementById('err-categories').style.display = catsOk ? 'none' : 'block';
         ok &= catsOk;
       } else if (step === 3) {
-        ok &= v('grp-risk',          document.getElementById('inp-risk').value.trim() !== '');
+        ok &= v('grp-risk', document.getElementById('inp-risk').value.trim() !== '');
         ok &= v('grp-effectiveness', document.getElementById('inp-effectiveness').value.trim() !== '');
       } else if (step === 4) {
-        ok &= v('grp-hod',          document.getElementById('sel-hod').value !== '');
-        ok &= v('grp-cust-approval',document.getElementById('sel-cust-approval').value !== '');
-        ok &= v('grp-l2-status',    document.getElementById('sel-l2-status').value !== '');
-        ok &= v('grp-l3-status',    document.getElementById('sel-l3-status').value !== '');
+        ok &= v('grp-hod', document.getElementById('sel-hod').value !== '');
+        ok &= v('grp-cust-approval', document.getElementById('sel-cust-approval').value !== '');
+        ok &= v('grp-l2-status', document.getElementById('sel-l2-status').value !== '');
+        ok &= v('grp-l3-status', document.getElementById('sel-l3-status').value !== '');
       }
       return Boolean(ok);
     }
@@ -893,24 +1086,24 @@
     function buildReview() {
       const g = id => document.getElementById(id);
       const rows = [
-        ['Unit',                  g('sel-unit').value || '—'],
-        ['4M Change No',          CHANGE_NO],
-        ['Requested Date',        g('inp-req-date').value || '—'],
-        ['Change Request Dept',   g('sel-req-dept').value || '—'],
-        ['Change Request By',     g('inp-req-by').value || '—'],
-        ['Process Name',          g('inp-process-name').value || '—'],
-        ['Process Line',          g('inp-process-line').value || '—'],
-        ['Machine No',            g('inp-machine-no').value || '—'],
-        ['4M Categories',         getSelectedCategories().join(', ') || '—'],
-        ['Improvement Area',      g('sel-improvement-area').value || '—'],
-        ['Permanent/Temporary',   g('sel-perm-temp').value || '—'],
-        ['Implement Start',       g('inp-impl-start').value || '—'],
-        ['Change Date Close',     g('inp-close-date').value || '—'],
-        ['Context of Change',     g('inp-context').value.substring(0, 80) + (g('inp-context').value.length > 80 ? '…' : '') || '—'],
-        ['L2 Approval Status',    g('sel-l2-status').value || '—'],
-        ['L3 Approval Status',    g('sel-l3-status').value || '—'],
-        ['Customer Approval',     g('sel-cust-approval').value || '—'],
-        ['HOD',                   g('sel-hod').value || '—'],
+        ['Unit', g('sel-unit').value || '—'],
+        ['4M Change No', CHANGE_NO],
+        ['Requested Date', g('inp-req-date').value || '—'],
+        ['Change Request Dept', g('sel-req-dept').value || '—'],
+        ['Change Request By', g('inp-req-by').value || '—'],
+        ['Process Name', g('inp-process-name').value || '—'],
+        ['Process Line', g('inp-process-line').value || '—'],
+        ['Machine No', g('inp-machine-no').value || '—'],
+        ['4M Categories', getSelectedCategories().join(', ') || '—'],
+        ['Improvement Area', g('sel-improvement-area').value || '—'],
+        ['Permanent/Temporary', g('sel-perm-temp').value || '—'],
+        ['Implement Start', g('inp-impl-start').value || '—'],
+        ['Change Date Close', g('inp-close-date').value || '—'],
+        ['Context of Change', g('inp-context').value.substring(0, 80) + (g('inp-context').value.length > 80 ? '…' : '') || '—'],
+        ['L2 Approval Status', g('sel-l2-status').value || '—'],
+        ['L3 Approval Status', g('sel-l3-status').value || '—'],
+        ['Customer Approval', g('sel-cust-approval').value || '—'],
+        ['HOD', g('sel-hod').value || '—'],
       ];
       let html = '<table style="width:100%;border-collapse:collapse;">';
       rows.forEach(([label, val]) => {
@@ -954,4 +1147,5 @@
     }
   </script>
 </body>
+
 </html>
