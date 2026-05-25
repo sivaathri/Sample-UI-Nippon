@@ -28,9 +28,18 @@
       <div class="nav-section">Main</div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#dashboard'"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#all-requests'"><i class="ti ti-list-check"></i> All Requests</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-file-plus"></i> L1 </div>
-      <div class="nav-item active" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2 </div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3 </div>
+      <!-- L1 expandable group (L2 active) -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item active" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
       <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
@@ -147,6 +156,12 @@
     </div>
   </div>
   <script>
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
     function toggleNotifications(event) {
       event.stopPropagation();
       const dropdown = document.getElementById('notif-dropdown');
