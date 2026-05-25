@@ -12,6 +12,66 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
+    .upload-box {
+      border: 1px dashed #cbd5e1;
+      padding: 18px;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .upload-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .upload-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .preview-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .preview-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preview-icon {
+      font-size: 20px;
+      color: #2563eb;
+    }
+
+    .remove-file {
+      color: red;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+
+
     /* ── Flatpickr theme ── */
     .flatpickr-calendar {
       background: var(--bg) !important;
@@ -430,6 +490,19 @@
               </div>
               <div class="form-hint">Current time, auto-captured</div>
             </div>
+            <!-- Change Categories -->
+            <div class="form-group">
+              <label class="form-label">Change In *</label>
+
+              <div class="checkbox-grid">
+                <label><input type="checkbox" name="changein" value="Man"> Man</label>
+                <label><input type="checkbox" name="changein" value="Machine"> Machine</label>
+                <label><input type="checkbox" name="changein" value="Material"> Material</label>
+                <label><input type="checkbox" name="changein" value="Method"> Method</label>
+                <label><input type="checkbox" name="changein" value="Measurement"> Measurement</label>
+                <label><input type="checkbox" name="changein" value="MotherNature"> Mother Nature</label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -496,15 +569,59 @@
               </div>
             </div>
             <!-- Field 17: Detailed Change Description -->
+            <!-- Field 17: Detailed Change Description -->
             <div class="form-group full" id="grp-detail-desc">
-              <div class="form-label">Detailed Change Description <span class="required">*</span></div>
+
+              <div class="form-label">
+                Detailed Change Description
+                <span class="required">*</span>
+              </div>
+
+              <!-- Textarea -->
               <textarea class="form-textarea" id="inp-detail-desc" rows="4"
                 placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
+
+              <!-- Bottom Info -->
               <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div class="field-error" id="err-detail-desc" style="position:static;">Minimum 20 characters required.
+
+                <div class="field-error" id="err-detail-desc" style="position:static;">
+                  Minimum 20 characters required.
                 </div>
-                <div class="char-counter" id="cnt-detail-desc">0 / 20 min</div>
+
+                <div class="char-counter" id="cnt-detail-desc">
+                  0 / 20 min
+                </div>
+
               </div>
+
+              <!-- Upload Section -->
+              <div style="margin-top:16px;">
+
+                <div class="form-label">
+                  Upload Supporting Files
+                </div>
+
+                <div class="upload-box">
+
+                  <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+                  <button type="button" class="upload-btn"
+                    onclick="document.getElementById('inp-detail-files').click()">
+                    <i class="ti ti-upload"></i>
+                    Upload Image / PDF
+                  </button>
+
+                  <div class="upload-note">
+                    Allowed: PDF, JPG, PNG | Max 5MB each
+                  </div>
+
+                  <!-- Preview -->
+                  <div id="file-preview-list" style="margin-top:12px;"></div>
+
+                </div>
+
+              </div>
+
             </div>
           </div>
         </div>
@@ -530,314 +647,390 @@
               </select>
               <div class="field-error" id="err-improvement-area">Please select an improvement area.</div>
             </div>
-            <!-- Field 19: Permanent / Temporary -->
-            <div class="form-group" id="grp-perm-temp">
-              <div class="form-label">Permanent / Temporary Change <span class="required">*</span></div>
-              <select class="form-select" id="sel-perm-temp">
-                <option value="">— Select —</option>
-                <option value="permanent">Permanent</option>
-                <option value="temporary">Temporary</option>
-              </select>
-              <div class="field-error" id="err-perm-temp">Please select change type.</div>
+            <!-- Upload Section -->
+            <div style="margin-top:16px;">
+
+              <div class="form-label">
+                Upload Supporting Files
+              </div>
+
+              <div class="upload-box">
+
+                <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+                <button type="button" class="upload-btn" onclick="document.getElementById('inp-detail-files').click()">
+                  <i class="ti ti-upload"></i>
+                  Upload Image / PDF
+                </button>
+
+                <div class="upload-note">
+                  Allowed: PDF, JPG, PNG | Max 5MB each
+                </div>
+
+                <!-- Preview -->
+                <div id="file-preview-list" style="margin-top:12px;"></div>
+
+              </div>
+
             </div>
-            <!-- Field 20: Implement Date Start -->
-            <div class="form-group" id="grp-impl-start">
-              <div class="form-label">Implement / Change Date Start <span class="required">*</span></div>
-              <input class="form-input datepicker-any" id="inp-impl-start" type="text" placeholder="dd/mm/yyyy"
-                autocomplete="off" />
-              <div class="field-error" id="err-impl-start">Implementation start date is required.</div>
+
+          </div>
+          <!-- Field 19: Permanent / Temporary -->
+          <div class="form-group" id="grp-perm-temp">
+            <div class="form-label">Permanent / Temporary Change <span class="required">*</span></div>
+            <select class="form-select" id="sel-perm-temp">
+              <option value="">— Select —</option>
+              <option value="permanent">Permanent</option>
+              <option value="temporary">Temporary</option>
+            </select>
+            <div class="field-error" id="err-perm-temp">Please select change type.</div>
+          </div>
+          <!-- Field 20: Implement Date Start -->
+          <div class="form-group" id="grp-impl-start">
+            <div class="form-label">Implement / Change Date Start <span class="required">*</span></div>
+            <input class="form-input datepicker-any" id="inp-impl-start" type="text" placeholder="dd/mm/yyyy"
+              autocomplete="off" />
+            <div class="field-error" id="err-impl-start">Implementation start date is required.</div>
+          </div>
+          <!-- Part Traceability details (From changes) -->
+          <div>
+
+
+            <div class="form-label">Part Traceability details (From changes)</div>
+            <!-- Textarea -->
+            <textarea class="form-textarea" id="inp-detail-desc" rows="4"
+              placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
+
+            <!-- Bottom Info -->
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+
+              <div class="field-error" id="err-detail-desc" style="position:static;">
+                Minimum 20 characters required.
+              </div>
+
+              <div class="char-counter" id="cnt-detail-desc">
+                0 / 20 min
+              </div>
+
             </div>
-            <!-- Field 22: Change Date Close -->
-            <div class="form-group" id="grp-close-date">
-              <div class="form-label">Change Date Close <span class="required">*</span></div>
-              <input class="form-input datepicker-any" id="inp-close-date" type="text" placeholder="dd/mm/yyyy"
-                autocomplete="off" />
-              <div class="field-error" id="err-close-date">Must be a date after the start date.</div>
+
+            <!-- Upload Section -->
+            <div style="margin-top:16px;">
+
+              <div class="form-label">
+                Upload Supporting Files
+              </div>
+
+              <div class="upload-box">
+
+                <input type="file" id="inp-detail-files" multiple accept=".pdf,.png,.jpg,.jpeg" hidden />
+
+                <button type="button" class="upload-btn" onclick="document.getElementById('inp-detail-files').click()">
+                  <i class="ti ti-upload"></i>
+                  Upload Image / PDF
+                </button>
+
+                <div class="upload-note">
+                  Allowed: PDF, JPG, PNG | Max 5MB each
+                </div>
+
+                <!-- Preview -->
+                <div id="file-preview-list" style="margin-top:12px;"></div>
+
+              </div>
+
             </div>
           </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: 4M
-            Categories</button>
+          <!-- Field 22: Change Date Close -->
+          <div class="form-group" id="grp-close-date">
+            <div class="form-label">Change Date Close <span class="required">*</span></div>
+            <input class="form-input datepicker-any" id="inp-close-date" type="text" placeholder="dd/mm/yyyy"
+              autocomplete="off" />
+            <div class="field-error" id="err-close-date">Must be a date after the start date.</div>
+          </div>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
+        <button class="btn btn-primary" onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: 4M
+          Categories</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
            STEP 2 — 4M Categories
       ══════════════════════════════════════ -->
-      <div class="step-panel" id="panel-2">
-        <div class="card">
-          <div class="card-title">
-            4M Change Categories <span class="required">*</span>
-            <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px;">At least one
-              required</span>
-          </div>
-          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
-            Select all applicable 4M categories for this change
-          </div>
-          <div class="cat-grid" id="cat-grid">
-            <!-- Field 5: Man -->
-            <div class="cat-chip" id="chip-man" onclick="toggleChip('chip-man', 'selected')" data-value="man">
-              <i class="ti ti-user"></i> Man
-            </div>
-            <!-- Field 6: Machine -->
-            <div class="cat-chip" id="chip-machine" onclick="toggleChip('chip-machine', 'sel-purple')"
-              data-value="machine">
-              <i class="ti ti-settings"></i> Machine
-            </div>
-            <!-- Field 7: Material -->
-            <div class="cat-chip" id="chip-material" onclick="toggleChip('chip-material', 'sel-teal')"
-              data-value="material">
-              <i class="ti ti-package"></i> Material
-            </div>
-            <!-- Field 8: Method -->
-            <div class="cat-chip" id="chip-method" onclick="toggleChip('chip-method', 'sel-warn')" data-value="method">
-              <i class="ti ti-git-branch"></i> Method
-            </div>
-            <!-- Field 9: Measurement -->
-            <div class="cat-chip" id="chip-measurement" onclick="toggleChip('chip-measurement', 'sel-green')"
-              data-value="measurement">
-              <i class="ti ti-ruler"></i> Measurement
-            </div>
-            <!-- Field 10: Mother Nature -->
-            <div class="cat-chip" id="chip-nature" onclick="toggleChip('chip-nature', 'sel-red')" data-value="nature">
-              <i class="ti ti-leaf"></i> Mother Nature
-            </div>
-          </div>
-          <div class="field-error" id="err-categories" style="display:none;margin-top:8px;">At least one 4M category
-            must be selected.</div>
+    <div class="step-panel" id="panel-2">
+      <div class="card">
+        <div class="card-title">
+          4M Change Categories <span class="required">*</span>
+          <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px;">At least one
+            required</span>
         </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Back</button>
-          <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(3)"><i class="ti ti-arrow-right"></i> Next: Risk &amp;
-            Docs</button>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
+          Select all applicable 4M categories for this change
         </div>
+        <div class="cat-grid" id="cat-grid">
+          <!-- Field 5: Man -->
+          <div class="cat-chip" id="chip-man" onclick="toggleChip('chip-man', 'selected')" data-value="man">
+            <i class="ti ti-user"></i> Man
+          </div>
+          <!-- Field 6: Machine -->
+          <div class="cat-chip" id="chip-machine" onclick="toggleChip('chip-machine', 'sel-purple')"
+            data-value="machine">
+            <i class="ti ti-settings"></i> Machine
+          </div>
+          <!-- Field 7: Material -->
+          <div class="cat-chip" id="chip-material" onclick="toggleChip('chip-material', 'sel-teal')"
+            data-value="material">
+            <i class="ti ti-package"></i> Material
+          </div>
+          <!-- Field 8: Method -->
+          <div class="cat-chip" id="chip-method" onclick="toggleChip('chip-method', 'sel-warn')" data-value="method">
+            <i class="ti ti-git-branch"></i> Method
+          </div>
+          <!-- Field 9: Measurement -->
+          <div class="cat-chip" id="chip-measurement" onclick="toggleChip('chip-measurement', 'sel-green')"
+            data-value="measurement">
+            <i class="ti ti-ruler"></i> Measurement
+          </div>
+          <!-- Field 10: Mother Nature -->
+          <div class="cat-chip" id="chip-nature" onclick="toggleChip('chip-nature', 'sel-red')" data-value="nature">
+            <i class="ti ti-leaf"></i> Mother Nature
+          </div>
+        </div>
+        <div class="field-error" id="err-categories" style="display:none;margin-top:8px;">At least one 4M category
+          must be selected.</div>
       </div>
 
-      <!-- ══════════════════════════════════════
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
+        <button class="btn btn-primary" onclick="goStep(3)"><i class="ti ti-arrow-right"></i> Next: Risk &amp;
+          Docs</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
            STEP 3 — Risk Analysis & Documents
       ══════════════════════════════════════ -->
-      <div class="step-panel" id="panel-3">
-        <!-- Risk Analysis -->
-        <div class="card">
-          <div class="card-title">Risk Analysis</div>
-          <!-- Field 24: Risk Analysis -->
-          <div class="form-group" id="grp-risk">
-            <div class="form-label">Risk Analysis <span class="required">*</span></div>
-            <textarea class="form-textarea" id="inp-risk" rows="5"
-              placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
-            <div class="field-error" id="err-risk">Risk analysis is required.</div>
-          </div>
-        </div>
-
-        <!-- Traceability -->
-        <div class="card">
-          <div class="card-title">Part Traceability Details</div>
-          <div class="form-grid">
-            <!-- Field 21: Part Traceability From Change -->
-            <div class="form-group">
-              <div class="form-label">From Change <span style="color:var(--text3);font-size:10px;">(optional)</span>
-              </div>
-              <div class="trace-row">
-                <label class="file-zone" id="zone-trace-from" for="file-trace-from">
-                  <i class="ti ti-upload file-zone-icon"></i>
-                  <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
-                  <input type="file" id="file-trace-from" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                    onchange="showFileName('file-trace-from','fname-trace-from')" />
-                </label>
-                <div class="file-name-display" id="fname-trace-from"></div>
-                <input class="form-input" id="inp-trace-from-text" type="text"
-                  placeholder="Part no. / description before change…" />
-              </div>
-            </div>
-            <!-- Field 23: Part Traceability To Change -->
-            <div class="form-group">
-              <div class="form-label">To Change <span style="color:var(--text3);font-size:10px;">(optional)</span></div>
-              <div class="trace-row">
-                <label class="file-zone" id="zone-trace-to" for="file-trace-to">
-                  <i class="ti ti-upload file-zone-icon"></i>
-                  <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
-                  <input type="file" id="file-trace-to" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                    onchange="showFileName('file-trace-to','fname-trace-to')" />
-                </label>
-                <div class="file-name-display" id="fname-trace-to"></div>
-                <input class="form-input" id="inp-trace-to-text" type="text"
-                  placeholder="Part no. / description after change…" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SOP / WI / Control Plan / FMEA Upload -->
-        <div class="card">
-          <!-- Field 25: Update in SOP / WI / Control Plan / FMEA -->
-          <div class="form-group">
-            <div class="form-label">
-              Update in SOP / WI / Control Plan / FMEA
-              <span
-                style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
-            </div>
-            <label class="file-zone" for="file-sop">
-              <i class="ti ti-files file-zone-icon"></i>
-              <div>
-                <div class="file-zone-text"><strong>Click to upload</strong> updated documents</div>
-                <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX,
-                  XLSX accepted</div>
-              </div>
-              <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
-                onchange="showFileName('file-sop','fname-sop')" />
-            </label>
-            <div class="file-name-display" id="fname-sop"></div>
-          </div>
-        </div>
-
-        <!-- Effectiveness Monitoring -->
-        <div class="card">
-          <!-- Field 28: Effectiveness Monitoring -->
-          <div class="form-group" id="grp-effectiveness">
-            <div class="form-label">Effectiveness Monitoring <span class="required">*</span></div>
-            <textarea class="form-textarea" id="inp-effectiveness" rows="4"
-              placeholder="How will effectiveness of this change be monitored and measured?…"></textarea>
-            <div class="field-error" id="err-effectiveness">Effectiveness monitoring details are required.</div>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Back</button>
-          <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(4)"><i class="ti ti-arrow-right"></i> Next: Approvals</button>
+    <div class="step-panel" id="panel-3">
+      <!-- Risk Analysis -->
+      <div class="card">
+        <div class="card-title">Risk Analysis</div>
+        <!-- Field 24: Risk Analysis -->
+        <div class="form-group" id="grp-risk">
+          <div class="form-label">Risk Analysis <span class="required">*</span></div>
+          <textarea class="form-textarea" id="inp-risk" rows="5"
+            placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
+          <div class="field-error" id="err-risk">Risk analysis is required.</div>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════
+      <!-- Traceability -->
+      <div class="card">
+        <div class="card-title">Part Traceability Details</div>
+        <div class="form-grid">
+          <!-- Field 21: Part Traceability From Change -->
+          <div class="form-group">
+            <div class="form-label">From Change <span style="color:var(--text3);font-size:10px;">(optional)</span>
+            </div>
+            <div class="trace-row">
+              <label class="file-zone" id="zone-trace-from" for="file-trace-from">
+                <i class="ti ti-upload file-zone-icon"></i>
+                <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+                <input type="file" id="file-trace-from" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  onchange="showFileName('file-trace-from','fname-trace-from')" />
+              </label>
+              <div class="file-name-display" id="fname-trace-from"></div>
+              <input class="form-input" id="inp-trace-from-text" type="text"
+                placeholder="Part no. / description before change…" />
+            </div>
+          </div>
+          <!-- Field 23: Part Traceability To Change -->
+          <div class="form-group">
+            <div class="form-label">To Change <span style="color:var(--text3);font-size:10px;">(optional)</span></div>
+            <div class="trace-row">
+              <label class="file-zone" id="zone-trace-to" for="file-trace-to">
+                <i class="ti ti-upload file-zone-icon"></i>
+                <div class="file-zone-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+                <input type="file" id="file-trace-to" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  onchange="showFileName('file-trace-to','fname-trace-to')" />
+              </label>
+              <div class="file-name-display" id="fname-trace-to"></div>
+              <input class="form-input" id="inp-trace-to-text" type="text"
+                placeholder="Part no. / description after change…" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOP / WI / Control Plan / FMEA Upload -->
+      <div class="card">
+        <!-- Field 25: Update in SOP / WI / Control Plan / FMEA -->
+        <div class="form-group">
+          <div class="form-label">
+            Update in SOP / WI / Control Plan / FMEA
+            <span style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
+          </div>
+          <label class="file-zone" for="file-sop">
+            <i class="ti ti-files file-zone-icon"></i>
+            <div>
+              <div class="file-zone-text"><strong>Click to upload</strong> updated documents</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px;">SOP, WI, Control Plan, FMEA — PDF, DOCX,
+                XLSX accepted</div>
+            </div>
+            <input type="file" id="file-sop" multiple accept=".pdf,.doc,.docx,.xls,.xlsx"
+              onchange="showFileName('file-sop','fname-sop')" />
+          </label>
+          <div class="file-name-display" id="fname-sop"></div>
+        </div>
+      </div>
+
+      <!-- Effectiveness Monitoring -->
+      <div class="card">
+        <!-- Field 28: Effectiveness Monitoring -->
+        <div class="form-group" id="grp-effectiveness">
+          <div class="form-label">Effectiveness Monitoring <span class="required">*</span></div>
+          <textarea class="form-textarea" id="inp-effectiveness" rows="4"
+            placeholder="How will effectiveness of this change be monitored and measured?…"></textarea>
+          <div class="field-error" id="err-effectiveness">Effectiveness monitoring details are required.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
+        <button class="btn btn-primary" onclick="goStep(4)"><i class="ti ti-arrow-right"></i> Next: Approvals</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
            STEP 4 — Approvals
       ══════════════════════════════════════ -->
-      <div class="step-panel" id="panel-4">
-        <div class="card">
-          <div class="card-title">Approval Information</div>
-          <div class="form-grid">
-            <!-- Field 26: User Dept HOD Approval -->
-            <div class="form-group" id="grp-hod">
-              <div class="form-label">User Dept HOD Approval <span class="required">*</span></div>
-              <select class="status-select form-select" id="sel-hod">
-                <option value="">— Select HOD —</option>
-                <option value="Ramanan P - PED HOD">Ramanan P — PED HOD</option>
-                <option value="Suresh K - QAD HOD">Suresh K — QAD HOD</option>
-                <option value="Priya M - Production HOD">Priya M — Production HOD</option>
-                <option value="Arun S - Maintenance HOD">Arun S — Maintenance HOD</option>
-                <option value="Vijay L - Materials HOD">Vijay L — Materials HOD</option>
-                <option value="Nisha T - HR HOD">Nisha T — HR HOD</option>
-              </select>
-              <div class="field-error" id="err-hod">HOD Approval selection is required.</div>
-            </div>
-            <!-- Field 27: Customer Approval -->
-            <div class="form-group" id="grp-cust-approval">
-              <div class="form-label">Customer Approval Required <span class="required">*</span></div>
-              <select class="status-select form-select" id="sel-cust-approval">
-                <option value="">— Select —</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-              <div class="field-error" id="err-cust-approval">Please specify if customer approval is needed.</div>
-            </div>
+    <div class="step-panel" id="panel-4">
+      <div class="card">
+        <div class="card-title">Approval Information</div>
+        <div class="form-grid">
+          <!-- Field 26: User Dept HOD Approval -->
+          <div class="form-group" id="grp-hod">
+            <div class="form-label">User Dept HOD Approval <span class="required">*</span></div>
+            <select class="status-select form-select" id="sel-hod">
+              <option value="">— Select HOD —</option>
+              <option value="Ramanan P - PED HOD">Ramanan P — PED HOD</option>
+              <option value="Suresh K - QAD HOD">Suresh K — QAD HOD</option>
+              <option value="Priya M - Production HOD">Priya M — Production HOD</option>
+              <option value="Arun S - Maintenance HOD">Arun S — Maintenance HOD</option>
+              <option value="Vijay L - Materials HOD">Vijay L — Materials HOD</option>
+              <option value="Nisha T - HR HOD">Nisha T — HR HOD</option>
+            </select>
+            <div class="field-error" id="err-hod">HOD Approval selection is required.</div>
           </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Approval Status</div>
-          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
-            Approval statuses are set by authorised reviewers. Select current status if pre-approved.
+          <!-- Field 27: Customer Approval -->
+          <div class="form-group" id="grp-cust-approval">
+            <div class="form-label">Customer Approval Required <span class="required">*</span></div>
+            <select class="status-select form-select" id="sel-cust-approval">
+              <option value="">— Select —</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+            <div class="field-error" id="err-cust-approval">Please specify if customer approval is needed.</div>
           </div>
-          <div class="form-grid">
-            <!-- Field 29: L2 Approval Status -->
-            <div class="form-group" id="grp-l2-status">
-              <div class="form-label">L2 Approval Status <span class="required">*</span></div>
-              <select class="status-select form-select" id="sel-l2-status">
-                <option value="">— Select Status —</option>
-                <option value="pending">⏳ Pending</option>
-                <option value="approved">✅ Approved</option>
-                <option value="rejected">❌ Rejected</option>
-                <option value="on_hold">🔒 On Hold</option>
-              </select>
-              <div class="field-error" id="err-l2-status">L2 Approval status is required.</div>
-            </div>
-            <!-- Field 30: L3 Approval Status -->
-            <div class="form-group" id="grp-l3-status">
-              <div class="form-label">L3 Approval Status <span class="required">*</span></div>
-              <select class="status-select form-select" id="sel-l3-status">
-                <option value="">— Select Status —</option>
-                <option value="pending">⏳ Pending</option>
-                <option value="approved">✅ Approved</option>
-                <option value="rejected">❌ Rejected</option>
-                <option value="on_hold">🔒 On Hold</option>
-              </select>
-              <div class="field-error" id="err-l3-status">L3 Approval status is required.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-outline" onclick="goStep(3)"><i class="ti ti-arrow-left"></i> Back</button>
-          <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" onclick="goStep(5)"><i class="ti ti-arrow-right"></i> Next: Review &amp;
-            Submit</button>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════
+      <div class="card">
+        <div class="card-title">Approval Status</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">
+          Approval statuses are set by authorised reviewers. Select current status if pre-approved.
+        </div>
+        <div class="form-grid">
+          <!-- Field 29: L2 Approval Status -->
+          <div class="form-group" id="grp-l2-status">
+            <div class="form-label">L2 Approval Status <span class="required">*</span></div>
+            <select class="status-select form-select" id="sel-l2-status">
+              <option value="">— Select Status —</option>
+              <option value="pending">⏳ Pending</option>
+              <option value="approved">✅ Approved</option>
+              <option value="rejected">❌ Rejected</option>
+              <option value="on_hold">🔒 On Hold</option>
+            </select>
+            <div class="field-error" id="err-l2-status">L2 Approval status is required.</div>
+          </div>
+          <!-- Field 30: L3 Approval Status -->
+          <div class="form-group" id="grp-l3-status">
+            <div class="form-label">L3 Approval Status <span class="required">*</span></div>
+            <select class="status-select form-select" id="sel-l3-status">
+              <option value="">— Select Status —</option>
+              <option value="pending">⏳ Pending</option>
+              <option value="approved">✅ Approved</option>
+              <option value="rejected">❌ Rejected</option>
+              <option value="on_hold">🔒 On Hold</option>
+            </select>
+            <div class="field-error" id="err-l3-status">L3 Approval status is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(3)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
+        <button class="btn btn-primary" onclick="goStep(5)"><i class="ti ti-arrow-right"></i> Next: Review &amp;
+          Submit</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
            STEP 5 — Review & Submit
       ══════════════════════════════════════ -->
-      <div class="step-panel" id="panel-5">
-        <!-- Summary -->
-        <div class="card" id="review-card">
-          <div class="card-title"><i class="ti ti-clipboard-check" style="color:var(--accent);margin-right:6px;"></i>
-            Review Summary</div>
-          <div id="review-summary" style="font-size:13px;color:var(--text2);line-height:1.7;">
-            <!-- JS populated -->
-          </div>
-        </div>
-
-        <!-- Declaration -->
-        <div class="card">
-          <div style="display:flex;align-items:flex-start;gap:10px;">
-            <input type="checkbox" id="chk-declare"
-              style="width:16px;height:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer;" />
-            <label for="chk-declare" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5;">
-              I declare that the information provided is accurate and complete. I understand that a unique 4M Change No.
-              will be auto-assigned upon submission.
-            </label>
-          </div>
-          <div class="field-error" id="err-declare" style="display:none;margin-top:6px;">You must accept the declaration
-            to submit.</div>
-        </div>
-
-        <!-- Submit success -->
-        <div class="submit-success" id="submit-success">
-          <div class="success-icon"><i class="ti ti-circle-check"></i></div>
-          <div>
-            <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">Request Submitted
-              Successfully</div>
-            <div style="font-size:13px;color:var(--text2);">Your 4M Change Request <strong id="success-id"
-                style="color:var(--accent);font-family:var(--mono);"></strong> has been created and sent for L2 review.
-            </div>
-          </div>
-          <button class="btn btn-primary" onclick="window.location.href='dashboard.html'"><i
-              class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
-        </div>
-
-        <div class="btn-row" id="submit-btns">
-          <button class="btn btn-outline" onclick="goStep(4)"><i class="ti ti-arrow-left"></i> Back</button>
-          <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
-          <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><i class="ti ti-send"></i> Submit
-            Request</button>
+    <div class="step-panel" id="panel-5">
+      <!-- Summary -->
+      <div class="card" id="review-card">
+        <div class="card-title"><i class="ti ti-clipboard-check" style="color:var(--accent);margin-right:6px;"></i>
+          Review Summary</div>
+        <div id="review-summary" style="font-size:13px;color:var(--text2);line-height:1.7;">
+          <!-- JS populated -->
         </div>
       </div>
 
-    </div><!-- /main-content -->
+      <!-- Declaration -->
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <input type="checkbox" id="chk-declare"
+            style="width:16px;height:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer;" />
+          <label for="chk-declare" style="font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5;">
+            I declare that the information provided is accurate and complete. I understand that a unique 4M Change No.
+            will be auto-assigned upon submission.
+          </label>
+        </div>
+        <div class="field-error" id="err-declare" style="display:none;margin-top:6px;">You must accept the declaration
+          to submit.</div>
+      </div>
+
+      <!-- Submit success -->
+      <div class="submit-success" id="submit-success">
+        <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+        <div>
+          <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;">Request Submitted
+            Successfully</div>
+          <div style="font-size:13px;color:var(--text2);">Your 4M Change Request <strong id="success-id"
+              style="color:var(--accent);font-family:var(--mono);"></strong> has been created and sent for L2 review.
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="window.location.href='dashboard.html'"><i
+            class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
+      </div>
+
+      <div class="btn-row" id="submit-btns">
+        <button class="btn btn-outline" onclick="goStep(4)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-outline" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save Draft</button>
+        <button class="btn btn-primary" id="btn-submit" onclick="submitForm()"><i class="ti ti-send"></i> Submit
+          Request</button>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
   </div><!-- /sidebar-layout -->
 
   <style>
@@ -1147,6 +1340,116 @@
       btn.style.color = 'var(--success)';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1800);
     }
+
+
+    const detailDesc =
+      document.getElementById("inp-detail-desc");
+
+    const counter =
+      document.getElementById("cnt-detail-desc");
+
+    const error =
+      document.getElementById("err-detail-desc");
+
+    detailDesc.addEventListener("input", () => {
+
+      const len = detailDesc.value.trim().length;
+
+      counter.innerText =
+        `${len} / 20 min`;
+
+      if (len < 20) {
+        error.style.display = "block";
+      } else {
+        error.style.display = "none";
+      }
+
+    });
+
+
+    // File Upload Preview + Validation
+
+    const uploadInput =
+      document.getElementById("inp-detail-files");
+
+    const previewList =
+      document.getElementById("file-preview-list");
+
+    uploadInput.addEventListener("change", function () {
+
+      previewList.innerHTML = "";
+
+      const files = this.files;
+
+      const allowed =
+        ["pdf", "png", "jpg", "jpeg"];
+
+      for (let file of files) {
+
+        const ext =
+          file.name.split(".").pop().toLowerCase();
+
+        // File Type Validation
+        if (!allowed.includes(ext)) {
+          alert(`${file.name} is invalid`);
+          uploadInput.value = "";
+          return;
+        }
+
+        // File Size Validation
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`${file.name} exceeds 5MB`);
+          uploadInput.value = "";
+          return;
+        }
+
+        // File Icon
+        let icon = "ti-file";
+
+        if (ext === "pdf") {
+          icon = "ti-file-type-pdf";
+        }
+
+        if (
+          ext === "png" ||
+          ext === "jpg" ||
+          ext === "jpeg"
+        ) {
+          icon = "ti-photo";
+        }
+
+        // Preview Item
+        const item =
+          document.createElement("div");
+
+        item.className = "preview-item";
+
+        item.innerHTML = `
+      <div class="preview-left">
+        <i class="ti ${icon} preview-icon"></i>
+        <div>
+          <div>${file.name}</div>
+          <div style="font-size:12px;color:#64748b;">
+            ${(file.size / 1024 / 1024).toFixed(2)} MB
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="remove-file"
+        onclick="this.parentElement.remove()"
+      >
+        ✕
+      </div>
+    `;
+
+        previewList.appendChild(item);
+
+      }
+
+    });
+
+
   </script>
 </body>
 
