@@ -941,13 +941,14 @@
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      // Requested Date: no future dates
-      flatpickr("#inp-req-date", {
+      // Requested Date: no future dates, auto-filled with today
+      const reqDatePicker = flatpickr("#inp-req-date", {
         dateFormat: "d/m/Y",
         allowInput: true,
-        maxDate: today,
-        defaultDate: today
+        maxDate: today
       });
+      // Use flatpickr's own API to set today — keeps calendar fully interactive
+      reqDatePicker.setDate(today, true);
 
       // Implementation dates: any date
       flatpickr("#inp-impl-start", {
