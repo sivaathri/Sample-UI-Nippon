@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Management Dashboard — KPIs, Charts &amp; Recent Requests</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
+      <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
+      <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
+      <div class="nav-section">Monitor</div>
+      <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
+      <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
+      <div class="nav-section">System</div>
+      <div class="nav-item"><i class="ti ti-users"></i> Users</div>
+      <div class="nav-item"><i class="ti ti-settings"></i> Settings</div>
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">A</div>
+        <div>
+          <!-- <div class="sidebar-user-name">ABCD</div> -->
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="page-title">Overview</div>
+      <div class="page-sub">Plant A — May 2026 · All Departments</div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Requests</div>
+          <div class="stat-value">10</div>
+          <!-- <div class="stat-delta delta-up"><i class="ti ti-trending-up" style="font-size:10px;"></i> +18 this
+            month</div> -->
+        </div>
+         <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value" style="color:var(--success);">8</div>
+          <!-- <div class="stat-delta delta-up">76% approval rate</div> -->
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approval</div>
+          <div class="stat-value" style="color:var(--warn);">2</div>
+          <!-- <div class="stat-delta" style="color:var(--text3);">Awaiting action</div> -->
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div class="card" style="padding: 14px 16px;">
+          <div class="card-header-tabs">
+            <div class="card-title" style="margin-bottom:0;">Plant Change Analytics <i class="ti ti-chart-bar" style="font-size:16px;color:var(--text3);margin-left:2px;"></i></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="chart-tabs" id="analytics-tabs">
+                <button class="chart-tab active" data-chart="dept" onclick="switchChart('dept')">Department</button>
+                <button class="chart-tab" data-chart="process" onclick="switchChart('process')">Process</button>
+                <button class="chart-tab" data-chart="six-m" onclick="switchChart('six-m')">6M Category</button>
+                <button class="chart-tab" data-chart="monthly" onclick="switchChart('monthly')">Monthly</button>
+                <button class="chart-tab" data-chart="status" onclick="switchChart('status')">Approval Status</button>
+              </div>
+              <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px; height: 24px; display: inline-flex; align-items: center; gap: 3px;" onclick="toggleChartView()" id="view-mode-btn">
+                <i class="ti ti-grid-dots" style="font-size:11px;"></i> Grid View
+              </button>
+            </div>
+          </div>
+
+          <div class="analytics-container">
+            <!-- Tab View -->
+            <div id="analytics-tab-content">
+              
+              <!-- Department Chart -->
+              <div class="chart-view active" id="chart-dept">
+                <div class="chart-filter-bar" data-chart="dept" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">10</div>
+                    <div class="bar" style="height:70px;background:var(--accent);"></div>
+                    <div class="bar-label">PED</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">6</div>
+                    <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">PROD</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">4</div>
+                    <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label">QA</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label">MAINT</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">2</div>
+                    <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
+                    <div class="bar-label">PC & L</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Process Chart -->
+              <div class="chart-view" id="chart-process">
+                <div class="chart-filter-bar" data-chart="process" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">10</div>
+                    <div class="bar" style="height:120px;background:var(--teal);"></div>
+                    <div class="bar-label">Winding</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">6</div>
+                    <div class="bar" style="height:72px;background:var(--teal);opacity:.85;"></div>
+                    <div class="bar-label">Soldering</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">4</div>
+                    <div class="bar" style="height:48px;background:var(--teal);opacity:.7;"></div>
+                    <div class="bar-label">EOL Testing</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--teal);opacity:.95;"></div>
+                    <div class="bar-label">Potting</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">2</div>
+                    <div class="bar" style="height:24px;background:var(--teal);opacity:.5;"></div>
+                    <div class="bar-label">Loading</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 6M Chart -->
+              <div class="chart-view" id="chart-six-m">
+                <div class="chart-filter-bar" data-chart="six-m" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--accent);"></div>
+                    <div class="bar-label">Man</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">10</div>
+                    <div class="bar" style="height:120px;background:var(--purple);"></div>
+                    <div class="bar-label">Machine</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">9</div>
+                    <div class="bar" style="height:108px;background:var(--warn);"></div>
+                    <div class="bar-label">Method</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">6</div>
+                    <div class="bar" style="height:72px;background:var(--teal);"></div>
+                    <div class="bar-label">Materials</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">7</div>
+                    <div class="bar" style="height:84px;background:var(--success);"></div>
+                    <div class="bar-label">Measure</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--danger);"></div>
+                    <div class="bar-label">Nature</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly Chart -->
+              <div class="chart-view" id="chart-monthly">
+                <div class="chart-filter-bar" data-chart="monthly" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">3</div>
+                    <div class="bar" style="height:120px;background:var(--accent);"></div>
+                    <div class="bar-label">Apr-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">2</div>
+                    <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">May-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">1</div>
+                    <div class="bar" style="height:40px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label">Jun-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">2</div>
+                    <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">Jul-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">3</div>
+                    <div class="bar" style="height:120px;background:var(--accent);"></div>
+                    <div class="bar-label">Aug-26</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status Chart -->
+              <div class="chart-view" id="chart-status">
+                <div class="chart-filter-bar" data-chart="status" data-view="tab"></div>
+                <div class="chart-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:#185FA5;"></div> Approved</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#E27D2F;"></div> Rejected</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#A3A29E;"></div> Pending</div>
+                </div>
+                <div class="chart-bars grouped-bars" style="height: 120px;">
+                  <!-- Apr-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">8</div>
+                        <div class="bar" style="height:96px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">2</div>
+                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">3</div>
+                        <div class="bar" style="height:36px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Apr-26</div>
+                  </div>
+                  <!-- May-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">7</div>
+                        <div class="bar" style="height:84px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">1</div>
+                        <div class="bar" style="height:12px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">4</div>
+                        <div class="bar" style="height:48px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">May-26</div>
+                  </div>
+                  <!-- Jun-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">9</div>
+                        <div class="bar" style="height:108px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">3</div>
+                        <div class="bar" style="height:36px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">2</div>
+                        <div class="bar" style="height:24px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jun-26</div>
+                  </div>
+                  <!-- Jul-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">8</div>
+                        <div class="bar" style="height:96px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">2</div>
+                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">3</div>
+                        <div class="bar" style="height:36px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jul-26</div>
+                  </div>
+                  <!-- Aug-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">7</div>
+                        <div class="bar" style="height:84px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">1</div>
+                        <div class="bar" style="height:12px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">1</div>
+                        <div class="bar" style="height:12px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Aug-26</div>
+                  </div>
+                  <!-- Sep-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">9</div>
+                        <div class="bar" style="height:108px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">2</div>
+                        <div class="bar" style="height:24px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">2</div>
+                        <div class="bar" style="height:24px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Sep-26</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Grid View -->
+            <div id="analytics-grid-content" style="display: none;">
+              <div class="charts-grid-layout">
+                
+                <!-- Mini Dept -->
+                <div class="mini-chart-card" id="grid-chart-dept">
+                  <div class="mini-chart-title">Department Wise Change <i class="ti ti-building" style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="dept" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">10</div>
+                      <div class="bar" style="height:70px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:9px;">PED</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">6</div>
+                      <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:9px;">PROD</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">4</div>
+                      <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:9px;">QA</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:9px;">MAINT</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">2</div>
+                      <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
+                      <div class="bar-label" style="font-size:9px;">PC&L</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Process -->
+                <div class="mini-chart-card" id="grid-chart-process">
+                  <div class="mini-chart-title">Process Wise Change <i class="ti ti-cpu" style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="process" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">10</div>
+                      <div class="bar" style="height:70px;background:var(--teal);"></div>
+                      <div class="bar-label" style="font-size:9px;">Wind</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">6</div>
+                      <div class="bar" style="height:42px;background:var(--teal);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:9px;">Sold</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">4</div>
+                      <div class="bar" style="height:28px;background:var(--teal);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:9px;">EOL</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--teal);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:9px;">Pott</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">2</div>
+                      <div class="bar" style="height:14px;background:var(--teal);opacity:.5;"></div>
+                      <div class="bar-label" style="font-size:9px;">Load</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini 6M -->
+                <div class="mini-chart-card" id="grid-chart-six-m">
+                  <div class="mini-chart-title">6M Category Change <i class="ti ti-sitemap" style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="six-m" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 3px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:8px;">Man</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">10</div>
+                      <div class="bar" style="height:70px;background:var(--purple);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mac</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">9</div>
+                      <div class="bar" style="height:63px;background:var(--warn);"></div>
+                      <div class="bar-label" style="font-size:8px;">Met</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">6</div>
+                      <div class="bar" style="height:42px;background:var(--teal);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mat</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">7</div>
+                      <div class="bar" style="height:49px;background:var(--success);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mea</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--danger);"></div>
+                      <div class="bar-label" style="font-size:8px;">Nat</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Monthly -->
+                <div class="mini-chart-card" id="grid-chart-monthly">
+                  <div class="mini-chart-title">Monthly Change <i class="ti ti-calendar-event" style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="monthly" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">3</div>
+                      <div class="bar" style="height:70px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:8px;">Apr</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">2</div>
+                      <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:8px;">May</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">1</div>
+                      <div class="bar" style="height:23px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jun</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">2</div>
+                      <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jul</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">3</div>
+                      <div class="bar" style="height:70px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:8px;">Aug</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Status (Full Width) -->
+                <div class="mini-chart-card full-width" id="grid-chart-status">
+                  <div class="mini-chart-title" style="margin-bottom: 4px;">
+                    <span>Overall Change Approval Status <i class="ti ti-clipboard-check" style="color:var(--text3);"></i></span>
+                    <div style="display: flex; gap: 8px; font-size: 9px; font-family: var(--mono);">
+                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#185FA5;border-radius:50%;"></span> Appr</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#E27D2F;border-radius:50%;"></span> Rej</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#A3A29E;border-radius:50%;"></span> Pend</span>
+                    </div>
+                  </div>
+                  <div class="chart-filter-bar" data-chart="status" data-view="grid"></div>
+                  <div class="chart-bars grouped-bars" style="height: 70px; gap: 4px;">
+                    <!-- Apr -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Apr</div>
+                    </div>
+                    <!-- May -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">4</div><div class="bar" style="height:28px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">May</div>
+                    </div>
+                    <!-- Jun -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jun</div>
+                    </div>
+                    <!-- Jul -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jul</div>
+                    </div>
+                    <!-- Aug -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Aug</div>
+                    </div>
+                    <!-- Sep -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
+                        <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Sep</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      
+      </div>
+      <div class="card" style="margin-bottom:0;padding:0;overflow:hidden;">
+        <div style="padding:12px 14px 8px;">
+          <div class="card-title" style="margin-bottom:0;">Recent change requests <i class="ti ti-clock"
+              style="font-size:16px;color:var(--text3);"></i></div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="padding-left:14px;">Change No.</th>
+              <th>Department</th>
+              <th>Category</th>
+              <th>Requested</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
+              <td>Assembly</td>
+              <td><span class="tag tag-machine">Machine</span></td>
+              <td>20 May</td>
+              <td><span class="badge badge-pending">Pending L2</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
+              <td>Quality</td>
+              <td><span class="tag tag-method">Method</span></td>
+              <td>19 May</td>
+              <td><span class="badge badge-approved">Approved</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
+              <td>Production</td>
+              <td><span class="tag tag-material">Material</span></td>
+              <td>18 May</td>
+              <td><span class="badge badge-review">L3 Review</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
+              <td>Maintenance</td>
+              <td><span class="tag tag-man">Man</span></td>
+              <td>17 May</td>
+              <td><span class="badge badge-rejected">Rejected</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
+              <td>Logistics</td>
+              <td><span class="tag tag-measure">Measure</span></td>
+              <td>16 May</td>
+              <td><span class="badge badge-closed">Closed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const people = ["Kumar Selvam", "Priya Venkat", "Ravi QA", "Rajesh Murthy", "Anand K", "Ramanan P"];
+    const depts = ["PED", "PROD", "QA", "MAINT", "PC&L"];
+    const processes = ["Winding", "Soldering", "EOL Testing", "Potting", "Loading"];
+    const machines = ["MFG-MC-1042", "MFG-MC-0882", "MFG-MC-0711", "MFG-MC-0915"];
+    const sixMs = ["Man", "Machine", "Method", "Materials", "Measure", "Nature"];
+    const months = ["Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26"];
+
+    // Generate deterministic records using a simple pseudo-random generator
+    function generateMockData() {
+      const data = [];
+      let seed = 42;
+      function random() {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      }
+      for (let i = 0; i < 75; i++) {
+        const person = people[Math.floor(random() * people.length)];
+        const dept = depts[Math.floor(random() * depts.length)];
+        const process = processes[Math.floor(random() * processes.length)];
+        const machineNo = machines[Math.floor(random() * machines.length)];
+        const sixM = sixMs[Math.floor(random() * sixMs.length)];
+        
+        // Status probability: Approved (60%), Pending (25%), Rejected (15%)
+        let statusVal = "Approved";
+        const rStatus = random();
+        if (rStatus > 0.75) statusVal = "Pending";
+        else if (rStatus > 0.6) statusVal = "Rejected";
+        
+        let month = months[Math.floor(random() * months.length)];
+        
+        data.push({
+          id: `4M-2026-${100 + i}`,
+          person,
+          dept,
+          process,
+          machineNo,
+          sixM,
+          status: statusVal,
+          date: month
+        });
+      }
+      return data;
+    }
+    const changeRequests = generateMockData();
+
+    function normalizeDept(d) {
+      return d.replace(/\s+/g, '').toUpperCase();
+    }
+
+    function matchProcess(label, processVal) {
+      const lbl = label.toLowerCase();
+      const val = processVal.toLowerCase();
+      if (lbl === val) return true;
+      if (lbl === 'wind' && val === 'winding') return true;
+      if (lbl === 'sold' && val === 'soldering') return true;
+      if (lbl === 'eol' && val === 'eol testing') return true;
+      if (lbl === 'pott' && val === 'potting') return true;
+      if (lbl === 'load' && val === 'loading') return true;
+      return false;
+    }
+
+    function matchSixM(label, val) {
+      const lbl = label.toLowerCase();
+      const v = val.toLowerCase();
+      if (lbl === v) return true;
+      if (lbl === 'mac' && v === 'machine') return true;
+      if (lbl === 'met' && v === 'method') return true;
+      if (lbl === 'mat' && v === 'materials') return true;
+      if (lbl === 'mea' && v === 'measure') return true;
+      if (lbl === 'nat' && v === 'nature') return true;
+      return false;
+    }
+
+    function matchMonth(label, val) {
+      const lbl = label.toLowerCase();
+      const v = val.toLowerCase();
+      return v.startsWith(lbl);
+    }
+
+    function buildFilterHTML() {
+      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
+      const peopleOpt = people.map(p => `<option value="${p}">${p}</option>`).join('');
+      const processesOpt = processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
+      const machinesOpt = machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+      
+      return `
+        <div class="filter-select-wrap">
+          <label>By Date</label>
+          <select class="filter-select" data-filter="date">
+            <option value="All">All Months</option>
+            ${monthsOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Person</label>
+          <select class="filter-select" data-filter="person">
+            <option value="All">All Persons</option>
+            ${peopleOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Process</label>
+          <select class="filter-select" data-filter="process">
+            <option value="All">All Processes</option>
+            ${processesOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By M/c no</label>
+          <select class="filter-select" data-filter="machine">
+            <option value="All">All Machines</option>
+            ${machinesOpt}
+          </select>
+        </div>
+      `;
+    }
+
+    function buildStatusFilterHTML() {
+      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
+      return `
+        <div class="filter-select-wrap">
+          <label>By Date</label>
+          <select class="filter-select" data-filter="date">
+            <option value="All">All Months</option>
+            ${monthsOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Status</label>
+          <select class="filter-select" data-filter="status-val">
+            <option value="All">All Statuses</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+      `;
+    }
+
+    function updateChart(chartId, viewType) {
+      const containerId = viewType === 'tab' ? `chart-${chartId}` : `grid-chart-${chartId}`;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const dateSelect = container.querySelector('select[data-filter="date"]');
+      const personSelect = container.querySelector('select[data-filter="person"]');
+      const processSelect = container.querySelector('select[data-filter="process"]');
+      const machineSelect = container.querySelector('select[data-filter="machine"]');
+
+      const dateVal = dateSelect ? dateSelect.value : 'All';
+      const personVal = personSelect ? personSelect.value : 'All';
+      const processVal = processSelect ? processSelect.value : 'All';
+      const machineVal = machineSelect ? machineSelect.value : 'All';
+
+      let filtered = changeRequests;
+      if (dateVal !== 'All') {
+        filtered = filtered.filter(r => r.date === dateVal);
+      }
+      if (personVal !== 'All') {
+        filtered = filtered.filter(r => r.person === personVal);
+      }
+      if (processVal !== 'All') {
+        filtered = filtered.filter(r => r.process === processVal);
+      }
+      if (machineVal !== 'All') {
+        filtered = filtered.filter(r => r.machineNo === machineVal);
+      }
+
+      const statusSelect = container.querySelector('select[data-filter="status-val"]');
+      const statusVal = statusSelect ? statusSelect.value : 'All';
+      if (statusVal !== 'All') {
+        filtered = filtered.filter(r => r.status === statusVal);
+      }
+
+      const maxHeight = viewType === 'tab' ? 70 : 50;
+
+      if (chartId === 'dept') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => normalizeDept(r.dept) === normalizeDept(label)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'process') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchProcess(label, r.process)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'six-m') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchSixM(label, r.sixM)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'monthly') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchMonth(label, r.date)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'status') {
+        const groupWraps = container.querySelectorAll('.group-wrap');
+        const monthData = Array.from(groupWraps).map(group => {
+          const label = group.querySelector('.bar-label').textContent.trim();
+          const monthFiltered = filtered.filter(r => matchMonth(label, r.date));
+          const approved = monthFiltered.filter(r => r.status === 'Approved').length;
+          const rejected = monthFiltered.filter(r => r.status === 'Rejected').length;
+          const pending = monthFiltered.filter(r => r.status === 'Pending').length;
+          return { group, approved, rejected, pending };
+        });
+
+        const maxCount = Math.max(
+          ...monthData.flatMap(m => [m.approved, m.rejected, m.pending]),
+          5
+        );
+
+        monthData.forEach(m => {
+          const subs = m.group.querySelectorAll('.group-bar-sub');
+          if (subs[0]) {
+            subs[0].querySelector('.bar-count').textContent = m.approved;
+            subs[0].querySelector('.bar').style.height = Math.round(m.approved * (maxHeight / maxCount)) + 'px';
+          }
+          if (subs[1]) {
+            subs[1].querySelector('.bar-count').textContent = m.rejected;
+            subs[1].querySelector('.bar').style.height = Math.round(m.rejected * (maxHeight / maxCount)) + 'px';
+          }
+          if (subs[2]) {
+            subs[2].querySelector('.bar-count').textContent = m.pending;
+            subs[2].querySelector('.bar').style.height = Math.round(m.pending * (maxHeight / maxCount)) + 'px';
+          }
+        });
+      }
+    }
+
+    function switchChart(chartId) {
+      const tabs = document.querySelectorAll('.chart-tab');
+      tabs.forEach(tab => {
+        if (tab.getAttribute('data-chart') === chartId) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      const views = document.querySelectorAll('.chart-view');
+      views.forEach(view => {
+        if (view.id === 'chart-' + chartId) {
+          view.classList.add('active');
+          const bars = view.querySelectorAll('.bar');
+          bars.forEach(bar => {
+            const h = bar.style.height;
+            bar.style.height = '0';
+            void bar.offsetWidth; // Force layout reflow
+            bar.style.height = h;
+          });
+        } else {
+          view.classList.remove('active');
+        }
+      });
+    }
+
+    let isGridView = false;
+    function toggleChartView() {
+      isGridView = !isGridView;
+      const tabContent = document.getElementById('analytics-tab-content');
+      const gridContent = document.getElementById('analytics-grid-content');
+      const tabsContainer = document.getElementById('analytics-tabs');
+      const btn = document.getElementById('view-mode-btn');
+
+      if (isGridView) {
+        tabContent.style.display = 'none';
+        gridContent.style.display = 'block';
+        tabsContainer.style.display = 'none';
+        btn.innerHTML = '<i class="ti ti-layout-tab" style="font-size:13px;"></i> Tab View';
+        
+        const gridBars = gridContent.querySelectorAll('.bar');
+        gridBars.forEach(bar => {
+          const h = bar.style.height;
+          bar.style.height = '0';
+          void bar.offsetWidth; // Force layout reflow
+          bar.style.height = h;
+        });
+      } else {
+        tabContent.style.display = 'block';
+        gridContent.style.display = 'none';
+        tabsContainer.style.display = 'flex';
+        btn.innerHTML = '<i class="ti ti-grid-dots" style="font-size:13px;"></i> Grid View';
+        
+        switchChart('dept');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Inject filters
+      const filterBars = document.querySelectorAll('.chart-filter-bar');
+      filterBars.forEach(bar => {
+        const chartId = bar.getAttribute('data-chart');
+        const viewType = bar.getAttribute('data-view');
+        if (chartId === 'status') {
+          bar.innerHTML = buildStatusFilterHTML();
+        } else {
+          bar.innerHTML = buildFilterHTML();
+        }
+        
+        const selects = bar.querySelectorAll('.filter-select');
+        selects.forEach(select => {
+          select.addEventListener('change', () => {
+            updateChart(chartId, viewType);
+          });
+        });
+      });
+
+      // Initial render for all charts
+      const charts = ['dept', 'process', 'six-m', 'monthly', 'status'];
+      charts.forEach(c => {
+        updateChart(c, 'tab');
+        updateChart(c, 'grid');
+      });
+
+      // Initial trigger for the default active tab
+      switchChart('dept');
+    });
+  </script>
+</body>
+</html>

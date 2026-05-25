@@ -1,2993 +1,950 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4M Change Management System — UI Designs</title>
+  <title>4M Change Management System — Interactive UI Sandbox</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
     :root {
-      --bg: #ffffff;
-      --bg2: #f5f5f3;
-      --bg3: #ededeb;
-      --text: #1a1a18;
-      --text2: #5f5e5a;
-      --text3: #888780;
-      --border: rgba(0, 0, 0, 0.10);
-      --border2: rgba(0, 0, 0, 0.18);
-      --accent: #185FA5;
-      --accent-light: #E6F1FB;
-      --success: #3B6D11;
-      --success-light: #EAF3DE;
-      --warn: #854F0B;
-      --warn-light: #FAEEDA;
-      --danger: #A32D2D;
-      --danger-light: #FCEBEB;
-      --teal: #0F6E56;
-      --teal-light: #E1F5EE;
-      --purple: #534AB7;
-      --purple-light: #EEEDFE;
-      --rad: 8px;
-      --rad-lg: 12px;
-      --font: 'DM Sans', system-ui, sans-serif;
-      --mono: 'Space Mono', monospace;
+      --primary: #185FA5;
+      --primary-light: #E6F1FB;
+      --bg-panel: #ffffff;
+      --bg-app: #f0f2f5;
+      --bg-hover: #f4f7fa;
+      --text-main: #1a1c1e;
+      --text-muted: #5e6266;
+      --text-ghost: #8c9094;
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-color-dark: rgba(0, 0, 0, 0.15);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono-family: 'Space Mono', monospace;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
     }
 
     body {
-      font-family: var(--font);
-      background: #d8d6d0;
-      min-height: 100vh;
-      padding: 0;
-      margin: 0;
-      overflow-x: hidden;
-    }
-
-    /* ── Page header ── */
-    .page-wrap {
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-    }
-
-    .doc-header {
-      background: var(--bg);
-      padding: 20px 32px;
-      margin-bottom: 0;
-      border-bottom: 1px solid var(--border);
-      border-radius: 0;
-    }
-
-    .doc-title {
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .doc-sub {
-      font-size: 15px;
-      color: var(--text2);
-    }
-
-    .doc-meta {
-      display: flex;
-      gap: 16px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .doc-chip {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-      background: var(--accent-light);
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    /* ── Screen card ── */
-    .screen-card {
-      background: var(--bg);
-      border-radius: 0;
-      border: none;
-      border-bottom: 4px solid var(--border2);
-      margin-bottom: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-app);
+      color: var(--text-main);
       height: 100vh;
-      width: 100%;
+      width: 100vw;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-sizing: border-box;
     }
 
-    .screen-header {
-      padding: 14px 20px;
-      border-bottom: 0.5px solid var(--border);
+    /* Top Navigation bar */
+    .topbar {
+      height: 64px;
+      background-color: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg2);
+      padding: 0 24px;
+      z-index: 10;
       flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
 
-    .screen-title {
-      font-size: 13px;
-      font-family: var(--mono);
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .screen-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .screen-body {
-      padding: 0;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Shared components ── */
-    .sidebar-layout {
-      display: flex;
-      flex: 1;
-      min-height: 0;
-      height: 100%;
-    }
-
-    .sidebar {
-      width: 220px;
-      flex-shrink: 0;
-      background: var(--bg);
-      border-right: 0.5px solid var(--border);
-      padding: 16px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .sidebar-logo {
-      padding: 0 16px 14px;
-      border-bottom: 0.5px solid var(--border);
-      margin-bottom: 8px;
-    }
-
-    .logo-mark {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      font-family: var(--mono);
-      letter-spacing: 0.06em;
-    }
-
-    .logo-sub {
-      font-size: 11px;
-      color: var(--text3);
-      margin-top: 2px;
-    }
-
-    .nav-item {
+    .topbar-brand {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      font-size: 14px;
-      color: var(--text2);
-      border-left: 2px solid transparent;
-    }
-
-    .nav-item.active {
-      color: var(--accent);
-      background: var(--accent-light);
-      border-left: 2px solid var(--accent);
-      font-weight: 500;
-    }
-
-    .nav-item i {
-      font-size: 17px;
-    }
-
-    .nav-section {
-      font-size: 11px;
-      font-family: var(--mono);
-      color: var(--text3);
-      padding: 10px 16px 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 20px;
-      background: var(--bg3);
-      overflow-y: auto;
-      height: 100%;
-    }
-
-    .page-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-
-    .page-sub {
-      font-size: 14px;
-      color: var(--text2);
-      margin-bottom: 16px;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .stat-card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--rad);
-      padding: 12px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--text2);
-      margin-bottom: 4px;
-      font-family: var(--mono);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .stat-delta {
-      font-size: 12px;
-      margin-top: 2px;
-    }
-
-    .delta-up {
-      color: var(--success);
-    }
-
-    .delta-down {
-      color: var(--danger);
-    }
-
-    .card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--rad-lg);
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .chart-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      height: 80px;
-    }
-
-    .bar-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      flex: 1;
-    }
-
-    .bar {
-      width: 100%;
-      max-width: 80px;
-      border-radius: 3px 3px 0 0;
-      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    }
-
-    .bar-label {
-      font-size: 11px;
-      color: var(--text3);
-      font-family: var(--mono);
-    }
-
-    .bar-count {
-      font-size: 11px;
-      color: var(--text2);
-      font-weight: 500;
-    }
-
-    .donut-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .donut-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text2);
-    }
-
-    .legend-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .table th {
-      text-align: left;
-      padding: 6px 8px;
-      font-size: 11px;
-      font-family: var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text3);
-      border-bottom: 0.5px solid var(--border);
-      font-weight: 400;
-    }
-
-    .table td {
-      padding: 7px 8px;
-      border-bottom: 0.5px solid var(--border);
-      color: var(--text);
-    }
-
-    .table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .badge-pending {
-      background: var(--warn-light);
-      color: var(--warn);
-    }
-
-    .badge-approved {
-      background: var(--success-light);
-      color: var(--success);
-    }
-
-    .badge-rejected {
-      background: var(--danger-light);
-      color: var(--danger);
-    }
-
-    .badge-draft {
-      background: var(--bg2);
-      color: var(--text2);
-    }
-
-    .badge-review {
-      background: var(--purple-light);
-      color: var(--purple);
-    }
-
-    .badge-closed {
-      background: var(--teal-light);
-      color: var(--teal);
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: var(--mono);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-right: 3px;
-    }
-
-    .tag-man {
-      background: #E6F1FB;
-      color: #185FA5;
-    }
-
-    .tag-machine {
-      background: var(--purple-light);
-      color: var(--purple);
-    }
-
-    .tag-material {
-      background: var(--teal-light);
-      color: var(--teal);
-    }
-
-    .tag-method {
-      background: var(--warn-light);
-      color: var(--warn);
-    }
-
-    .tag-measure {
-      background: #EAF3DE;
-      color: #3B6D11;
-    }
-
-    .tag-nature {
-      background: var(--danger-light);
-      color: var(--danger);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
-    .form-label {
-      font-size: 12px;
-      font-family: var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text2);
-    }
-
-    .form-input {
-      background: var(--bg2);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--rad);
-      padding: 7px 10px;
-      font-size: 14px;
-      font-family: var(--font);
-      color: var(--text);
-      width: 100%;
-    }
-
-    .form-select {
-      background: var(--bg2);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--rad);
-      padding: 7px 10px;
-      font-size: 14px;
-      font-family: var(--font);
-      color: var(--text);
-      width: 100%;
-    }
-
-    .form-textarea {
-      background: var(--bg2);
-      border: 0.5px solid var(--border2);
-      border-radius: var(--rad);
-      padding: 7px 10px;
-      font-size: 14px;
-      font-family: var(--font);
-      color: var(--text);
-      width: 100%;
-      min-height: 60px;
-      resize: none;
-    }
-
-    .required {
-      color: var(--danger);
-    }
-
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .cat-chip {
-      border: 0.5px solid var(--border);
-      border-radius: var(--rad);
-      padding: 8px 10px;
+    .brand-logo {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text2);
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: var(--mono-family);
+      box-shadow: 0 3px 8px rgba(24, 95, 165, 0.25);
     }
 
-    .cat-chip.selected {
-      border-color: var(--accent);
-      background: var(--accent-light);
-      color: var(--accent);
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
     }
 
-    .cat-chip.sel-purple {
-      border-color: var(--purple);
-      background: var(--purple-light);
-      color: var(--purple);
-    }
-
-    .cat-chip i {
+    .brand-title {
       font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
     }
 
-    .step-bar {
-      display: flex;
-      align-items: flex-start;
-      gap: 0;
-      margin-bottom: 20px;
-    }
-
-    .step-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .step-dot.done {
-      background: var(--accent);
-      color: white;
-    }
-
-    .step-dot.active {
-      background: var(--accent);
-      color: white;
-      box-shadow: 0 0 0 3px var(--accent-light);
-    }
-
-    .step-dot.todo {
-      background: var(--bg2);
-      color: var(--text2);
-      border: 0.5px solid var(--border2);
-    }
-
-    .step-line {
-      flex: 1;
-      height: 0.5px;
-      background: var(--border2);
-      margin: 14px 4px 0;
-    }
-
-    .step-line.done {
-      background: var(--accent);
-    }
-
-    .step-name {
+    .brand-subtitle {
       font-size: 11px;
-      color: var(--text2);
-      margin-top: 4px;
-      font-family: var(--mono);
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
-    .approval-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background: var(--bg2);
-      border-radius: var(--rad);
-      margin-bottom: 6px;
-    }
-
-    .approval-row.active-row {
-      background: var(--accent-light);
-      border: 1px solid var(--accent);
-    }
-
-    .approval-row.dimmed {
-      opacity: 0.5;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
+    .brand-tag {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-size: 11px;
       font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 340px;
+      background-color: var(--bg-panel);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
       flex-shrink: 0;
     }
 
-    .av-blue {
-      background: var(--accent-light);
-      color: var(--accent);
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .av-green {
-      background: var(--success-light);
-      color: var(--success);
-    }
-
-    .av-purple {
-      background: var(--purple-light);
-      color: var(--purple);
-    }
-
-    .av-teal {
-      background: var(--teal-light);
-      color: var(--teal);
-    }
-
-    .av-accent {
-      background: var(--accent);
-      color: white;
-    }
-
-    .approval-info {
-      flex: 1;
-    }
-
-    .approval-name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .approval-role {
-      font-size: 12px;
-      color: var(--text2);
-    }
-
-    .chain-line {
-      width: 1px;
-      height: 10px;
-      background: var(--border2);
-      margin-left: 18px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      border-radius: var(--rad);
-      font-size: 14px;
-      font-weight: 500;
-      font-family: var(--font);
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 0.5px solid var(--border2);
-      color: var(--text2);
-    }
-
-    .btn-danger {
-      background: var(--danger-light);
-      color: var(--danger);
-      border: 0.5px solid var(--danger);
-    }
-
-    .btn-success {
-      background: var(--success-light);
-      color: var(--success);
-      border: 0.5px solid var(--success);
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .timeline {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .tl-item {
-      display: flex;
-      gap: 10px;
-      padding-bottom: 14px;
+    .search-input-wrapper {
       position: relative;
     }
 
-    .tl-item:not(:last-child)::before {
-      content: '';
+    .search-input-wrapper i {
       position: absolute;
-      left: 11px;
-      top: 22px;
-      bottom: 0;
-      width: 0.5px;
-      background: var(--border2);
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-ghost);
+      font-size: 16px;
     }
 
-    .tl-dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      z-index: 1;
-      background: var(--bg);
-      border: 1px solid var(--border2);
-      color: var(--text2);
-    }
-
-    .tl-dot.done {
-      background: var(--success-light);
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .tl-dot.active {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .tl-body {
-      flex: 1;
-    }
-
-    .tl-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .tl-meta {
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 1px;
-    }
-
-    .tl-note {
-      font-size: 13px;
-      color: var(--text2);
-      background: var(--bg2);
-      border-radius: var(--rad);
-      padding: 6px 8px;
-      margin-top: 6px;
-    }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .filter-chip {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-      border: 0.5px solid var(--border2);
-      background: var(--bg);
-      color: var(--text2);
-    }
-
-    .filter-chip.active {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .progress-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 7px;
-    }
-
-    .progress-label {
-      font-size: 13px;
-      color: var(--text2);
-      width: 90px;
-      flex-shrink: 0;
-    }
-
-    .progress-track {
-      flex: 1;
-      height: 5px;
-      background: var(--bg2);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 10px;
-    }
-
-    .progress-val {
-      font-size: 13px;
-      color: var(--text2);
-      width: 34px;
-      text-align: right;
-      flex-shrink: 0;
-      font-family: var(--mono);
-    }
-
-    .mini-id {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 0.5px solid var(--border);
-      font-size: 13px;
-    }
-
-    .info-row:last-child {
-      border-bottom: none;
-    }
-
-    .info-key {
-      color: var(--text2);
-    }
-
-    .info-val {
-      font-weight: 500;
-      color: var(--text);
-      text-align: right;
-    }
-
-    svg.donut {
-      transform: rotate(-90deg);
-    }
-
-    /* Login screen */
-    .login-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding: 30px;
-      background: var(--bg3);
-    }
-
-    .login-card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      width: 340px;
-    }
-
-    .login-logo {
-      font-family: var(--mono);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 4px;
-    }
-
-    .login-tagline {
-      font-size: 13px;
-      color: var(--text2);
-      margin-bottom: 24px;
-    }
-
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .role-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-top: 14px;
-    }
-
-    .role-chip {
-      padding: 6px 8px;
-      background: var(--bg2);
-      border-radius: var(--rad);
-      font-size: 12px;
-      color: var(--text2);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .role-chip.active {
-      background: var(--accent-light);
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    /* Effectiveness */
-    .eff-month {
-      border-radius: var(--rad);
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .eff-month.done {
-      background: var(--success-light);
-      border: 0.5px solid #9FE1CB;
-    }
-
-    .eff-month.pending {
-      background: var(--bg2);
-      border: 0.5px dashed var(--border2);
-    }
-
-    .eff-month-title {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 6px;
-    }
-
-    .eff-month-body {
-      font-size: 13px;
-    }
-
-    /* Sidebar user */
-    .sidebar-user {
-      padding: 12px 16px;
-      border-top: 0.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .sidebar-user-name {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .sidebar-user-role {
-      font-size: 11px;
-      color: var(--text3);
-    }
-
-    /* Interactive charts & analytics styling */
-    .chart-filter-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      background: var(--bg2);
-      padding: 6px 8px;
-      border-radius: var(--rad);
-      border: 0.5px solid var(--border);
-    }
-
-    .filter-select-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-      min-width: 65px;
-    }
-
-    .filter-select-wrap label {
-      font-size: 9px;
-      font-family: var(--mono);
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .filter-select {
-      background: var(--bg);
-      border: 0.5px solid var(--border2);
-      border-radius: 4px;
-      padding: 2px 4px;
-      font-size: 11px;
-      font-family: var(--font);
-      color: var(--text);
+    .search-input {
       width: 100%;
-      height: 22px;
-      cursor: pointer;
+      padding: 10px 12px 10px 36px;
+      border: 1px solid var(--border-color-dark);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family);
+      font-size: 13px;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
+      background-color: var(--bg-hover);
     }
 
-    .filter-select:focus {
-      border-color: var(--accent);
+    .search-input:focus {
+      border-color: var(--primary);
+      background-color: var(--bg-panel);
+      box-shadow: 0 0 0 3px var(--primary-light);
     }
 
-    .card-header-tabs {
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .screen-item {
+      display: flex;
       align-items: center;
-      border-bottom: 0.5px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .screen-item:hover {
+      background-color: var(--bg-hover);
+    }
+
+    .screen-item.active {
+      background-color: var(--primary-light);
+      border-color: rgba(24, 95, 165, 0.12);
+    }
+
+    .screen-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background-color: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      border: 0.5px solid var(--border-color);
+    }
+
+    .screen-item.active .screen-icon {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .screen-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .screen-number {
+      font-family: var(--mono-family);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-ghost);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .screen-item.active .screen-number {
+      color: var(--primary);
+    }
+
+    .screen-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .screen-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main Viewport Styles */
+    .viewport-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 100%;
+    }
+
+    /* Viewport Toolbar */
+    .viewport-toolbar {
+      height: 56px;
+      background-color: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+    }
+
+    .toolbar-left, .toolbar-right, .toolbar-center {
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
 
-    .chart-tabs {
+    .btn-group {
       display: flex;
-      gap: 2px;
-      background: var(--bg2);
-      padding: 2px;
-      border-radius: var(--rad);
-      border: 0.5px solid var(--border);
+      background-color: var(--bg-hover);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
     }
 
-    .chart-tab {
-      background: transparent;
+    .toolbar-btn {
+      background: none;
       border: none;
-      padding: 4px 10px;
+      padding: 6px 12px;
+      font-family: var(--font-family);
       font-size: 12px;
       font-weight: 500;
-      font-family: var(--font);
-      color: var(--text2);
+      color: var(--text-muted);
       cursor: pointer;
-      border-radius: calc(var(--rad) - 2px);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
 
-    .chart-tab.active {
-      background: var(--bg);
-      color: var(--accent);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    .toolbar-btn:hover {
+      color: var(--text-main);
+    }
+
+    .toolbar-btn.active {
+      background-color: var(--bg-panel);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
       font-weight: 600;
     }
 
-    .chart-tab:hover:not(.active) {
-      color: var(--text);
-      background: rgba(0, 0, 0, 0.03);
-    }
-
-    .chart-view {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.35s ease;
-    }
-
-    .chart-view.active {
-      display: block;
-      opacity: 1;
-    }
-
-    .chart-view.active .bar {
-      animation: growUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .chart-view.active .bar-count {
-      animation: fadeIn 0.4s ease 0.3s both;
-    }
-
-    @keyframes growUp {
-      from {
-        height: 0;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Grouped bars styling */
-    .chart-bars.grouped-bars {
-      justify-content: space-around;
-      gap: 12px;
-    }
-
-    .group-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-    }
-
-    .group-bars-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .group-bar-sub {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      width: 12px;
-    }
-
-    .group-bar-sub .bar {
-      width: 100%;
-      border-radius: 2px 2px 0 0;
-    }
-
-    .group-bar-sub .bar-count {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text2);
-    }
-
-    .chart-legend {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      font-size: 11px;
-      margin-bottom: 12px;
-      font-family: var(--mono);
-    }
-
-    .chart-legend .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Grid view layout */
-    .charts-grid-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px 12px;
-      padding-top: 6px;
-    }
-
-    .mini-chart-card {
-      border: 0.5px solid var(--border);
-      border-radius: var(--rad);
-      padding: 10px;
-      background: var(--bg2);
-    }
-
-    .mini-chart-card .bar {
-      max-width: 32px;
-    }
-
-    .mini-chart-title {
+    .action-btn {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color-dark);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      height: 32px;
+      font-family: var(--font-family);
       font-size: 12px;
-      font-weight: 600;
-      color: var(--text2);
-      margin-bottom: 8px;
-      font-family: var(--font);
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    .action-btn.primary {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .action-btn.primary:hover {
+      background-color: #134e89;
+      border-color: #134e89;
+    }
+
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .viewport-divider {
+      width: 1px;
+      height: 20px;
+      background-color: var(--border-color);
+      margin: 0 4px;
+    }
+
+    /* Device Preview Panel */
+    .preview-area {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      overflow: auto;
+      position: relative;
+    }
+
+    .preview-frame-wrapper {
+      background-color: var(--bg-panel);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color-dark);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 100%;
+      width: 100%;
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    .frame-header {
+      background-color: var(--bg-hover);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--mono-family);
+      flex-shrink: 0;
+      user-select: none;
     }
 
-    .mini-chart-card.full-width {
-      grid-column: 1 / -1;
+    .frame-dots {
+      display: flex;
+      gap: 6px;
     }
 
-    /* Print / export */
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
+    .frame-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ddd;
+    }
 
-      .page-wrap {
-        max-width: 100%;
-      }
+    .frame-dot:nth-child(1) { background-color: #ff5f56; }
+    .frame-dot:nth-child(2) { background-color: #ffbd2e; }
+    .frame-dot:nth-child(3) { background-color: #27c93f; }
 
-      .screen-card {
-        break-inside: avoid;
-        margin-bottom: 16px;
-      }
+    .frame-title {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
 
-      .doc-header {
-        break-after: avoid;
-      }
+    .frame-dimensions {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .preview-iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      background-color: white;
+      transition: opacity 0.2s ease;
+    }
+
+    /* Stacked View Mode */
+    .stacked-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+      display: none;
+      flex-direction: column;
+      gap: 40px;
+      background-color: var(--bg-app);
+    }
+
+    .stacked-screen-card {
+      background-color: var(--bg-panel);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+      transition: transform 0.2s ease;
+    }
+
+    .stacked-screen-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stacked-screen-header {
+      background-color: var(--bg-hover);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .stacked-screen-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: var(--mono-family);
+    }
+
+    .stacked-screen-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-left: 12px;
+    }
+
+    .stacked-screen-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Portal Footer */
+    .portal-footer {
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-ghost);
+      font-family: var(--mono-family);
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-panel);
+      flex-shrink: 0;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      display: inline-block;
+      margin-right: 4px;
+      box-shadow: 0 0 8px var(--primary);
     }
   </style>
 </head>
 
 <body>
-  <div class="page-wrap">
-
-    <!-- Document header -->
-    <div class="doc-header">
-      <div class="doc-title">Change Management System — UI Design Screens</div>
-      <!-- <div class="doc-sub">Prepared by Ramanan Prabakaran · Functional, Technical &amp; QA Blueprint</div> -->
-      <!-- <div class="doc-meta">
-        <span class="doc-chip">8 Screens</span>
-        <span class="doc-chip">React.js · Tailwind CSS · ShadCN</span>
-        <span class="doc-chip">Manufacturing Industry</span>
-        <span class="doc-chip">May 2026</span>
-      </div> -->
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 1 — LOGIN
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 01</span>
-        <span class="screen-name">Login — Role-based Sign In</span>
+  <!-- Top header -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-logo">4M</div>
+      <div class="brand-title-wrap">
+        <span class="brand-title">Change Management System</span>
+        <span class="brand-subtitle">Interactive UI Blueprint Sandbox</span>
       </div>
-      <div class="screen-body">
-        <div class="login-wrap">
-          <div class="login-card">
-            <!-- <div class="login-logo">4M·CMS</div> -->
-            <div class="login-tagline">Change Management System — Manufacturing</div>
-            <div class="login-form">
-              <div class="form-group">
-                <div class="form-label">Email address</div>
-                <input class="form-input" type="email" value="abcd@plant.com" readonly />
-              </div>
-              <div class="form-group">
-                <div class="form-label">Password</div>
-                <input class="form-input" type="password" value="password" readonly />
-              </div>
-              <!-- <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-                <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);">
-                  <input type="checkbox" checked readonly /> Remember me
-                </label>
-                <a style="font-size:11px;color:var(--accent);text-decoration:none;">Forgot password?</a>
-              </div> -->
-              <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px;">
-                <i class="ti ti-login"></i> Sign in
-              </button>
-            </div>
-            <!-- <div style="margin-top:18px;padding-top:14px;border-top:0.5px solid var(--border);">
-              <div
-                style="font-size:10px;color:var(--text3);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;">
-                Quick role select</div>
-              <div class="role-grid">
-                <div class="role-chip"><i class="ti ti-user" style="font-size:11px;"></i> Operator</div>
-                <div class="role-chip"><i class="ti ti-check" style="font-size:11px;"></i> QA Team</div>
-                <div class="role-chip"><i class="ti ti-users" style="font-size:11px;"></i> HOD</div>
-                <div class="role-chip active"><i class="ti ti-shield" style="font-size:11px;"></i> Admin</div>
-              </div>
-            </div> -->
-          </div>
+      <span class="brand-tag">8 Screens</span>
+    </div>
+    <div class="topbar-meta">
+      <a href="style.css" class="topbar-link" target="_blank">
+        <i class="ti ti-code"></i> View Shared CSS (style.css)
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="workspace">
+    <!-- Sidebar: Screen Selection -->
+    <section class="sidebar">
+      <div class="sidebar-search">
+        <div class="search-input-wrapper">
+          <i class="ti ti-search"></i>
+          <input type="text" id="search-box" class="search-input" placeholder="Search screens..." oninput="filterScreens()" />
         </div>
       </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 2 — DASHBOARD
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 02</span>
-        <span class="screen-name">Management Dashboard — KPIs, Charts &amp; Recent Requests</span>
+      <div class="sidebar-list" id="sidebar-list">
+        <!-- Rendered dynamically -->
       </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Main</div>
-            <div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
-            <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
-            <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
-            <div class="nav-section">Monitor</div>
-            <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-            <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
-            <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
-            <div class="nav-section">System</div>
-            <div class="nav-item"><i class="ti ti-users"></i> Users</div>
-            <div class="nav-item"><i class="ti ti-settings"></i> Settings</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">A</div>
-              <div>
-                <!-- <div class="sidebar-user-name">ABCD</div> -->
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div class="main-content">
-            <div class="page-title">Overview</div>
-            <div class="page-sub">Plant A — May 2026 · All Departments</div>
-            <div class="stat-grid">
-              <div class="stat-card">
-                <div class="stat-label">Total Requests</div>
-                <div class="stat-value">10</div>
-                <!-- <div class="stat-delta delta-up"><i class="ti ti-trending-up" style="font-size:10px;"></i> +18 this
-                  month</div> -->
-              </div>
-               <div class="stat-card">
-                <div class="stat-label">Approved</div>
-                <div class="stat-value" style="color:var(--success);">8</div>
-                <!-- <div class="stat-delta delta-up">76% approval rate</div> -->
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">Pending Approval</div>
-                <div class="stat-value" style="color:var(--warn);">2</div>
-                <!-- <div class="stat-delta" style="color:var(--text3);">Awaiting action</div> -->
-              </div>
-             
-              <!-- <div class="stat-card">
-                <div class="stat-label">Overdue</div>
-                <div class="stat-value" style="color:var(--danger);">7</div>
-                <div class="stat-delta delta-down"><i class="ti ti-alert-triangle" style="font-size:10px;"></i> Need
-                  attention</div>
-              </div> -->
-            </div>
-            <div style="margin-bottom:12px;">
-              <div class="card" style="padding: 14px 16px;">
-                <div class="card-header-tabs">
-                  <div class="card-title" style="margin-bottom:0;">Plant Change Analytics <i class="ti ti-chart-bar" style="font-size:16px;color:var(--text3);margin-left:2px;"></i></div>
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <div class="chart-tabs" id="analytics-tabs">
-                      <button class="chart-tab active" data-chart="dept" onclick="switchChart('dept')">Department</button>
-                      <button class="chart-tab" data-chart="process" onclick="switchChart('process')">Process</button>
-                      <button class="chart-tab" data-chart="six-m" onclick="switchChart('six-m')">6M Category</button>
-                      <button class="chart-tab" data-chart="monthly" onclick="switchChart('monthly')">Monthly</button>
-                      <button class="chart-tab" data-chart="status" onclick="switchChart('status')">Approval Status</button>
-                    </div>
-                    <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px; height: 24px; display: inline-flex; align-items: center; gap: 3px;" onclick="toggleChartView()" id="view-mode-btn">
-                      <i class="ti ti-grid-dots" style="font-size:11px;"></i> Grid View
-                    </button>
-                  </div>
-                </div>
+    </section>
 
-                <div class="analytics-container">
-                  <!-- Tab View -->
-                  <div id="analytics-tab-content">
-                    
-                    <!-- Department Chart -->
-                    <div class="chart-view active" id="chart-dept">
-                      <div class="chart-filter-bar" data-chart="dept" data-view="tab"></div>
-                      <div class="chart-bars" style="height: 120px; padding-top: 10px;">
-                        <div class="bar-wrap">
-                          <div class="bar-count">10</div>
-                          <div class="bar" style="height:70px;background:var(--accent);"></div>
-                          <div class="bar-label">PED</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">6</div>
-                          <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
-                          <div class="bar-label">PROD</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">4</div>
-                          <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
-                          <div class="bar-label">QA</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">8</div>
-                          <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
-                          <div class="bar-label">MAINT</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">2</div>
-                          <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
-                          <div class="bar-label">PC & L</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Process Chart -->
-                    <div class="chart-view" id="chart-process">
-                      <div class="chart-filter-bar" data-chart="process" data-view="tab"></div>
-                      <div class="chart-bars" style="height: 120px; padding-top: 10px;">
-                        <div class="bar-wrap">
-                          <div class="bar-count">10</div>
-                          <div class="bar" style="height:120px;background:var(--teal);"></div>
-                          <div class="bar-label">Winding</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">6</div>
-                          <div class="bar" style="height:72px;background:var(--teal);opacity:.85;"></div>
-                          <div class="bar-label">Soldering</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">4</div>
-                          <div class="bar" style="height:48px;background:var(--teal);opacity:.7;"></div>
-                          <div class="bar-label">EOL Testing</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">8</div>
-                          <div class="bar" style="height:96px;background:var(--teal);opacity:.95;"></div>
-                          <div class="bar-label">Potting</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">2</div>
-                          <div class="bar" style="height:24px;background:var(--teal);opacity:.5;"></div>
-                          <div class="bar-label">Loading</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- 6M Chart -->
-                    <div class="chart-view" id="chart-six-m">
-                      <div class="chart-filter-bar" data-chart="six-m" data-view="tab"></div>
-                      <div class="chart-bars" style="height: 120px; padding-top: 10px;">
-                        <div class="bar-wrap">
-                          <div class="bar-count">8</div>
-                          <div class="bar" style="height:96px;background:var(--accent);"></div>
-                          <div class="bar-label">Man</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">10</div>
-                          <div class="bar" style="height:120px;background:var(--purple);"></div>
-                          <div class="bar-label">Machine</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">9</div>
-                          <div class="bar" style="height:108px;background:var(--warn);"></div>
-                          <div class="bar-label">Method</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">6</div>
-                          <div class="bar" style="height:72px;background:var(--teal);"></div>
-                          <div class="bar-label">Materials</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">7</div>
-                          <div class="bar" style="height:84px;background:var(--success);"></div>
-                          <div class="bar-label">Measure</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">8</div>
-                          <div class="bar" style="height:96px;background:var(--danger);"></div>
-                          <div class="bar-label">Nature</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Monthly Chart -->
-                    <div class="chart-view" id="chart-monthly">
-                      <div class="chart-filter-bar" data-chart="monthly" data-view="tab"></div>
-                      <div class="chart-bars" style="height: 120px; padding-top: 10px;">
-                        <div class="bar-wrap">
-                          <div class="bar-count">3</div>
-                          <div class="bar" style="height:120px;background:var(--accent);"></div>
-                          <div class="bar-label">Apr-26</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">2</div>
-                          <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
-                          <div class="bar-label">May-26</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">1</div>
-                          <div class="bar" style="height:40px;background:var(--accent);opacity:.7;"></div>
-                          <div class="bar-label">Jun-26</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">2</div>
-                          <div class="bar" style="height:80px;background:var(--accent);opacity:.85;"></div>
-                          <div class="bar-label">Jul-26</div>
-                        </div>
-                        <div class="bar-wrap">
-                          <div class="bar-count">3</div>
-                          <div class="bar" style="height:120px;background:var(--accent);"></div>
-                          <div class="bar-label">Aug-26</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Status Chart -->
-                    <div class="chart-view" id="chart-status">
-                      <div class="chart-filter-bar" data-chart="status" data-view="tab"></div>
-                      <div class="chart-legend">
-                        <div class="legend-item"><div class="legend-dot" style="background:#185FA5;"></div> Approved</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#E27D2F;"></div> Rejected</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:#A3A29E;"></div> Pending</div>
-                      </div>
-                      <div class="chart-bars grouped-bars" style="height: 120px;">
-                        <!-- Apr-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">8</div>
-                              <div class="bar" style="height:96px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">2</div>
-                              <div class="bar" style="height:24px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">3</div>
-                              <div class="bar" style="height:36px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">Apr-26</div>
-                        </div>
-                        <!-- May-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">7</div>
-                              <div class="bar" style="height:84px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">1</div>
-                              <div class="bar" style="height:12px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">4</div>
-                              <div class="bar" style="height:48px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">May-26</div>
-                        </div>
-                        <!-- Jun-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">9</div>
-                              <div class="bar" style="height:108px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">3</div>
-                              <div class="bar" style="height:36px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">2</div>
-                              <div class="bar" style="height:24px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">Jun-26</div>
-                        </div>
-                        <!-- Jul-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">8</div>
-                              <div class="bar" style="height:96px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">2</div>
-                              <div class="bar" style="height:24px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">3</div>
-                              <div class="bar" style="height:36px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">Jul-26</div>
-                        </div>
-                        <!-- Aug-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">7</div>
-                              <div class="bar" style="height:84px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">1</div>
-                              <div class="bar" style="height:12px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">1</div>
-                              <div class="bar" style="height:12px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">Aug-26</div>
-                        </div>
-                        <!-- Sep-26 -->
-                        <div class="group-wrap">
-                          <div class="group-bars-row">
-                            <div class="group-bar-sub">
-                              <div class="bar-count">9</div>
-                              <div class="bar" style="height:108px;background:#185FA5;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">2</div>
-                              <div class="bar" style="height:24px;background:#E27D2F;"></div>
-                            </div>
-                            <div class="group-bar-sub">
-                              <div class="bar-count">2</div>
-                              <div class="bar" style="height:24px;background:#A3A29E;"></div>
-                            </div>
-                          </div>
-                          <div class="bar-label" style="font-size:10px;margin-top:2px;">Sep-26</div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <!-- Grid View -->
-                  <div id="analytics-grid-content" style="display: none;">
-                    <div class="charts-grid-layout">
-                      
-                      <!-- Mini Dept -->
-                      <div class="mini-chart-card" id="grid-chart-dept">
-                        <div class="mini-chart-title">Department Wise Change <i class="ti ti-building" style="color:var(--text3);"></i></div>
-                        <div class="chart-filter-bar" data-chart="dept" data-view="grid"></div>
-                        <div class="chart-bars" style="height: 80px; gap: 4px;">
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">10</div>
-                            <div class="bar" style="height:70px;background:var(--accent);"></div>
-                            <div class="bar-label" style="font-size:9px;">PED</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">6</div>
-                            <div class="bar" style="height:42px;background:var(--accent);opacity:.85;"></div>
-                            <div class="bar-label" style="font-size:9px;">PROD</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">4</div>
-                            <div class="bar" style="height:28px;background:var(--accent);opacity:.7;"></div>
-                            <div class="bar-label" style="font-size:9px;">QA</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">8</div>
-                            <div class="bar" style="height:56px;background:var(--accent);opacity:.95;"></div>
-                            <div class="bar-label" style="font-size:9px;">MAINT</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">2</div>
-                            <div class="bar" style="height:14px;background:var(--accent);opacity:.5;"></div>
-                            <div class="bar-label" style="font-size:9px;">PC&L</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Mini Process -->
-                      <div class="mini-chart-card" id="grid-chart-process">
-                        <div class="mini-chart-title">Process Wise Change <i class="ti ti-cpu" style="color:var(--text3);"></i></div>
-                        <div class="chart-filter-bar" data-chart="process" data-view="grid"></div>
-                        <div class="chart-bars" style="height: 80px; gap: 4px;">
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">10</div>
-                            <div class="bar" style="height:70px;background:var(--teal);"></div>
-                            <div class="bar-label" style="font-size:9px;">Wind</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">6</div>
-                            <div class="bar" style="height:42px;background:var(--teal);opacity:.85;"></div>
-                            <div class="bar-label" style="font-size:9px;">Sold</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">4</div>
-                            <div class="bar" style="height:28px;background:var(--teal);opacity:.7;"></div>
-                            <div class="bar-label" style="font-size:9px;">EOL</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">8</div>
-                            <div class="bar" style="height:56px;background:var(--teal);opacity:.95;"></div>
-                            <div class="bar-label" style="font-size:9px;">Pott</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">2</div>
-                            <div class="bar" style="height:14px;background:var(--teal);opacity:.5;"></div>
-                            <div class="bar-label" style="font-size:9px;">Load</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Mini 6M -->
-                      <div class="mini-chart-card" id="grid-chart-six-m">
-                        <div class="mini-chart-title">6M Category Change <i class="ti ti-sitemap" style="color:var(--text3);"></i></div>
-                        <div class="chart-filter-bar" data-chart="six-m" data-view="grid"></div>
-                        <div class="chart-bars" style="height: 80px; gap: 3px;">
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">8</div>
-                            <div class="bar" style="height:56px;background:var(--accent);"></div>
-                            <div class="bar-label" style="font-size:8px;">Man</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">10</div>
-                            <div class="bar" style="height:70px;background:var(--purple);"></div>
-                            <div class="bar-label" style="font-size:8px;">Mac</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">9</div>
-                            <div class="bar" style="height:63px;background:var(--warn);"></div>
-                            <div class="bar-label" style="font-size:8px;">Met</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">6</div>
-                            <div class="bar" style="height:42px;background:var(--teal);"></div>
-                            <div class="bar-label" style="font-size:8px;">Mat</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">7</div>
-                            <div class="bar" style="height:49px;background:var(--success);"></div>
-                            <div class="bar-label" style="font-size:8px;">Mea</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">8</div>
-                            <div class="bar" style="height:56px;background:var(--danger);"></div>
-                            <div class="bar-label" style="font-size:8px;">Nat</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Mini Monthly -->
-                      <div class="mini-chart-card" id="grid-chart-monthly">
-                        <div class="mini-chart-title">Monthly Change <i class="ti ti-calendar-event" style="color:var(--text3);"></i></div>
-                        <div class="chart-filter-bar" data-chart="monthly" data-view="grid"></div>
-                        <div class="chart-bars" style="height: 80px; gap: 4px;">
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">3</div>
-                            <div class="bar" style="height:70px;background:var(--accent);"></div>
-                            <div class="bar-label" style="font-size:8px;">Apr</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">2</div>
-                            <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
-                            <div class="bar-label" style="font-size:8px;">May</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">1</div>
-                            <div class="bar" style="height:23px;background:var(--accent);opacity:.7;"></div>
-                            <div class="bar-label" style="font-size:8px;">Jun</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">2</div>
-                            <div class="bar" style="height:46px;background:var(--accent);opacity:.85;"></div>
-                            <div class="bar-label" style="font-size:8px;">Jul</div>
-                          </div>
-                          <div class="bar-wrap">
-                            <div class="bar-count" style="font-size:9px;">3</div>
-                            <div class="bar" style="height:70px;background:var(--accent);"></div>
-                            <div class="bar-label" style="font-size:8px;">Aug</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Mini Status (Full Width) -->
-                      <div class="mini-chart-card full-width" id="grid-chart-status">
-                        <div class="mini-chart-title" style="margin-bottom: 4px;">
-                          <span>Overall Change Approval Status <i class="ti ti-clipboard-check" style="color:var(--text3);"></i></span>
-                          <div style="display: flex; gap: 8px; font-size: 9px; font-family: var(--mono);">
-                            <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#185FA5;border-radius:50%;"></span> Appr</span>
-                            <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#E27D2F;border-radius:50%;"></span> Rej</span>
-                            <span style="display:flex;align-items:center;gap:2px;"><span style="display:inline-block;width:5px;height:5px;background:#A3A29E;border-radius:50%;"></span> Pend</span>
-                          </div>
-                        </div>
-                        <div class="chart-filter-bar" data-chart="status" data-view="grid"></div>
-                        <div class="chart-bars grouped-bars" style="height: 70px; gap: 4px;">
-                          <!-- Apr -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">Apr</div>
-                          </div>
-                          <!-- May -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">4</div><div class="bar" style="height:28px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">May</div>
-                          </div>
-                          <!-- Jun -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">Jun</div>
-                          </div>
-                          <!-- Jul -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">8</div><div class="bar" style="height:56px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">3</div><div class="bar" style="height:21px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">Jul</div>
-                          </div>
-                          <!-- Aug -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">7</div><div class="bar" style="height:49px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">1</div><div class="bar" style="height:7px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">Aug</div>
-                          </div>
-                          <!-- Sep -->
-                          <div class="group-wrap">
-                            <div class="group-bars-row" style="gap:1px;">
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">9</div><div class="bar" style="height:63px;background:#185FA5;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#E27D2F;"></div></div>
-                              <div class="group-bar-sub" style="width:7px;"><div class="bar-count" style="font-size:8px;">2</div><div class="bar" style="height:14px;background:#A3A29E;"></div></div>
-                            </div>
-                            <div class="bar-label" style="font-size:8px;">Sep</div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            
-            </div>
-            <div class="card" style="margin-bottom:0;padding:0;overflow:hidden;">
-              <div style="padding:12px 14px 8px;">
-                <div class="card-title" style="margin-bottom:0;">Recent change requests <i class="ti ti-clock"
-                    style="font-size:16px;color:var(--text3);"></i></div>
-              </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="padding-left:14px;">Change No.</th>
-                    <th>Department</th>
-                    <th>Category</th>
-                    <th>Requested</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
-                    <td>Assembly</td>
-                    <td><span class="tag tag-machine">Machine</span></td>
-                    <td>20 May</td>
-                    <td><span class="badge badge-pending">Pending L2</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
-                    <td>Quality</td>
-                    <td><span class="tag tag-method">Method</span></td>
-                    <td>19 May</td>
-                    <td><span class="badge badge-approved">Approved</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
-                    <td>Production</td>
-                    <td><span class="tag tag-material">Material</span></td>
-                    <td>18 May</td>
-                    <td><span class="badge badge-review">L3 Review</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
-                    <td>Maintenance</td>
-                    <td><span class="tag tag-man">Man</span></td>
-                    <td>17 May</td>
-                    <td><span class="badge badge-rejected">Rejected</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
-                    <td>Logistics</td>
-                    <td><span class="tag tag-measure">Measure</span></td>
-                    <td>16 May</td>
-                    <td><span class="badge badge-closed">Closed</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+    <!-- Content Viewport -->
+    <section class="viewport-container">
+      <!-- Toolbar -->
+      <div class="viewport-toolbar">
+        <div class="toolbar-left">
+          <div class="btn-group">
+            <button id="mode-single-btn" class="toolbar-btn active" onclick="setViewMode('single')">
+              <i class="ti ti-device-laptop"></i> Single Screen
+            </button>
+            <button id="mode-all-btn" class="toolbar-btn" onclick="setViewMode('all')">
+              <i class="ti ti-layout-grid"></i> All Screens Stacked
+            </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 3 — L1 FORM
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 03</span>
-        <span class="screen-name">L1 Change Request Form — Multi-step</span>
-      </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Main</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item active"><i class="ti ti-file-plus"></i> New Request</div>
-            <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
-            <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
+        <div class="toolbar-center" id="device-controls">
+          <div class="btn-group">
+            <button class="toolbar-btn active" data-size="desktop" onclick="setDeviceSize('desktop')">
+              <i class="ti ti-device-desktop"></i> Desktop (Fit)
+            </button>
+            <button class="toolbar-btn" data-size="laptop" onclick="setDeviceSize('laptop')">
+              <i class="ti ti-device-laptop"></i> Laptop (1280px)
+            </button>
+            <button class="toolbar-btn" data-size="tablet" onclick="setDeviceSize('tablet')">
+              <i class="ti ti-device-tablet"></i> Tablet (768px)
+            </button>
+            <button class="toolbar-btn" data-size="mobile" onclick="setDeviceSize('mobile')">
+              <i class="ti ti-device-mobile"></i> Mobile (375px)
+            </button>
           </div>
-          <div class="main-content">
-            <div class="page-title">New L1 Change Request</div>
-            <div class="page-sub">Auto-ID will be assigned on submission</div>
-            <!-- Stepper -->
-            <div class="step-bar" style="margin-bottom:20px;">
-              <div class="step-col">
-                <div class="step-dot active">1</div>
-                <div class="step-name">Details</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step-col">
-                <div class="step-dot todo">2</div>
-                <div class="step-name">Categories</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step-col">
-                <div class="step-dot todo">3</div>
-                <div class="step-name">Risk</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step-col">
-                <div class="step-dot todo">4</div>
-                <div class="step-name">Files</div>
-              </div>
-              <div class="step-line"></div>
-              <div class="step-col">
-                <div class="step-dot todo">5</div>
-                <div class="step-name">Submit</div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-title">Request Details</div>
-              <div class="form-grid">
-                <div class="form-group">
-                  <div class="form-label">Department <span class="required">*</span></div>
-                  <select class="form-select">
-                    <option>Assembly</option>
-                    <option>Production</option>
-                    <option>Quality</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Process name <span class="required">*</span></div>
-                  <input class="form-input" type="text" placeholder="e.g. Welding Line A" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Machine / Equipment No.</div>
-                  <input class="form-input" type="text" placeholder="e.g. MFG-MC-1042" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Planned implementation date <span class="required">*</span></div>
-                  <input class="form-input" type="date" value="2026-05-28" />
-                </div>
-                <div class="form-group full">
-                  <div class="form-label">Context of change <span class="required">*</span></div>
-                  <input class="form-input" type="text" placeholder="Brief one-line context of the change..." />
-                </div>
-                <div class="form-group full">
-                  <div class="form-label">Detailed description <span class="required">*</span></div>
-                  <textarea class="form-textarea"
-                    placeholder="Describe the change — what, why, how, and expected outcome..."></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-title" style="margin-bottom:8px;">4M Change Categories <span class="required">*</span>
-              </div>
-              <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Select all applicable categories for
-                this change</div>
-              <div class="cat-grid">
-                <div class="cat-chip selected"><i class="ti ti-user"></i> Man</div>
-                <div class="cat-chip sel-purple"><i class="ti ti-settings"></i> Machine</div>
-                <div class="cat-chip"><i class="ti ti-package"></i> Material</div>
-                <div class="cat-chip"><i class="ti ti-git-branch"></i> Method</div>
-                <div class="cat-chip"><i class="ti ti-ruler"></i> Measurement</div>
-                <div class="cat-chip"><i class="ti ti-leaf"></i> Mother Nature</div>
-              </div>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-outline"><i class="ti ti-device-floppy"></i> Save draft</button>
-              <button class="btn btn-primary"><i class="ti ti-arrow-right"></i> Next: Risk Analysis</button>
-            </div>
-          </div>
+          <button class="action-btn" id="rotate-btn" onclick="toggleOrientation()" title="Rotate Device" disabled>
+            <i class="ti ti-rotate-clockwise"></i>
+          </button>
+        </div>
+
+        <div class="toolbar-right">
+          <button class="action-btn" onclick="reloadActiveFrame()" title="Refresh Frame">
+            <i class="ti ti-refresh"></i>
+          </button>
+          <button class="action-btn primary" id="open-btn" onclick="openActiveStandalone()" title="Open Standalone page in new tab">
+            <i class="ti ti-external-link"></i> Open Standalone
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 4 — APPROVAL WORKFLOW
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 04</span>
-        <span class="screen-name">Approval Workflow — L2 &amp; L3 Chain</span>
-      </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
+      <!-- Preview Area (Single Screen) -->
+      <div class="preview-area" id="preview-area">
+        <div class="preview-frame-wrapper" id="preview-frame-wrapper">
+          <div class="frame-header">
+            <div class="frame-dots">
+              <span class="frame-dot"></span>
+              <span class="frame-dot"></span>
+              <span class="frame-dot"></span>
             </div>
-            <div class="nav-section">Main</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
-            <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
-            <div class="nav-item active"><i class="ti ti-checks"></i> Approvals</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
+            <span class="frame-title" id="frame-title">Login — Role-based Sign In</span>
+            <span class="frame-dimensions" id="frame-dimensions">Desktop (Fit)</span>
           </div>
-          <div class="main-content">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
-              <div>
-                <div class="page-title">Approval — <span class="mini-id" style="font-size:16px;">4M-2026-246</span>
-                </div>
-                <div class="page-sub" style="margin-bottom:0;">Material change · Production Dept · 18 May 2026</div>
-              </div>
-              <span class="badge badge-review" style="padding: 6px 14px; font-size: 13px; margin-top: 4px;">L3 Review</span>
-            </div>
-            <div class="card">
-              <div class="card-title">Change summary</div>
-              <div class="info-row"><span class="info-key">Process</span><span class="info-val">Injection Moulding Line
-                  B</span></div>
-              <div class="info-row"><span class="info-key">Machine No.</span><span class="info-val">MFG-MC-0882</span>
-              </div>
-              <div class="info-row"><span class="info-key">Category</span><span class="info-val"><span
-                    class="tag tag-material">Material</span><span class="tag tag-method">Method</span></span></div>
-              <div class="info-row"><span class="info-key">Requested by</span><span class="info-val">Kumar S. ·
-                  Production</span></div>
-              <div class="info-row"><span class="info-key">Implementation date</span><span class="info-val">28 May
-                  2026</span></div>
-              <div class="info-row"><span class="info-key">Risk level</span><span class="info-val"><span
-                    class="badge badge-pending">Medium</span></span></div>
-            </div>
-            <div class="card">
-              <div class="card-title">Approval chain</div>
-              <div class="approval-row">
-                <div class="avatar av-blue">KS</div>
-                <div class="approval-info">
-                  <div class="approval-name">Kumar Selvam</div>
-                  <div class="approval-role">Requester · Production</div>
-                </div><span class="badge badge-approved">Submitted</span>
-              </div>
-              <div class="chain-line"></div>
-              <div class="approval-row">
-                <div class="avatar av-green">PV</div>
-                <div class="approval-info">
-                  <div class="approval-name">Priya Venkat</div>
-                  <div class="approval-role">L2 · PED Validation</div>
-                </div><span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i>
-                  Approved</span>
-              </div>
-              <div class="chain-line"></div>
-              <div class="approval-row">
-                <div class="avatar av-teal">RQ</div>
-                <div class="approval-info">
-                  <div class="approval-name">Ravi QA</div>
-                  <div class="approval-role">L2 · QA Setup Verification</div>
-                </div><span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i>
-                  Approved</span>
-              </div>
-              <div class="chain-line"></div>
-              <div class="approval-row active-row">
-                <div class="avatar av-accent">RM</div>
-                <div class="approval-info">
-                  <div class="approval-name">Rajesh Murthy</div>
-                  <div class="approval-role">L3 · HOD — Production</div>
-                </div><span class="badge badge-pending">Awaiting</span>
-              </div>
-              <div class="chain-line"></div>
-              <div class="approval-row dimmed">
-                <div class="avatar av-purple">UH</div>
-                <div class="approval-info">
-                  <div class="approval-name">Unit Head</div>
-                  <div class="approval-role">L3 · Final Approval</div>
-                </div><span class="badge badge-draft">Not reached</span>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-title">HOD review action</div>
-              <div class="form-group" style="margin-bottom:10px;">
-                <div class="form-label">Remarks / Comments</div>
-                <textarea class="form-textarea" placeholder="Add your review remarks here..."></textarea>
-              </div>
-              <div class="btn-row" style="margin-top:0;">
-                <button class="btn btn-danger"><i class="ti ti-x"></i> Reject</button>
-                <button class="btn btn-outline"><i class="ti ti-rotate"></i> Return for revision</button>
-                <button class="btn btn-success"><i class="ti ti-check"></i> Approve</button>
-              </div>
-            </div>
-          </div>
+          <iframe id="preview-iframe" class="preview-iframe" src="about:blank"></iframe>
         </div>
       </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 5 — TRACKER
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 05</span>
-        <span class="screen-name">Request Tracker — All Requests Table</span>
+      <!-- Stacked Scroll Area (All Screens) -->
+      <div class="stacked-area" id="stacked-area">
+        <!-- Rendered dynamically -->
       </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Main</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
-            <div class="nav-item active"><i class="ti ti-list-check"></i> All Requests</div>
-            <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div class="main-content">
-            <div class="page-title">All Change Requests</div>
-            <div class="page-sub">248 total · filtered by: All</div>
-            <div style="display:flex;gap:8px;margin-bottom:10px;">
-              <input class="form-input" style="flex:1;" placeholder="Search by ID, process, department..." />
-              <button class="btn btn-outline"><i class="ti ti-filter"></i> Filter</button>
-              <button class="btn btn-primary"><i class="ti ti-plus"></i> New</button>
-            </div>
-            <div class="filters">
-              <div class="filter-chip active">All (248)</div>
-              <div class="filter-chip">Pending (34)</div>
-              <div class="filter-chip">Approved (189)</div>
-              <div class="filter-chip">Rejected (18)</div>
-              <div class="filter-chip">Closed (7)</div>
-            </div>
-            <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="padding-left:14px;">Change No.</th>
-                    <th>Process</th>
-                    <th>Department</th>
-                    <th>Category</th>
-                    <th>Requested</th>
-                    <th>Level</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
-                    <td>Welding Line A</td>
-                    <td>Assembly</td>
-                    <td><span class="tag tag-machine">Machine</span></td>
-                    <td>20 May</td>
-                    <td><span class="badge badge-review">L2</span></td>
-                    <td><span class="badge badge-pending">Pending</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
-                    <td>Torque Calibration</td>
-                    <td>Quality</td>
-                    <td><span class="tag tag-method">Method</span></td>
-                    <td>19 May</td>
-                    <td><span class="badge badge-approved">L3</span></td>
-                    <td><span class="badge badge-approved">Approved</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
-                    <td>Injection Moulding B</td>
-                    <td>Production</td>
-                    <td><span class="tag tag-material">Material</span></td>
-                    <td>18 May</td>
-                    <td><span class="badge badge-review">L3</span></td>
-                    <td><span class="badge badge-review">Review</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
-                    <td>Line Operator Training</td>
-                    <td>Maintenance</td>
-                    <td><span class="tag tag-man">Man</span></td>
-                    <td>17 May</td>
-                    <td><span class="badge badge-rejected">L2</span></td>
-                    <td><span class="badge badge-rejected">Rejected</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
-                    <td>Gauge R&amp;R Study</td>
-                    <td>Quality</td>
-                    <td><span class="tag tag-measure">Measure</span></td>
-                    <td>16 May</td>
-                    <td><span class="badge badge-approved">L3</span></td>
-                    <td><span class="badge badge-closed">Closed</span></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left:14px;"><span class="mini-id">4M-2026-241</span></td>
-                    <td>Coolant Spec Change</td>
-                    <td>Production</td>
-                    <td><span class="tag tag-nature">Nature</span></td>
-                    <td>14 May</td>
-                    <td><span class="badge badge-approved">L3</span></td>
-                    <td><span class="badge badge-approved">Approved</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
+  </main>
 
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 6 — EFFECTIVENESS MONITORING
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 06</span>
-        <span class="screen-name">Effectiveness Monitoring — 3-Month Tracking</span>
-      </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Monitor</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item active"><i class="ti ti-chart-line"></i> Effectiveness</div>
-            <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
-            <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div class="main-content">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
-              <div>
-                <div class="page-title">Effectiveness — <span class="mini-id" style="font-size:16px;">4M-2026-243</span>
-                </div>
-                <div class="page-sub" style="margin-bottom:0;">Gauge R&amp;R Study · Quality Dept · 3-month monitoring
-                </div>
-              </div>
-              <span class="badge badge-approved"
-                style="padding: 6px 14px; font-size: 13px; margin-top: 4px;">Effective</span>
-            </div>
-            <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:14px;">
-              <div class="stat-card">
-                <div class="stat-label">Monitor Period</div>
-                <div class="stat-value" style="font-size:22px;">3 Months</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">Months Completed</div>
-                <div class="stat-value" style="font-size:22px;color:var(--success);">2 / 3</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">QA Status</div>
-                <div class="stat-value" style="font-size:22px;color:var(--teal);">Verified</div>
-              </div>
-            </div>
-            <div class="card" style="margin-bottom:0;">
-              <div class="card-title">Monthly monitoring log</div>
-              <div class="eff-month done">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                  <div class="eff-month-title" style="color:var(--success);">Month 1 — March 2026</div>
-                  <span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i> QA
-                    Approved</span>
-                </div>
-                <div class="eff-month-body" style="color:var(--success);">Gauge repeatability improved by 14%. No
-                  defects in controlled batch. Implementation consistent across all shifts.</div>
-                <div style="font-size:12px;color:var(--teal);margin-top:5px;font-family:var(--mono);">📎
-                  gauge-rr-mar26.pdf</div>
-              </div>
-              <div class="eff-month done">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                  <div class="eff-month-title" style="color:var(--success);">Month 2 — April 2026</div>
-                  <span class="badge badge-approved"><i class="ti ti-check" style="font-size:12px;"></i> QA
-                    Approved</span>
-                </div>
-                <div class="eff-month-body" style="color:var(--success);">Zero repeat defects. Gauge R&amp;R score: 8.2%
-                  (within 10% threshold). Training compliance 100%.</div>
-                <div style="font-size:12px;color:var(--teal);margin-top:5px;font-family:var(--mono);">📎
-                  gauge-rr-apr26.pdf</div>
-              </div>
-              <div class="eff-month pending">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                  <div class="eff-month-title" style="color:var(--text2);">Month 3 — May 2026</div>
-                  <span class="badge badge-pending">Awaiting input</span>
-                </div>
-                <div class="form-group" style="margin-bottom:8px;">
-                  <textarea class="form-textarea" style="min-height:48px;"
-                    placeholder="Enter monthly observation remarks..."></textarea>
-                </div>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn btn-outline" style="font-size:13px;padding:6px 12px;"><i class="ti ti-upload"></i>
-                    Upload evidence</button>
-                  <button class="btn btn-primary" style="font-size:13px;padding:6px 12px;"><i class="ti ti-send"></i>
-                    Submit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 7 — AUDIT LOG
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 07</span>
-        <span class="screen-name">Audit Log — Immutable Action Trail</span>
-      </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Monitor</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-            <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
-            <div class="nav-item active"><i class="ti ti-shield-check"></i> Audit Log</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div class="main-content">
-            <div class="page-title">Audit Log</div>
-            <div class="page-sub">Immutable record of all system actions</div>
-            <div style="display:flex;gap:8px;margin-bottom:14px;">
-              <input class="form-input" style="flex:1;" placeholder="Filter by user, action, or change ID..." />
-              <select class="form-select" style="width:140px;">
-                <option>All actions</option>
-                <option>Approvals</option>
-                <option>Submissions</option>
-                <option>Logins</option>
-              </select>
-              <button class="btn btn-outline"><i class="ti ti-download"></i> Export</button>
-            </div>
-            <div class="card" style="margin-bottom:0;">
-              <div class="timeline">
-                <div class="tl-item">
-                  <div class="tl-dot active"><i class="ti ti-check" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">L2 Approval — <span class="mini-id">4M-2026-248</span></div>
-                    <div class="tl-meta">Priya Venkat · PED Team · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-20 09:14:02</span></div>
-                    <div class="tl-note">Approved after PED validation. Setup confirmed on Floor 2.</div>
-                  </div>
-                </div>
-                <div class="tl-item">
-                  <div class="tl-dot done"><i class="ti ti-file" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">L1 Submission — <span class="mini-id">4M-2026-248</span></div>
-                    <div class="tl-meta">Kumar Selvam · Assembly · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-20 08:47:31</span></div>
-                    <div class="tl-note">Categories: Machine, Method. Risk: Medium. Attachment: change-spec.pdf</div>
-                  </div>
-                </div>
-                <div class="tl-item">
-                  <div class="tl-dot"
-                    style="background:var(--danger-light);border-color:var(--danger);color:var(--danger);"><i
-                      class="ti ti-x" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">L2 Rejection — <span class="mini-id">4M-2026-244</span></div>
-                    <div class="tl-meta">Ravi QA · QA Team · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-19 16:30:11</span></div>
-                    <div class="tl-note">Rejected: Training evidence insufficient. Operator records missing.</div>
-                  </div>
-                </div>
-                <div class="tl-item">
-                  <div class="tl-dot done"><i class="ti ti-login" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">User login</div>
-                    <div class="tl-meta">Ramanan Prabakaran · Admin · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-19 08:00:01</span></div>
-                  </div>
-                </div>
-                <div class="tl-item">
-                  <div class="tl-dot done"><i class="ti ti-check" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">L3 Final Approval — <span class="mini-id">4M-2026-241</span></div>
-                    <div class="tl-meta">Unit Head · Management · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-18 11:22:45</span></div>
-                    <div class="tl-note">Final approval granted. Effective from 20 May 2026.</div>
-                  </div>
-                </div>
-                <div class="tl-item">
-                  <div class="tl-dot done"><i class="ti ti-file-plus" style="font-size:12px;"></i></div>
-                  <div class="tl-body">
-                    <div class="tl-title">New request created — <span class="mini-id">4M-2026-243</span></div>
-                    <div class="tl-meta">Anand K · Quality · <span
-                        style="font-family:var(--mono);font-size:11px;">2026-05-16 10:05:19</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-       SCREEN 8 — REPORTS
-  ══════════════════════════════════════════════════════ -->
-    <div class="screen-card">
-      <div class="screen-header">
-        <span class="screen-title">Screen 08</span>
-        <span class="screen-name">Reports — Export &amp; Analytics</span>
-      </div>
-      <div class="screen-body">
-        <div class="sidebar-layout">
-          <div class="sidebar">
-            <div class="sidebar-logo">
-              <div class="logo-mark">4M·CMS</div>
-              <div class="logo-sub">Change Management</div>
-            </div>
-            <div class="nav-section">Monitor</div>
-            <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-            <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
-            <div class="nav-item active"><i class="ti ti-report"></i> Reports</div>
-            <div class="nav-item"><i class="ti ti-shield-check"></i> Audit Log</div>
-            <div class="sidebar-user">
-              <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
-              <div>
-                <div class="sidebar-user-name">Ramanan P</div>
-                <div class="sidebar-user-role">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div class="main-content">
-            <div class="page-title">Reports</div>
-            <div class="page-sub">Export and analyze change data</div>
-            <div class="card">
-              <div class="card-title">Generate report</div>
-              <div class="form-grid">
-                <div class="form-group">
-                  <div class="form-label">Report type</div>
-                  <select class="form-select">
-                    <option>Monthly Summary</option>
-                    <option>Approval Status Report</option>
-                    <option>Effectiveness Report</option>
-                    <option>Audit Report</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Department</div>
-                  <select class="form-select">
-                    <option>All Departments</option>
-                    <option>Assembly</option>
-                    <option>Quality</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Date from</div>
-                  <input class="form-input" type="date" value="2026-04-01" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Date to</div>
-                  <input class="form-input" type="date" value="2026-05-20" />
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Export format</div>
-                  <select class="form-select">
-                    <option>PDF</option>
-                    <option>Excel (.xlsx)</option>
-                    <option>CSV</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <div class="form-label">Category filter</div>
-                  <select class="form-select">
-                    <option>All Categories</option>
-                    <option>Machine</option>
-                    <option>Method</option>
-                  </select>
-                </div>
-              </div>
-              <div class="btn-row">
-                <button class="btn btn-outline"><i class="ti ti-eye"></i> Preview</button>
-                <button class="btn btn-primary"><i class="ti ti-download"></i> Export report</button>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-title">Approval rate by department</div>
-              <div style="margin-top:4px;">
-                <div class="progress-row"><span class="progress-label">Assembly</span>
-                  <div class="progress-track">
-                    <div class="progress-fill" style="width:82%;background:var(--accent);"></div>
-                  </div><span class="progress-val">82%</span>
-                </div>
-                <div class="progress-row"><span class="progress-label">Quality</span>
-                  <div class="progress-track">
-                    <div class="progress-fill" style="width:91%;background:var(--success);"></div>
-                  </div><span class="progress-val">91%</span>
-                </div>
-                <div class="progress-row"><span class="progress-label">Production</span>
-                  <div class="progress-track">
-                    <div class="progress-fill" style="width:74%;background:var(--accent);"></div>
-                  </div><span class="progress-val">74%</span>
-                </div>
-                <div class="progress-row"><span class="progress-label">Maintenance</span>
-                  <div class="progress-track">
-                    <div class="progress-fill" style="width:63%;background:var(--warn);"></div>
-                  </div><span class="progress-val">63%</span>
-                </div>
-                <div class="progress-row"><span class="progress-label">Logistics</span>
-                  <div class="progress-track">
-                    <div class="progress-fill" style="width:88%;background:var(--success);"></div>
-                  </div><span class="progress-val">88%</span>
-                </div>
-              </div>
-            </div>
-            <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr 1fr;margin-bottom:0;">
-              <div class="stat-card">
-                <div class="stat-label">Avg. Approval Time</div>
-                <div class="stat-value" style="font-size:22px;">2.4d</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">Avg. Close Time</div>
-                <div class="stat-value" style="font-size:22px;">18d</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">Effective Rate</div>
-                <div class="stat-value" style="font-size:22px;color:var(--success);">84%</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-label">SLA Breaches</div>
-                <div class="stat-value" style="font-size:22px;color:var(--danger);">3</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div style="text-align:center;padding:20px 0;font-size:13px;color:#888;font-family:'Space Mono',monospace;">
-      4M Change Management System · UI Design Blueprint · Prepared by Ramanan Prabakaran · 2026
-    </div>
+  <footer class="portal-footer">
+    <span><span class="pulse-dot"></span>4M Change Management System · UI Design Blueprint · Prepared for Plant A · May 2026</span>
+  </footer>
 
   <script>
-    const people = ["Kumar Selvam", "Priya Venkat", "Ravi QA", "Rajesh Murthy", "Anand K", "Ramanan P"];
-    const depts = ["PED", "PROD", "QA", "MAINT", "PC&L"];
-    const processes = ["Winding", "Soldering", "EOL Testing", "Potting", "Loading"];
-    const machines = ["MFG-MC-1042", "MFG-MC-0882", "MFG-MC-0711", "MFG-MC-0915"];
-    const sixMs = ["Man", "Machine", "Method", "Materials", "Measure", "Nature"];
-    const months = ["Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26"];
-
-    // Generate deterministic records using a simple pseudo-random generator
-    function generateMockData() {
-      const data = [];
-      let seed = 42;
-      function random() {
-        let x = Math.sin(seed++) * 10000;
-        return x - Math.floor(x);
+    // List of screens matching exact files
+    const screens = [
+      {
+        id: "login",
+        num: "Screen 01",
+        name: "Login — Role-based Sign In",
+        file: "login.html",
+        icon: "ti-login",
+        desc: "Role selection and plant authorization",
+        tags: ["Form", "Identity"]
+      },
+      {
+        id: "dashboard",
+        num: "Screen 02",
+        name: "Management Dashboard",
+        file: "dashboard.html",
+        icon: "ti-layout-dashboard",
+        desc: "KPIs, department/process analytics and charts",
+        tags: ["Dashboard", "Charts"]
+      },
+      {
+        id: "new-request",
+        num: "Screen 03",
+        name: "L1 Change Request Form",
+        file: "new-request.html",
+        icon: "ti-file-plus",
+        desc: "Multi-step request wizard with 4M categorization",
+        tags: ["Form", "Wizard"]
+      },
+      {
+        id: "approval",
+        num: "Screen 04",
+        name: "Approval Workflow",
+        file: "approval.html",
+        icon: "ti-checks",
+        desc: "L2/L3 HOD approval chain and validation logs",
+        tags: ["Workflow", "HOD"]
+      },
+      {
+        id: "tracker",
+        num: "Screen 05",
+        name: "Request Tracker",
+        file: "tracker.html",
+        icon: "ti-list-check",
+        desc: "All requests list with status chips and search filters",
+        tags: ["Table", "Search"]
+      },
+      {
+        id: "effectiveness",
+        num: "Screen 06",
+        name: "Effectiveness Monitoring",
+        file: "effectiveness.html",
+        icon: "ti-chart-line",
+        desc: "3-Month QA post-implementation observation logs",
+        tags: ["Log", "QA"]
+      },
+      {
+        id: "audit-log",
+        num: "Screen 07",
+        name: "Audit Log",
+        file: "audit-log.html",
+        icon: "ti-shield-check",
+        desc: "Immutable change action trails and timeline audits",
+        tags: ["Timeline", "Security"]
+      },
+      {
+        id: "reports",
+        num: "Screen 08",
+        name: "Reports & Exports",
+        file: "reports.html",
+        icon: "ti-report",
+        desc: "Statistical charts, avg approval times, export options",
+        tags: ["Report", "Export"]
       }
-      for (let i = 0; i < 75; i++) {
-        const person = people[Math.floor(random() * people.length)];
-        const dept = depts[Math.floor(random() * depts.length)];
-        const process = processes[Math.floor(random() * processes.length)];
-        const machineNo = machines[Math.floor(random() * machines.length)];
-        const sixM = sixMs[Math.floor(random() * sixMs.length)];
-        
-        // Status probability: Approved (60%), Pending (25%), Rejected (15%)
-        let statusVal = "Approved";
-        const rStatus = random();
-        if (rStatus > 0.75) statusVal = "Pending";
-        else if (rStatus > 0.6) statusVal = "Rejected";
-        
-        let month = months[Math.floor(random() * months.length)];
-        
-        data.push({
-          id: `4M-2026-${100 + i}`,
-          person,
-          dept,
-          process,
-          machineNo,
-          sixM,
-          status: statusVal,
-          date: month
-        });
-      }
-      return data;
-    }
-    const changeRequests = generateMockData();
+    ];
 
-    function normalizeDept(d) {
-      return d.replace(/\s+/g, '').toUpperCase();
-    }
+    let activeScreen = screens[0];
+    let viewMode = 'single'; // 'single' or 'all'
+    let deviceSize = 'desktop'; // 'desktop', 'laptop', 'tablet', 'mobile'
+    let isLandscape = false;
 
-    function matchProcess(label, processVal) {
-      const lbl = label.toLowerCase();
-      const val = processVal.toLowerCase();
-      if (lbl === val) return true;
-      if (lbl === 'wind' && val === 'winding') return true;
-      if (lbl === 'sold' && val === 'soldering') return true;
-      if (lbl === 'eol' && val === 'eol testing') return true;
-      if (lbl === 'pott' && val === 'potting') return true;
-      if (lbl === 'load' && val === 'loading') return true;
-      return false;
-    }
+    // Dimensions Map
+    const deviceDimensions = {
+      desktop: { w: '100%', h: '100%', label: 'Desktop (Fit)' },
+      laptop: { w: '1280px', h: '768px', label: 'Laptop (1280x768)' },
+      tablet: { w: '768px', h: '1024px', label: 'Tablet (768x1024)' },
+      mobile: { w: '375px', h: '667px', label: 'Mobile (375x667)' }
+    };
 
-    function matchSixM(label, val) {
-      const lbl = label.toLowerCase();
-      const v = val.toLowerCase();
-      if (lbl === v) return true;
-      if (lbl === 'mac' && v === 'machine') return true;
-      if (lbl === 'met' && v === 'method') return true;
-      if (lbl === 'mat' && v === 'materials') return true;
-      if (lbl === 'mea' && v === 'measure') return true;
-      if (lbl === 'nat' && v === 'nature') return true;
-      return false;
-    }
-
-    function matchMonth(label, val) {
-      const lbl = label.toLowerCase();
-      const v = val.toLowerCase();
-      return v.startsWith(lbl);
-    }
-
-    function buildFilterHTML() {
-      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
-      const peopleOpt = people.map(p => `<option value="${p}">${p}</option>`).join('');
-      const processesOpt = processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
-      const machinesOpt = machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+    // Render screen list in sidebar
+    function renderSidebar() {
+      const listContainer = document.getElementById('sidebar-list');
+      listContainer.innerHTML = '';
       
-      return `
-        <div class="filter-select-wrap">
-          <label>By Date</label>
-          <select class="filter-select" data-filter="date">
-            <option value="All">All Months</option>
-            ${monthsOpt}
-          </select>
-        </div>
-        <div class="filter-select-wrap">
-          <label>By Person</label>
-          <select class="filter-select" data-filter="person">
-            <option value="All">All Persons</option>
-            ${peopleOpt}
-          </select>
-        </div>
-        <div class="filter-select-wrap">
-          <label>By Process</label>
-          <select class="filter-select" data-filter="process">
-            <option value="All">All Processes</option>
-            ${processesOpt}
-          </select>
-        </div>
-        <div class="filter-select-wrap">
-          <label>By M/c no</label>
-          <select class="filter-select" data-filter="machine">
-            <option value="All">All Machines</option>
-            ${machinesOpt}
-          </select>
-        </div>
-      `;
-    }
-
-    function buildStatusFilterHTML() {
-      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
-      return `
-        <div class="filter-select-wrap">
-          <label>By Date</label>
-          <select class="filter-select" data-filter="date">
-            <option value="All">All Months</option>
-            ${monthsOpt}
-          </select>
-        </div>
-        <div class="filter-select-wrap">
-          <label>By Status</label>
-          <select class="filter-select" data-filter="status-val">
-            <option value="All">All Statuses</option>
-            <option value="Approved">Approved</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </div>
-      `;
-    }
-
-    function updateChart(chartId, viewType) {
-      const containerId = viewType === 'tab' ? `chart-${chartId}` : `grid-chart-${chartId}`;
-      const container = document.getElementById(containerId);
-      if (!container) return;
-
-      const dateSelect = container.querySelector('select[data-filter="date"]');
-      const personSelect = container.querySelector('select[data-filter="person"]');
-      const processSelect = container.querySelector('select[data-filter="process"]');
-      const machineSelect = container.querySelector('select[data-filter="machine"]');
-
-      const dateVal = dateSelect ? dateSelect.value : 'All';
-      const personVal = personSelect ? personSelect.value : 'All';
-      const processVal = processSelect ? processSelect.value : 'All';
-      const machineVal = machineSelect ? machineSelect.value : 'All';
-
-      let filtered = changeRequests;
-      if (dateVal !== 'All') {
-        filtered = filtered.filter(r => r.date === dateVal);
-      }
-      if (personVal !== 'All') {
-        filtered = filtered.filter(r => r.person === personVal);
-      }
-      if (processVal !== 'All') {
-        filtered = filtered.filter(r => r.process === processVal);
-      }
-      if (machineVal !== 'All') {
-        filtered = filtered.filter(r => r.machineNo === machineVal);
-      }
-
-      const statusSelect = container.querySelector('select[data-filter="status-val"]');
-      const statusVal = statusSelect ? statusSelect.value : 'All';
-      if (statusVal !== 'All') {
-        filtered = filtered.filter(r => r.status === statusVal);
-      }
-
-      const maxHeight = viewType === 'tab' ? 70 : 50;
-
-      if (chartId === 'dept') {
-        const barWraps = container.querySelectorAll('.bar-wrap');
-        const counts = Array.from(barWraps).map(wrap => {
-          const label = wrap.querySelector('.bar-label').textContent.trim();
-          const count = filtered.filter(r => normalizeDept(r.dept) === normalizeDept(label)).length;
-          return { wrap, count };
-        });
-
-        const maxCount = Math.max(...counts.map(c => c.count), 5);
-        counts.forEach(c => {
-          const h = Math.round(c.count * (maxHeight / maxCount));
-          c.wrap.querySelector('.bar-count').textContent = c.count;
-          c.wrap.querySelector('.bar').style.height = h + 'px';
-        });
-
-      } else if (chartId === 'process') {
-        const barWraps = container.querySelectorAll('.bar-wrap');
-        const counts = Array.from(barWraps).map(wrap => {
-          const label = wrap.querySelector('.bar-label').textContent.trim();
-          const count = filtered.filter(r => matchProcess(label, r.process)).length;
-          return { wrap, count };
-        });
-
-        const maxCount = Math.max(...counts.map(c => c.count), 5);
-        counts.forEach(c => {
-          const h = Math.round(c.count * (maxHeight / maxCount));
-          c.wrap.querySelector('.bar-count').textContent = c.count;
-          c.wrap.querySelector('.bar').style.height = h + 'px';
-        });
-
-      } else if (chartId === 'six-m') {
-        const barWraps = container.querySelectorAll('.bar-wrap');
-        const counts = Array.from(barWraps).map(wrap => {
-          const label = wrap.querySelector('.bar-label').textContent.trim();
-          const count = filtered.filter(r => matchSixM(label, r.sixM)).length;
-          return { wrap, count };
-        });
-
-        const maxCount = Math.max(...counts.map(c => c.count), 5);
-        counts.forEach(c => {
-          const h = Math.round(c.count * (maxHeight / maxCount));
-          c.wrap.querySelector('.bar-count').textContent = c.count;
-          c.wrap.querySelector('.bar').style.height = h + 'px';
-        });
-
-      } else if (chartId === 'monthly') {
-        const barWraps = container.querySelectorAll('.bar-wrap');
-        const counts = Array.from(barWraps).map(wrap => {
-          const label = wrap.querySelector('.bar-label').textContent.trim();
-          const count = filtered.filter(r => matchMonth(label, r.date)).length;
-          return { wrap, count };
-        });
-
-        const maxCount = Math.max(...counts.map(c => c.count), 5);
-        counts.forEach(c => {
-          const h = Math.round(c.count * (maxHeight / maxCount));
-          c.wrap.querySelector('.bar-count').textContent = c.count;
-          c.wrap.querySelector('.bar').style.height = h + 'px';
-        });
-
-      } else if (chartId === 'status') {
-        const groupWraps = container.querySelectorAll('.group-wrap');
-        const monthData = Array.from(groupWraps).map(group => {
-          const label = group.querySelector('.bar-label').textContent.trim();
-          const monthFiltered = filtered.filter(r => matchMonth(label, r.date));
-          const approved = monthFiltered.filter(r => r.status === 'Approved').length;
-          const rejected = monthFiltered.filter(r => r.status === 'Rejected').length;
-          const pending = monthFiltered.filter(r => r.status === 'Pending').length;
-          return { group, approved, rejected, pending };
-        });
-
-        const maxCount = Math.max(
-          ...monthData.flatMap(m => [m.approved, m.rejected, m.pending]),
-          5
-        );
-
-        monthData.forEach(m => {
-          const subs = m.group.querySelectorAll('.group-bar-sub');
-          if (subs[0]) {
-            subs[0].querySelector('.bar-count').textContent = m.approved;
-            subs[0].querySelector('.bar').style.height = Math.round(m.approved * (maxHeight / maxCount)) + 'px';
-          }
-          if (subs[1]) {
-            subs[1].querySelector('.bar-count').textContent = m.rejected;
-            subs[1].querySelector('.bar').style.height = Math.round(m.rejected * (maxHeight / maxCount)) + 'px';
-          }
-          if (subs[2]) {
-            subs[2].querySelector('.bar-count').textContent = m.pending;
-            subs[2].querySelector('.bar').style.height = Math.round(m.pending * (maxHeight / maxCount)) + 'px';
-          }
-        });
-      }
-    }
-
-    function switchChart(chartId) {
-      const tabs = document.querySelectorAll('.chart-tab');
-      tabs.forEach(tab => {
-        if (tab.getAttribute('data-chart') === chartId) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
-      });
-
-      const views = document.querySelectorAll('.chart-view');
-      views.forEach(view => {
-        if (view.id === 'chart-' + chartId) {
-          view.classList.add('active');
-          const bars = view.querySelectorAll('.bar');
-          bars.forEach(bar => {
-            const h = bar.style.height;
-            bar.style.height = '0';
-            void bar.offsetWidth; // Force layout reflow
-            bar.style.height = h;
-          });
-        } else {
-          view.classList.remove('active');
-        }
-      });
-    }
-
-    let isGridView = false;
-    function toggleChartView() {
-      isGridView = !isGridView;
-      const tabContent = document.getElementById('analytics-tab-content');
-      const gridContent = document.getElementById('analytics-grid-content');
-      const tabsContainer = document.getElementById('analytics-tabs');
-      const btn = document.getElementById('view-mode-btn');
-
-      if (isGridView) {
-        tabContent.style.display = 'none';
-        gridContent.style.display = 'block';
-        tabsContainer.style.display = 'none';
-        btn.innerHTML = '<i class="ti ti-layout-tab" style="font-size:13px;"></i> Tab View';
+      screens.forEach(screen => {
+        const item = document.createElement('div');
+        item.className = `screen-item ${screen.id === activeScreen.id ? 'active' : ''}`;
+        item.onclick = () => selectScreen(screen);
         
-        const gridBars = gridContent.querySelectorAll('.bar');
-        gridBars.forEach(bar => {
-          const h = bar.style.height;
-          bar.style.height = '0';
-          void bar.offsetWidth; // Force layout reflow
-          bar.style.height = h;
-        });
+        item.innerHTML = `
+          <div class="screen-icon">
+            <i class="ti ${screen.icon}"></i>
+          </div>
+          <div class="screen-details">
+            <div class="screen-number">${screen.num}</div>
+            <div class="screen-name">${screen.name}</div>
+            <div class="screen-desc">${screen.desc}</div>
+          </div>
+        `;
+        listContainer.appendChild(item);
+      });
+    }
+
+    // Filter screens from search input
+    function filterScreens() {
+      const query = document.getElementById('search-box').value.toLowerCase();
+      const items = document.querySelectorAll('.screen-item');
+      
+      screens.forEach((screen, index) => {
+        const matches = screen.name.toLowerCase().includes(query) || 
+                        screen.num.toLowerCase().includes(query) || 
+                        screen.desc.toLowerCase().includes(query) ||
+                        screen.tags.some(tag => tag.toLowerCase().includes(query));
+        
+        items[index].style.display = matches ? 'flex' : 'none';
+      });
+    }
+
+    // Select active screen
+    function selectScreen(screen) {
+      if (viewMode === 'all') {
+        // Switch to single screen view mode
+        setViewMode('single');
+      }
+      activeScreen = screen;
+      renderSidebar();
+      
+      // Update iframe source
+      const iframe = document.getElementById('preview-iframe');
+      iframe.style.opacity = '0';
+      setTimeout(() => {
+        iframe.src = screen.file;
+        iframe.onload = () => { iframe.style.opacity = '1'; };
+      }, 150);
+
+      // Update frame title
+      document.getElementById('frame-title').innerText = `${screen.num} — ${screen.name}`;
+      updateDimensionLabel();
+    }
+
+    // Set preview orientation
+    function toggleOrientation() {
+      if (deviceSize === 'desktop' || deviceSize === 'laptop') return;
+      isLandscape = !isLandscape;
+      applyDeviceSize();
+    }
+
+    // Set viewport dimensions
+    function setDeviceSize(size) {
+      deviceSize = size;
+      
+      // Update UI active buttons
+      const buttons = document.querySelectorAll('#device-controls .toolbar-btn');
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-size') === size) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Enable/disable rotation
+      const rotateBtn = document.getElementById('rotate-btn');
+      if (size === 'tablet' || size === 'mobile') {
+        rotateBtn.disabled = false;
       } else {
-        tabContent.style.display = 'block';
-        gridContent.style.display = 'none';
-        tabsContainer.style.display = 'flex';
-        btn.innerHTML = '<i class="ti ti-grid-dots" style="font-size:13px;"></i> Grid View';
+        rotateBtn.disabled = true;
+        isLandscape = false;
+      }
+
+      applyDeviceSize();
+    }
+
+    // Apply dimensions to preview element
+    function applyDeviceSize() {
+      const wrapper = document.getElementById('preview-frame-wrapper');
+      const dimensions = deviceDimensions[deviceSize];
+      
+      if (deviceSize === 'desktop') {
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        wrapper.style.borderRadius = 'var(--radius-lg)';
+      } else {
+        let width = dimensions.w;
+        let height = dimensions.h;
         
-        switchChart('dept');
+        if (isLandscape) {
+          width = dimensions.h;
+          height = dimensions.w;
+        }
+        
+        wrapper.style.width = width;
+        wrapper.style.height = height;
+        wrapper.style.borderRadius = '14px';
+      }
+      
+      updateDimensionLabel();
+    }
+
+    // Update dimensions text in bar
+    function updateDimensionLabel() {
+      const labelElement = document.getElementById('frame-dimensions');
+      const dimensions = deviceDimensions[deviceSize];
+      
+      if (deviceSize === 'desktop') {
+        labelElement.innerText = dimensions.label;
+      } else {
+        let w = dimensions.w;
+        let h = dimensions.h;
+        if (isLandscape) {
+          w = dimensions.h;
+          h = dimensions.w;
+        }
+        labelElement.innerText = `${deviceSize.charAt(0).toUpperCase() + deviceSize.slice(1)} (${w} x ${h}) ${isLandscape ? 'Landscape' : 'Portrait'}`;
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Inject filters
-      const filterBars = document.querySelectorAll('.chart-filter-bar');
-      filterBars.forEach(bar => {
-        const chartId = bar.getAttribute('data-chart');
-        const viewType = bar.getAttribute('data-view');
-        if (chartId === 'status') {
-          bar.innerHTML = buildStatusFilterHTML();
-        } else {
-          bar.innerHTML = buildFilterHTML();
-        }
+    // Toggle view mode: Single or Stacked
+    function setViewMode(mode) {
+      viewMode = mode;
+      
+      const singleBtn = document.getElementById('mode-single-btn');
+      const allBtn = document.getElementById('mode-all-btn');
+      const previewArea = document.getElementById('preview-area');
+      const stackedArea = document.getElementById('stacked-area');
+      const deviceControls = document.getElementById('device-controls');
+      const openBtn = document.getElementById('open-btn');
+
+      if (mode === 'single') {
+        singleBtn.classList.add('active');
+        allBtn.classList.remove('active');
+        previewArea.style.display = 'flex';
+        stackedArea.style.display = 'none';
+        deviceControls.style.opacity = '1';
+        deviceControls.style.pointerEvents = 'all';
+        openBtn.disabled = false;
         
-        const selects = bar.querySelectorAll('.filter-select');
-        selects.forEach(select => {
-          select.addEventListener('change', () => {
-            updateChart(chartId, viewType);
-          });
+        // Reload single screen
+        selectScreen(activeScreen);
+      } else {
+        singleBtn.classList.remove('active');
+        allBtn.classList.add('active');
+        previewArea.style.display = 'none';
+        stackedArea.style.display = 'flex';
+        deviceControls.style.opacity = '0.3';
+        deviceControls.style.pointerEvents = 'none';
+        openBtn.disabled = true;
+
+        renderStackedScreens();
+      }
+    }
+
+    // Render all screens stacked in All Screens mode
+    function renderStackedScreens() {
+      const container = document.getElementById('stacked-area');
+      container.innerHTML = '';
+      
+      screens.forEach(screen => {
+        const card = document.createElement('div');
+        card.className = 'stacked-screen-card';
+        
+        card.innerHTML = `
+          <div class="stacked-screen-header">
+            <div>
+              <span class="stacked-screen-title">${screen.num}</span>
+              <span class="stacked-screen-name">${screen.name}</span>
+            </div>
+            <div class="stacked-screen-actions">
+              <button class="action-btn" onclick="window.open('${screen.file}', '_blank')">
+                <i class="ti ti-external-link"></i> Standalone
+              </button>
+            </div>
+          </div>
+          <iframe class="preview-iframe" src="${screen.file}"></iframe>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Reload active iframe
+    function reloadActiveFrame() {
+      if (viewMode === 'single') {
+        const iframe = document.getElementById('preview-iframe');
+        iframe.src = iframe.src;
+      } else {
+        const iframes = document.querySelectorAll('.stacked-screen-card iframe');
+        iframes.forEach(iframe => {
+          iframe.src = iframe.src;
         });
-      });
+      }
+    }
 
-      // Initial render for all charts
-      const charts = ['dept', 'process', 'six-m', 'monthly', 'status'];
-      charts.forEach(c => {
-        updateChart(c, 'tab');
-        updateChart(c, 'grid');
-      });
+    // Open active screen standalone in a new tab
+    function openActiveStandalone() {
+      if (viewMode === 'single') {
+        window.open(activeScreen.file, '_blank');
+      }
+    }
 
-      // Initial trigger for the default active tab
-      switchChart('dept');
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar();
+      selectScreen(screens[0]);
     });
   </script>
-  </div>
 </body>
-
 </html>

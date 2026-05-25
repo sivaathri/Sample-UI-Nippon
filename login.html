@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Role-based Sign In</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg3);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <!-- <div class="login-logo">4M·CMS</div> -->
+      <div class="login-tagline">Change Management System — Manufacturing</div>
+      <div class="login-form">
+        <div class="form-group">
+          <div class="form-label">Email address</div>
+          <input class="form-input" type="email" value="abcd@plant.com" readonly />
+        </div>
+        <div class="form-group">
+          <div class="form-label">Password</div>
+          <input class="form-input" type="password" value="password" readonly />
+        </div>
+        <!-- <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);">
+            <input type="checkbox" checked readonly /> Remember me
+          </label>
+          <a style="font-size:11px;color:var(--accent);text-decoration:none;">Forgot password?</a>
+        </div> -->
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px;">
+          <i class="ti ti-login"></i> Sign in
+        </button>
+      </div>
+      <!-- <div style="margin-top:18px;padding-top:14px;border-top:0.5px solid var(--border);">
+        <div
+          style="font-size:10px;color:var(--text3);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;">
+          Quick role select</div>
+        <div class="role-grid">
+          <div class="role-chip"><i class="ti ti-user" style="font-size:11px;"></i> Operator</div>
+          <div class="role-chip"><i class="ti ti-check" style="font-size:11px;"></i> QA Team</div>
+          <div class="role-chip"><i class="ti ti-users" style="font-size:11px;"></i> HOD</div>
+          <div class="role-chip active"><i class="ti ti-shield" style="font-size:11px;"></i> Admin</div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</body>
+</html>

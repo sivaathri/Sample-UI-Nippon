@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Tracker — All Requests Table</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div>
+      <div class="nav-item active"><i class="ti ti-list-check"></i> All Requests</div>
+      <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
+        <div>
+          <div class="sidebar-user-name">Ramanan P</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="page-title">All Change Requests</div>
+      <div class="page-sub">248 total · filtered by: All</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input class="form-input" style="flex:1;" placeholder="Search by ID, process, department..." />
+        <button class="btn btn-outline"><i class="ti ti-filter"></i> Filter</button>
+        <button class="btn btn-primary"><i class="ti ti-plus"></i> New</button>
+      </div>
+      <div class="filters">
+        <div class="filter-chip active">All (248)</div>
+        <div class="filter-chip">Pending (34)</div>
+        <div class="filter-chip">Approved (189)</div>
+        <div class="filter-chip">Rejected (18)</div>
+        <div class="filter-chip">Closed (7)</div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="padding-left:14px;">Change No.</th>
+              <th>Process</th>
+              <th>Department</th>
+              <th>Category</th>
+              <th>Requested</th>
+              <th>Level</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-248</span></td>
+              <td>Welding Line A</td>
+              <td>Assembly</td>
+              <td><span class="tag tag-machine">Machine</span></td>
+              <td>20 May</td>
+              <td><span class="badge badge-review">L2</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-247</span></td>
+              <td>Torque Calibration</td>
+              <td>Quality</td>
+              <td><span class="tag tag-method">Method</span></td>
+              <td>19 May</td>
+              <td><span class="badge badge-approved">L3</span></td>
+              <td><span class="badge badge-approved">Approved</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-246</span></td>
+              <td>Injection Moulding B</td>
+              <td>Production</td>
+              <td><span class="tag tag-material">Material</span></td>
+              <td>18 May</td>
+              <td><span class="badge badge-review">L3</span></td>
+              <td><span class="badge badge-review">Review</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-244</span></td>
+              <td>Line Operator Training</td>
+              <td>Maintenance</td>
+              <td><span class="tag tag-man">Man</span></td>
+              <td>17 May</td>
+              <td><span class="badge badge-rejected">L2</span></td>
+              <td><span class="badge badge-rejected">Rejected</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-243</span></td>
+              <td>Gauge R&amp;R Study</td>
+              <td>Quality</td>
+              <td><span class="tag tag-measure">Measure</span></td>
+              <td>16 May</td>
+              <td><span class="badge badge-approved">L3</span></td>
+              <td><span class="badge badge-closed">Closed</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px;"><span class="mini-id">4M-2026-241</span></td>
+              <td>Coolant Spec Change</td>
+              <td>Production</td>
+              <td><span class="tag tag-nature">Nature</span></td>
+              <td>14 May</td>
+              <td><span class="badge badge-approved">L3</span></td>
+              <td><span class="badge badge-approved">Approved</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

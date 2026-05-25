@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — Immutable Action Trail</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Monitor</div>
+      <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item"><i class="ti ti-report"></i> Reports</div>
+      <div class="nav-item active"><i class="ti ti-shield-check"></i> Audit Log</div>
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
+        <div>
+          <div class="sidebar-user-name">Ramanan P</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="page-title">Audit Log</div>
+      <div class="page-sub">Immutable record of all system actions</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <input class="form-input" style="flex:1;" placeholder="Filter by user, action, or change ID..." />
+        <select class="form-select" style="width:140px;">
+          <option>All actions</option>
+          <option>Approvals</option>
+          <option>Submissions</option>
+          <option>Logins</option>
+        </select>
+        <button class="btn btn-outline"><i class="ti ti-download"></i> Export</button>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot active"><i class="ti ti-check" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">L2 Approval — <span class="mini-id">4M-2026-248</span></div>
+              <div class="tl-meta">Priya Venkat · PED Team · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-20 09:14:02</span></div>
+              <div class="tl-note">Approved after PED validation. Setup confirmed on Floor 2.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot done"><i class="ti ti-file" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">L1 Submission — <span class="mini-id">4M-2026-248</span></div>
+              <div class="tl-meta">Kumar Selvam · Assembly · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-20 08:47:31</span></div>
+              <div class="tl-note">Categories: Machine, Method. Risk: Medium. Attachment: change-spec.pdf</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"
+              style="background:var(--danger-light);border-color:var(--danger);color:var(--danger);"><i
+                class="ti ti-x" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">L2 Rejection — <span class="mini-id">4M-2026-244</span></div>
+              <div class="tl-meta">Ravi QA · QA Team · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-19 16:30:11</span></div>
+              <div class="tl-note">Rejected: Training evidence insufficient. Operator records missing.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot done"><i class="ti ti-login" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">User login</div>
+              <div class="tl-meta">Ramanan Prabakaran · Admin · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-19 08:00:01</span></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot done"><i class="ti ti-check" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">L3 Final Approval — <span class="mini-id">4M-2026-241</span></div>
+              <div class="tl-meta">Unit Head · Management · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-18 11:22:45</span></div>
+              <div class="tl-note">Final approval granted. Effective from 20 May 2026.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot done"><i class="ti ti-file-plus" style="font-size:12px;"></i></div>
+            <div class="tl-body">
+              <div class="tl-title">New request created — <span class="mini-id">4M-2026-243</span></div>
+              <div class="tl-meta">Anand K · Quality · <span
+                  style="font-family:var(--mono);font-size:11px;">2026-05-16 10:05:19</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

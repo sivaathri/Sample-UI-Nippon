@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L1 Change Request Form — Multi-step</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item active"><i class="ti ti-file-plus"></i> New Request</div>
+      <div class="nav-item"><i class="ti ti-list-check"></i> All Requests</div>
+      <div class="nav-item"><i class="ti ti-checks"></i> Approvals</div>
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
+        <div>
+          <div class="sidebar-user-name">Ramanan P</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="page-title">New L1 Change Request</div>
+      <div class="page-sub">Auto-ID will be assigned on submission</div>
+      <!-- Stepper -->
+      <div class="step-bar" style="margin-bottom:20px;">
+        <div class="step-col">
+          <div class="step-dot active">1</div>
+          <div class="step-name">Details</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-col">
+          <div class="step-dot todo">2</div>
+          <div class="step-name">Categories</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-col">
+          <div class="step-dot todo">3</div>
+          <div class="step-name">Risk</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-col">
+          <div class="step-dot todo">4</div>
+          <div class="step-name">Files</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-col">
+          <div class="step-dot todo">5</div>
+          <div class="step-name">Submit</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Request Details</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <div class="form-label">Department <span class="required">*</span></div>
+            <select class="form-select">
+              <option>Assembly</option>
+              <option>Production</option>
+              <option>Quality</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="form-label">Process name <span class="required">*</span></div>
+            <input class="form-input" type="text" placeholder="e.g. Welding Line A" />
+          </div>
+          <div class="form-group">
+            <div class="form-label">Machine / Equipment No.</div>
+            <input class="form-input" type="text" placeholder="e.g. MFG-MC-1042" />
+          </div>
+          <div class="form-group">
+            <div class="form-label">Planned implementation date <span class="required">*</span></div>
+            <input class="form-input" type="date" value="2026-05-28" />
+          </div>
+          <div class="form-group full">
+            <div class="form-label">Context of change <span class="required">*</span></div>
+            <input class="form-input" type="text" placeholder="Brief one-line context of the change..." />
+          </div>
+          <div class="form-group full">
+            <div class="form-label">Detailed description <span class="required">*</span></div>
+            <textarea class="form-textarea"
+              placeholder="Describe the change — what, why, how, and expected outcome..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px;">4M Change Categories <span class="required">*</span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Select all applicable categories for
+          this change</div>
+        <div class="cat-grid">
+          <div class="cat-chip selected"><i class="ti ti-user"></i> Man</div>
+          <div class="cat-chip sel-purple"><i class="ti ti-settings"></i> Machine</div>
+          <div class="cat-chip"><i class="ti ti-package"></i> Material</div>
+          <div class="cat-chip"><i class="ti ti-git-branch"></i> Method</div>
+          <div class="cat-chip"><i class="ti ti-ruler"></i> Measurement</div>
+          <div class="cat-chip"><i class="ti ti-leaf"></i> Mother Nature</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline"><i class="ti ti-device-floppy"></i> Save draft</button>
+        <button class="btn btn-primary"><i class="ti ti-arrow-right"></i> Next: Risk Analysis</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
