@@ -62,18 +62,34 @@
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item active" style="cursor: pointer;" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <!-- <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div> -->
-      <div class="nav-item" style="cursor: pointer;" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-checks"></i> L1 </div>
+      <div class="nav-item active" style="cursor: pointer;" id="sidebar-dash-btn" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item" style="cursor: pointer;" id="sidebar-all-btn" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-file-plus"></i> L1 </div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2 </div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L3 </div>
-      
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3 </div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-report"></i> Account Creation</div>
-      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleNotifications(event)">
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
+      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="toggleNotifications(event)">
         <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
         <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
+        
+        <!-- Notifications Dropdown inside Sidebar -->
+        <div id="notif-dropdown" style="display: none; position: absolute; bottom: 35px; left: 10px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 250px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+            <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px 0;">
+            <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+              <div style="font-size: 11px; color: var(--text2); margin-top: 2px; white-space: normal;">Change Request 4M-2026-248 awaits L2 validation.</div>
+              <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="sidebar-user">
@@ -92,12 +108,12 @@
           <div class="page-sub">Plant A — May 2026 · All Departments</div>
         </div>
         <div style="position: relative; z-index: 100;">
-          <div class="notification-bell" onclick="toggleNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
+          <div class="notification-bell" onclick="toggleHeaderNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
             <i class="ti ti-bell" style="font-size: 18px; color: var(--text2);"></i>
             <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--bg);">1</span>
           </div>
           <!-- Dropdown container -->
-          <div id="notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
+          <div id="header-notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
               <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
               <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
@@ -1558,6 +1574,18 @@
       if (dropdown) {
         dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
       }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) headerDropdown.style.display = 'none';
+    }
+
+    function toggleHeaderNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('header-notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+      const sidebarDropdown = document.getElementById('notif-dropdown');
+      if (sidebarDropdown) sidebarDropdown.style.display = 'none';
     }
 
     function clearNotif(event) {
@@ -1574,12 +1602,20 @@
       if (dropdown) {
         dropdown.style.display = 'none';
       }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
+      }
     }
 
     window.addEventListener('click', () => {
       const dropdown = document.getElementById('notif-dropdown');
       if (dropdown) {
         dropdown.style.display = 'none';
+      }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
       }
     });
 
@@ -1591,13 +1627,19 @@
       document.getElementById('all-requests-view').style.display = 'none';
 
       if (viewId === 'dashboard') {
-        const dashBtn = Array.from(navItems).find(item => item.textContent.includes('Dashboard'));
+        const dashBtn = document.getElementById('sidebar-dash-btn');
         if (dashBtn) dashBtn.classList.add('active');
         document.getElementById('dashboard-view').style.display = 'block';
+        if (window.location.hash !== '#dashboard') {
+          window.location.hash = 'dashboard';
+        }
       } else if (viewId === 'all-requests') {
-        const reqBtn = Array.from(navItems).find(item => item.textContent.includes('All Requests'));
+        const reqBtn = document.getElementById('sidebar-all-btn');
         if (reqBtn) reqBtn.classList.add('active');
         document.getElementById('all-requests-view').style.display = 'block';
+        if (window.location.hash !== '#all-requests') {
+          window.location.hash = 'all-requests';
+        }
       }
     }
 
@@ -1776,11 +1818,20 @@
         updateChart(c, 'grid');
       });
 
-      // Initial trigger for the default active tab
-      switchChart('dept');
-
       // Initialize all requests view
       initAllRequestsView();
+
+      // Hash Routing
+      function handleHashRoute() {
+        if (window.location.hash === '#all-requests') {
+          showView('all-requests');
+        } else {
+          showView('dashboard');
+          switchChart('dept');
+        }
+      }
+      window.addEventListener('hashchange', handleHashRoute);
+      handleHashRoute();
 
       // Initialize datepicker (Flatpickr) on all date inputs
       flatpickr(".datepicker", {
