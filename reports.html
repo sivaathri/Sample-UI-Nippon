@@ -234,6 +234,12 @@
     </div>
   </div>
   <script>
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
     function toggleNotifications(event) {
       event.stopPropagation();
       const dropdown = document.getElementById('notif-dropdown');
