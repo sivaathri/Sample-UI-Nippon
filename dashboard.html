@@ -63,9 +63,14 @@
       </div>
       <div class="nav-section">Main</div>
       <div class="nav-item active" style="cursor: pointer;" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-file-plus"></i> New Request</div>
+      <!-- <div class="nav-item"><i class="ti ti-file-plus"></i> New Request</div> -->
       <div class="nav-item" style="cursor: pointer;" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> Approvals</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-checks"></i> L1 </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2 </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L3 </div>
+      
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-report"></i> Account Creation</div>
       <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleNotifications(event)">
         <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
         <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
@@ -1776,15 +1781,6 @@
 
       // Initialize all requests view
       initAllRequestsView();
-
-      // Check query parameter for view
-      const urlParams = new URLSearchParams(window.location.search);
-      const viewParam = urlParams.get('view');
-      if (viewParam === 'all-requests') {
-        showView('all-requests');
-      } else {
-        showView('dashboard');
-      }
 
       // Initialize datepicker (Flatpickr) on all date inputs
       flatpickr(".datepicker", {
