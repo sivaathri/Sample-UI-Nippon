@@ -7,7 +7,37 @@
   <title>Management Dashboard — KPIs, Charts &amp; Recent Requests</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
+    /* Custom Flatpickr Theme matching Nippon UI */
+    .flatpickr-calendar {
+      background: var(--bg) !important;
+      border: 0.5px solid var(--border) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      border-radius: var(--rad-lg) !important;
+      font-family: var(--font) !important;
+    }
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.prevMonthDay.selected, .flatpickr-day.nextMonthDay.selected {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
+    }
+    .flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: var(--text) !important;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+    .flatpickr-day.today {
+      border-color: var(--accent-light) !important;
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
     body {
       height: 100vh;
       width: 100%;
@@ -820,11 +850,11 @@
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>From Date</label>
-          <input type="date" class="filter-select" id="req-filter-from-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" id="req-filter-from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>To Date</label>
-          <input type="date" class="filter-select" id="req-filter-to-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" id="req-filter-to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>By Person</label>
@@ -986,11 +1016,11 @@
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>From Date</label>
-          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>To Date</label>
-          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Person</label>
@@ -1028,11 +1058,11 @@
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>From Date</label>
-          <input type="date" class="filter-select" data-filter="from-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
           <label>To Date</label>
-          <input type="date" class="filter-select" data-filter="to-date" style="padding: 0 4px;" />
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
         </div>
         <div class="filter-select-wrap">
           <label>By Status</label>
@@ -1059,8 +1089,8 @@
       const machineSelect = container.querySelector('select[data-filter="machine"]');
 
       const dateVal = dateSelect ? dateSelect.value : 'All';
-      const fromDateVal = fromDateInput ? fromDateInput.value : '';
-      const toDateVal = toDateInput ? toDateInput.value : '';
+      const fromDateVal = fromDateInput ? convertInputDate(fromDateInput.value) : '';
+      const toDateVal = toDateInput ? convertInputDate(toDateInput.value) : '';
       const personVal = personSelect ? personSelect.value : 'All';
       const processVal = processSelect ? processSelect.value : 'All';
       const machineVal = machineSelect ? machineSelect.value : 'All';
@@ -1294,6 +1324,16 @@
       }
     }
 
+    function convertInputDate(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('/');
+      if (parts.length !== 3) return '';
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+
     function formatShortDate(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
@@ -1350,8 +1390,10 @@
     function renderRequestsTable() {
       const searchVal = (document.getElementById('req-filter-search')?.value || '').toLowerCase().trim();
       const monthVal = document.getElementById('req-filter-month')?.value || 'All';
-      const fromDateVal = document.getElementById('req-filter-from-date')?.value || '';
-      const toDateVal = document.getElementById('req-filter-to-date')?.value || '';
+      const fromDateRaw = document.getElementById('req-filter-from-date')?.value || '';
+      const toDateRaw = document.getElementById('req-filter-to-date')?.value || '';
+      const fromDateVal = convertInputDate(fromDateRaw);
+      const toDateVal = convertInputDate(toDateRaw);
       const personVal = document.getElementById('req-filter-person')?.value || 'All';
       const processVal = document.getElementById('req-filter-process')?.value || 'All';
       const machineVal = document.getElementById('req-filter-machine')?.value || 'All';
@@ -1461,6 +1503,15 @@
 
       // Initialize all requests view
       initAllRequestsView();
+
+      // Initialize datepicker (Flatpickr) on all date inputs
+      flatpickr(".datepicker", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
     });
   </script>
 </body>

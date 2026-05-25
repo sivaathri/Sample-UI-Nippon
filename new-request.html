@@ -6,7 +6,37 @@
   <title>L1 Change Request Form — Multi-step</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
+    /* Custom Flatpickr Theme matching Nippon UI */
+    .flatpickr-calendar {
+      background: var(--bg) !important;
+      border: 0.5px solid var(--border) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      border-radius: var(--rad-lg) !important;
+      font-family: var(--font) !important;
+    }
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.prevMonthDay.selected, .flatpickr-day.nextMonthDay.selected {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
+    }
+    .flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: var(--text) !important;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+    .flatpickr-day.today {
+      border-color: var(--accent-light) !important;
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
     body {
       height: 100vh;
       width: 100%;
@@ -89,7 +119,7 @@
           </div>
           <div class="form-group">
             <div class="form-label">Planned implementation date <span class="required">*</span></div>
-            <input class="form-input" type="date" value="2026-05-28" />
+            <input class="form-input datepicker" type="text" placeholder="dd/mm/yyyy" value="28/05/2026" />
           </div>
           <div class="form-group full">
             <div class="form-label">Context of change <span class="required">*</span></div>
@@ -122,5 +152,13 @@
       </div>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      flatpickr(".datepicker", {
+        dateFormat: "d/m/Y",
+        allowInput: true
+      });
+    });
+  </script>
 </body>
 </html>
