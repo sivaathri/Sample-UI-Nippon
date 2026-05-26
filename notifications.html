@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications Centre — Change Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      background: var(--bg);
+    }
+
+    /* ── Notifications Custom CSS ── */
+    .notif-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .notif-search-container {
+      position: relative;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .notif-search-container i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      font-size: 16px;
+    }
+
+    .notif-search-input {
+      padding-left: 36px;
+    }
+
+    .notif-filters {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--text2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .filter-chip:hover {
+      background: var(--bg2);
+      color: var(--text);
+    }
+
+    .filter-chip.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-count {
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text2);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-family: var(--mono);
+    }
+
+    .filter-chip.active .filter-count {
+      background: var(--accent);
+      color: white;
+    }
+
+    .notif-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .notif-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--rad-lg);
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .notif-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .notif-card.unread {
+      border-left: 4px solid var(--accent);
+      background: linear-gradient(90deg, rgba(24, 95, 165, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    .notif-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Icon Types Colors */
+    .icon-action {
+      background: var(--warn-light);
+      color: var(--warn);
+    }
+
+    .icon-info {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .icon-warning {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .icon-system {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .notif-content-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notif-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .notif-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .notif-time {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+
+    .notif-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .notif-meta-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .notif-badge-meta {
+      font-size: 11px;
+      font-family: var(--mono);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .notif-card-actions {
+      display: flex;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+    }
+
+    .notif-card:hover .notif-card-actions {
+      opacity: 1;
+    }
+
+    .notif-action-btn {
+      padding: 4px 8px;
+      font-size: 12px;
+      height: 26px;
+    }
+
+    /* ── Side-Drawer Details Panel ── */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .drawer-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .details-drawer {
+      position: fixed;
+      top: 0;
+      right: -460px;
+      width: 460px;
+      max-width: 100%;
+      height: 100%;
+      background: var(--bg);
+      border-left: 0.5px solid var(--border2);
+      box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
+      z-index: 1250;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .drawer-overlay.show .details-drawer {
+      right: 0;
+    }
+
+    .drawer-header {
+      padding: 16px 20px;
+      background: var(--bg2);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .drawer-footer {
+      padding: 14px 20px;
+      background: var(--bg2);
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13.5px;
+    }
+
+    .info-key {
+      color: var(--text2);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+    }
+
+    .info-val {
+      font-weight: 500;
+      color: var(--text);
+      text-align: right;
+    }
+
+    /* ── Custom Modals ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease-in-out;
+      z-index: 1100;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      background: var(--bg);
+      border: 0.5px solid var(--border2);
+      border-radius: var(--rad-lg);
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .modal-overlay.show .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 14px 20px;
+      background: var(--bg2);
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer {
+      padding: 12px 20px;
+      background: var(--bg2);
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .pref-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .pref-group:last-child {
+      border-bottom: none;
+    }
+
+    .pref-title {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .pref-desc {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+
+    .pref-channels {
+      display: flex;
+      gap: 10px;
+    }
+
+    .pref-channel-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--rad);
+      border: 0.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+
+    .pref-channel-btn:hover {
+      background: var(--bg2);
+      color: var(--text);
+    }
+
+    .pref-channel-btn.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border2);
+      transition: .2s;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--rad);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1500;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+        <i class="ti ti-list-check"></i> All Requests
+      </div>
+      <!-- L1 expandable group -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'">
+        <i class="ti ti-chart-line"></i> Effectiveness
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'">
+        <i class="ti ti-user-plus"></i> Account Creation
+      </div>
+      <!-- ACTIVE Notifications menu link -->
+      <div class="nav-item active" style="cursor: pointer;" onclick="window.location.href='notifications.html'">
+        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto; display: none;">0</span>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='user-creation.html'">
+        <i class="ti ti-users"></i> Users
+      </div>
+
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">RP</div>
+        <div>
+          <div class="sidebar-user-name">Ramanan P</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Content -->
+    <div class="main-content">
+      <div class="page-title">Notifications Centre</div>
+      <div class="page-sub">Review alerts, track approvals, and manage notification triggers for Plant A.</div>
+
+      <!-- Controls & Toolbar -->
+      <div class="notif-toolbar">
+        <div class="notif-search-container">
+          <i class="ti ti-search"></i>
+          <input type="text" id="notifSearch" class="form-input notif-search-input" placeholder="Search by ID, title, process, sender..." oninput="applyFilters()" />
+        </div>
+        
+        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+          <button class="btn btn-outline" onclick="markAllAsRead()" title="Mark all notifications as read">
+            <i class="ti ti-checks"></i> Mark all read
+          </button>
+          <button class="btn btn-outline" onclick="clearAllRead()" title="Clear read notifications from history">
+            <i class="ti ti-trash"></i> Clear read
+          </button>
+          <button class="btn btn-outline" onclick="resetToDefaults()" title="Reset default sample notifications">
+            <i class="ti ti-rotate"></i> Reset
+          </button>
+          <button class="btn btn-outline" onclick="openPreferencesModal()" title="Notification Settings">
+            <i class="ti ti-settings"></i> Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="notif-toolbar" style="margin-bottom: 20px;">
+        <div class="notif-filters" id="tabContainer">
+          <div class="filter-chip active" onclick="switchTab('all')" data-tab="all">
+            <span>All Alerts</span>
+            <span class="filter-count" id="count-all">0</span>
+          </div>
+          <div class="filter-chip" onclick="switchTab('unread')" data-tab="unread">
+            <span>Unread</span>
+            <span class="filter-count" id="count-unread" style="background: var(--danger); color: white;">0</span>
+          </div>
+          <div class="filter-chip" onclick="switchTab('action')" data-tab="action">
+            <span>Action Required</span>
+            <span class="filter-count" id="count-action">0</span>
+          </div>
+          <div class="filter-chip" onclick="switchTab('system')" data-tab="system">
+            <span>System Logs</span>
+            <span class="filter-count" id="count-system">0</span>
+          </div>
+          <div class="filter-chip" onclick="switchTab('read')" data-tab="read">
+            <span>Read</span>
+            <span class="filter-count" id="count-read">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications List Container -->
+      <div class="notif-list" id="notifListContainer">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Side-Drawer Details Panel -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()">
+    <div class="details-drawer" id="detailsDrawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <span class="drawer-title" id="drawerTitle">Notification Details</span>
+        <button class="modal-close-btn" style="font-size: 18px;" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="drawer-body" id="drawerBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="drawer-footer" id="drawerFooter">
+        <!-- Dynamic buttons based on notification type -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Preferences / Settings Modal -->
+  <div class="modal-overlay" id="preferencesModal">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-title"><i class="ti ti-settings" style="margin-right: 6px;"></i>Notification Preferences</span>
+        <button class="modal-close-btn" onclick="closePreferencesModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" style="padding-top: 14px;">
+        <p style="font-size: 13px; color: var(--text2); margin-bottom: 16px;">Customize how you receive alerts and validation reminders. Toggles apply globally across the plant.</p>
+        
+        <div class="pref-group">
+          <div>
+            <div class="pref-title">New Change Requests</div>
+            <div class="pref-desc">Trigger when an operator submits a new L1 change request.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="pref-new-requests" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="pref-group">
+          <div>
+            <div class="pref-title">Approvals &amp; Validation Reminders</div>
+            <div class="pref-desc">Notify when a request reaches L2 or L3 review stages.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="pref-approvals" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="pref-group">
+          <div>
+            <div class="pref-title">Effectiveness Reviews</div>
+            <div class="pref-desc">Alert when a 3-month QA post-implementation log is due.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="pref-effectiveness" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="pref-group">
+          <div>
+            <div class="pref-title">System &amp; Database Logs</div>
+            <div class="pref-desc">Receive security audits, backups, and user creation summaries.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="pref-system" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div style="margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 14px;">
+          <span class="form-label" style="display: block; margin-bottom: 10px;">Alert Channels</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline pref-channel-btn active" id="chan-inapp" onclick="toggleChannel('inapp')" title="In-App Feed"><i class="ti ti-bell"></i> In-App</button>
+            <button class="btn btn-outline pref-channel-btn active" id="chan-email" onclick="toggleChannel('email')" title="Email Digest"><i class="ti ti-mail"></i> Email</button>
+            <button class="btn btn-outline pref-channel-btn" id="chan-sms" onclick="toggleChannel('sms')" title="SMS Mobile Alert"><i class="ti ti-device-mobile"></i> SMS</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closePreferencesModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="savePreferences()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Message Alert -->
+  <div id="toast" class="toast">
+    <i class="ti ti-circle-check" id="toastIcon"></i>
+    <span id="toastMessage">Action completed successfully</span>
+  </div>
+
+  <!-- JavaScript Logics -->
+  <script>
+    // Standard mock notification data matching actual 4M Change System records
+    const defaultNotifications = [
+      {
+        id: "NOTIF-248",
+        title: "L2 Setup Validation Awaiting",
+        msg: "Change Request 4M-2026-248 (Machine change in Welding Line A) requires L2 PED validation setup checklist.",
+        time: "Just now",
+        timestamp: new Date().getTime(),
+        type: "action",
+        reqId: "4M-2026-248",
+        process: "Welding Line A",
+        machine: "WLD-MC-04A",
+        dept: "PED",
+        category: "Machine",
+        requestedBy: "Kumar Selvam",
+        severity: "high",
+        read: false
+      },
+      {
+        id: "NOTIF-247",
+        title: "Change Request Approved by HOD",
+        msg: "Change Request 4M-2026-247 (Method calibration) has been approved by L3 HOD and forwarded to unit supervisor.",
+        time: "2 hours ago",
+        timestamp: new Date().getTime() - 2 * 60 * 60 * 1000,
+        type: "info",
+        reqId: "4M-2026-247",
+        process: "Torque Calibration",
+        machine: "MFG-CAL-08",
+        dept: "QAD",
+        category: "Method",
+        requestedBy: "Ravi QA",
+        severity: "normal",
+        read: false
+      },
+      {
+        id: "NOTIF-246",
+        title: "L3 Final Review Required",
+        msg: "Change Request 4M-2026-246 (Material spec adjustment in Injection Moulding B) reached L3 review stages.",
+        time: "5 hours ago",
+        timestamp: new Date().getTime() - 5 * 60 * 60 * 1000,
+        type: "action",
+        reqId: "4M-2026-246",
+        process: "Injection Moulding B",
+        machine: "MFG-MC-0882",
+        dept: "PRODUCTION",
+        category: "Material",
+        requestedBy: "Priya Venkat",
+        severity: "high",
+        read: false
+      },
+      {
+        id: "NOTIF-244",
+        title: "Change Request Rejected",
+        msg: "Change Request 4M-2026-244 (Man training syllabus update) was rejected by Unit Head. Comments: Needs syllabus validation.",
+        time: "Yesterday",
+        timestamp: new Date().getTime() - 24 * 60 * 60 * 1000,
+        type: "warning",
+        reqId: "4M-2026-244",
+        process: "Line Operator Training",
+        machine: "N/A",
+        dept: "MAINTENANCE",
+        category: "Man",
+        requestedBy: "Kumar Selvam",
+        severity: "medium",
+        read: true
+      },
+      {
+        id: "NOTIF-231",
+        title: "Effectiveness Evaluation Due",
+        msg: "The 3-Month QA post-implementation observation logs are now due for approved Request 4M-2026-231.",
+        time: "3 days ago",
+        timestamp: new Date().getTime() - 3 * 24 * 60 * 60 * 1000,
+        type: "action",
+        reqId: "4M-2026-231",
+        process: "Gauge R&R Study",
+        machine: "QA-G03",
+        dept: "QAD",
+        category: "Measure",
+        requestedBy: "Ravi QA",
+        severity: "medium",
+        read: true
+      },
+      {
+        id: "NOTIF-SYS-1",
+        title: "System DB Backup Successful",
+        msg: "System database automatic backup finished. 248 active change records and 4 user profiles encrypted successfully.",
+        time: "4 days ago",
+        timestamp: new Date().getTime() - 4 * 24 * 60 * 60 * 1000,
+        type: "system",
+        reqId: "N/A",
+        process: "System Maintenance",
+        machine: "Cloud Database Node",
+        dept: "IT Admin",
+        category: "System",
+        requestedBy: "System Daemon",
+        severity: "low",
+        read: true
+      }
+    ];
+
+    let currentTab = 'all';
+    let selectedNotif = null;
+
+    // Load active notifications from localStorage
+    function getNotifications() {
+      const stored = localStorage.getItem("cms_notifications");
+      if (!stored) {
+        localStorage.setItem("cms_notifications", JSON.stringify(defaultNotifications));
+        return defaultNotifications;
+      }
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const first = parsed[0];
+          // If first item lacks 'msg' or 'reqId' properties, automatically upgrade/reset to defaultNotifications
+          if (first && (first.msg === undefined || first.reqId === undefined)) {
+            localStorage.setItem("cms_notifications", JSON.stringify(defaultNotifications));
+            return defaultNotifications;
+          }
+          return parsed;
+        }
+      } catch (e) {
+        localStorage.setItem("cms_notifications", JSON.stringify(defaultNotifications));
+        return defaultNotifications;
+      }
+      return JSON.parse(stored);
+    }
+
+    // Reset to default sample notifications
+    function resetToDefaults() {
+      localStorage.setItem("cms_notifications", JSON.stringify(defaultNotifications));
+      currentTab = 'all';
+      switchTab('all');
+      updateBadgeCounts();
+      applyFilters();
+      showToast("Notifications reset to demo default data!", "ti-rotate");
+    }
+
+    // Save notifications to localStorage
+    function saveNotifications(notifs) {
+      localStorage.setItem("cms_notifications", JSON.stringify(notifs));
+      updateBadgeCounts();
+    }
+
+    // Sidebar & general group expansion toggle
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
+    // Setup visual badges counts
+    function updateBadgeCounts() {
+      const notifs = getNotifications();
+      const unreadCount = notifs.filter(n => !n.read).length;
+      
+      const sidebarBadge = document.getElementById("sidebar-notif-badge");
+      if (sidebarBadge) {
+        if (unreadCount > 0) {
+          sidebarBadge.textContent = unreadCount;
+          sidebarBadge.style.display = "inline-block";
+        } else {
+          sidebarBadge.style.display = "none";
+        }
+      }
+
+      // Filter chips counts
+      const allCount = notifs.length;
+      const actionCount = notifs.filter(n => n.type === 'action').length;
+      const systemCount = notifs.filter(n => n.type === 'system').length;
+      const readCount = notifs.filter(n => n.read).length;
+
+      document.getElementById("count-all").textContent = allCount;
+      document.getElementById("count-unread").textContent = unreadCount;
+      document.getElementById("count-action").textContent = actionCount;
+      document.getElementById("count-system").textContent = systemCount;
+      document.getElementById("count-read").textContent = readCount;
+    }
+
+    // Switch filters chip tabs
+    function switchTab(tabId) {
+      currentTab = tabId;
+      
+      const chips = document.querySelectorAll("#tabContainer .filter-chip");
+      chips.forEach(chip => {
+        if (chip.getAttribute("data-tab") === tabId) {
+          chip.classList.add("active");
+        } else {
+          chip.classList.remove("active");
+        }
+      });
+
+      applyFilters();
+    }
+
+    // Return CSS Icon Class mapping
+    function getIconInfo(type) {
+      let icon = "ti-bell";
+      let colorClass = "icon-system";
+      if (type === 'action') {
+        icon = "ti-checks";
+        colorClass = "icon-action";
+      } else if (type === 'info') {
+        icon = "ti-circle-check";
+        colorClass = "icon-info";
+      } else if (type === 'warning') {
+        icon = "ti-alert-triangle";
+        colorClass = "icon-warning";
+      } else if (type === 'system') {
+        icon = "ti-cpu";
+        colorClass = "icon-system";
+      }
+      return { icon, colorClass };
+    }
+
+    // Render feed items on layout
+    function renderNotificationsFeed(items) {
+      const container = document.getElementById("notifListContainer");
+      container.innerHTML = "";
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 40px; color: var(--text3);">
+            <i class="ti ti-bell-off" style="font-size: 38px; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+            No alerts or notifications fit the current filters.
+          </div>
+        `;
+        return;
+      }
+
+      items.forEach(notif => {
+        const { icon, colorClass } = getIconInfo(notif.type);
+        const card = document.createElement("div");
+        card.className = `notif-card ${notif.read ? '' : 'unread'}`;
+        card.onclick = () => openDrawer(notif.id);
+
+        let categoryTag = '';
+        if (notif.category && notif.category !== 'System') {
+          const catLower = notif.category.toLowerCase();
+          const tagClass = catLower === 'materials' ? 'tag-material' : `tag-${catLower}`;
+          categoryTag = `<span class="tag ${tagClass}" style="font-size: 10px;">${notif.category}</span>`;
+        }
+
+        const nTitle = notif.title || "New Message";
+        const nTime = notif.time || "Just now";
+        const nDesc = notif.msg || notif.text || "No details provided.";
+        const nReqId = notif.reqId || "N/A";
+        const nDept = notif.dept || "General";
+
+        card.innerHTML = `
+          <div class="notif-icon-wrap ${colorClass}">
+            <i class="ti ${icon}"></i>
+          </div>
+          <div class="notif-content-wrap">
+            <div class="notif-header">
+              <div class="notif-title">${nTitle}</div>
+              <div class="notif-time">${nTime}</div>
+            </div>
+            <div class="notif-desc">${nDesc}</div>
+            <div class="notif-meta-row">
+              ${nReqId !== 'N/A' ? `<span class="mini-id" style="font-size: 11px;">${nReqId}</span>` : ''}
+              ${categoryTag}
+              ${nDept ? `<span style="font-size: 11.5px; color: var(--text3);"><i class="ti ti-building" style="font-size: 12px; margin-right: 3px;"></i>${nDept}</span>` : ''}
+            </div>
+          </div>
+          <div class="notif-card-actions" onclick="event.stopPropagation()">
+            <button class="btn btn-outline notif-action-btn" onclick="toggleReadState('${notif.id}')" title="${notif.read ? 'Mark Unread' : 'Mark Read'}">
+              <i class="ti ${notif.read ? 'ti-mail-opened' : 'ti-mail'}"></i>
+            </button>
+            <button class="btn btn-outline notif-action-btn" style="color: var(--danger);" onclick="deleteNotification('${notif.id}')" title="Delete Alert">
+              <i class="ti ti-trash"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Apply filters based on search box and filter tabs
+    function applyFilters() {
+      const notifs = getNotifications();
+      const query = document.getElementById("notifSearch").value.toLowerCase().trim();
+      
+      let filtered = notifs;
+
+      // Filter by Tab
+      if (currentTab === 'unread') {
+        filtered = filtered.filter(n => !n.read);
+      } else if (currentTab === 'read') {
+        filtered = filtered.filter(n => n.read);
+      } else if (currentTab === 'action') {
+        filtered = filtered.filter(n => n.type === 'action');
+      } else if (currentTab === 'system') {
+        filtered = filtered.filter(n => n.type === 'system');
+      }
+
+      // Filter by Search Query
+      if (query) {
+        filtered = filtered.filter(n => {
+          return n.title.toLowerCase().includes(query) ||
+                 n.msg.toLowerCase().includes(query) ||
+                 (n.reqId && n.reqId.toLowerCase().includes(query)) ||
+                 (n.process && n.process.toLowerCase().includes(query)) ||
+                 (n.dept && n.dept.toLowerCase().includes(query)) ||
+                 (n.requestedBy && n.requestedBy.toLowerCase().includes(query));
+        });
+      }
+
+      renderNotificationsFeed(filtered);
+    }
+
+    // Toggle Read/Unread state of notification
+    function toggleReadState(id) {
+      const notifs = getNotifications();
+      const target = notifs.find(n => n.id === id);
+      if (target) {
+        target.read = !target.read;
+        saveNotifications(notifs);
+        applyFilters();
+        showToast(target.read ? "Notification marked as read" : "Notification marked as unread");
+      }
+    }
+
+    // Delete single notification
+    function deleteNotification(id) {
+      let notifs = getNotifications();
+      const target = notifs.find(n => n.id === id);
+      notifs = notifs.filter(n => n.id !== id);
+      saveNotifications(notifs);
+      applyFilters();
+      showToast(`Notification deleted successfully`);
+      if (selectedNotif && selectedNotif.id === id) {
+        closeDrawer();
+      }
+    }
+
+    // Mark all notifications as read
+    function markAllAsRead() {
+      const notifs = getNotifications();
+      let count = 0;
+      notifs.forEach(n => {
+        if (!n.read) {
+          n.read = true;
+          count++;
+        }
+      });
+      if (count > 0) {
+        saveNotifications(notifs);
+        applyFilters();
+        showToast(`Marked ${count} alerts as read`);
+      } else {
+        showToast("All notifications are already read");
+      }
+    }
+
+    // Clear all read notifications
+    function clearAllRead() {
+      let notifs = getNotifications();
+      const initialCount = notifs.length;
+      notifs = notifs.filter(n => !n.read);
+      const clearedCount = initialCount - notifs.length;
+      
+      if (clearedCount > 0) {
+        saveNotifications(notifs);
+        applyFilters();
+        showToast(`Cleared ${clearedCount} read notifications`);
+      } else {
+        showToast("No read notifications to clear");
+      }
+    }
+
+    // Side-Drawer Details Panel Actions
+    function openDrawer(id) {
+      const notifs = getNotifications();
+      const notif = notifs.find(n => n.id === id);
+      if (!notif) return;
+
+      selectedNotif = notif;
+      
+      // Auto-mark as read when opened
+      if (!notif.read) {
+        notif.read = true;
+        saveNotifications(notifs);
+        applyFilters();
+      }
+
+      const body = document.getElementById("drawerBody");
+      const footer = document.getElementById("drawerFooter");
+
+      let categoryTag = '';
+      if (notif.category && notif.category !== 'System') {
+        const catLower = notif.category.toLowerCase();
+        const tagClass = catLower === 'materials' ? 'tag-material' : `tag-${catLower}`;
+        categoryTag = `<span class="tag ${tagClass}">${notif.category}</span>`;
+      }
+
+      let severityBadge = '';
+      if (notif.severity) {
+        let severityClass = 'badge-draft';
+        if (notif.severity === 'high') severityClass = 'badge-rejected';
+        else if (notif.severity === 'medium') severityClass = 'badge-pending';
+        severityBadge = `<span class="badge ${severityClass}" style="text-transform: capitalize;">${notif.severity} Severity</span>`;
+      }
+
+      const nTitle = notif.title || "Alert Notification";
+      const nTime = notif.time || "Just now";
+      const nDesc = notif.msg || notif.text || "No details provided.";
+      const nReqId = notif.reqId || "N/A";
+      const nProcess = notif.process || "General";
+      const nMachine = notif.machine || "N/A";
+      const nDept = notif.dept || "General";
+      const nRequestedBy = notif.requestedBy || "N/A";
+
+      // Populate body contents
+      body.innerHTML = `
+        <div class="card" style="margin-bottom: 0;">
+          <div style="font-weight: 700; font-size: 15.5px; color: var(--text); margin-bottom: 8px;">${nTitle}</div>
+          <div style="font-size: 11.5px; color: var(--text3); font-family: var(--mono); margin-bottom: 12px;"><i class="ti ti-clock" style="margin-right: 4px;"></i>${nTime}</div>
+          <div style="font-size: 13.5px; color: var(--text2); line-height: 1.4; border-top: 0.5px solid var(--border); padding-top: 12px; margin-bottom: 4px;">
+            ${nDesc}
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-title">Context Parameters</div>
+          <div class="info-row"><span class="info-key">Document ID</span><span class="info-val">${nReqId !== 'N/A' ? `<span class="mini-id">${nReqId}</span>` : 'N/A'}</span></div>
+          <div class="info-row"><span class="info-key">Process Area</span><span class="info-val">${nProcess}</span></div>
+          <div class="info-row"><span class="info-key">Machine / Tool No</span><span class="info-val" style="font-family: var(--mono); font-size: 12px;">${nMachine}</span></div>
+          <div class="info-row"><span class="info-key">Department</span><span class="info-val">${nDept}</span></div>
+          <div class="info-row"><span class="info-key">Triggered By</span><span class="info-val">${nRequestedBy}</span></div>
+          <div class="info-row"><span class="info-key">4M Category</span><span class="info-val">${categoryTag || 'N/A'}</span></div>
+          <div class="info-row"><span class="info-key">Risk / Priority</span><span class="info-val">${severityBadge}</span></div>
+        </div>
+        
+        ${notif.type === 'action' ? `
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-title">Quick Comments / Review Logs</div>
+          <div class="form-group">
+            <textarea class="form-textarea" id="drawerComments" placeholder="Add remarks or reasons for validation action..." style="min-height: 70px;"></textarea>
+          </div>
+        </div>
+        ` : ''}
+      `;
+
+      // Populate footer actions
+      if (notif.type === 'action') {
+        footer.innerHTML = `
+          <button class="btn btn-outline" onclick="closeDrawer()">Back</button>
+          <button class="btn btn-danger" onclick="handleDrawerAction('Reject')"><i class="ti ti-x"></i> Reject</button>
+          <button class="btn btn-success" style="background: var(--success); color: white;" onclick="handleDrawerAction('Approve')"><i class="ti ti-check"></i> Approve</button>
+        `;
+      } else {
+        footer.innerHTML = `
+          <button class="btn btn-outline" style="color: var(--danger); border-color: var(--border2);" onclick="deleteNotification('${notif.id}')"><i class="ti ti-trash"></i> Delete</button>
+          <button class="btn btn-primary" onclick="closeDrawer()">Done</button>
+        `;
+      }
+
+      document.getElementById("drawerOverlay").classList.add("show");
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawerOverlay").classList.remove("show");
+      selectedNotif = null;
+    }
+
+    // Handles quick Action approvals/rejections directly inside side-drawer
+    function handleDrawerAction(actionType) {
+      if (!selectedNotif) return;
+      const comments = document.getElementById("drawerComments")?.value.trim() || "Approved via Notifications Center.";
+      const targetId = selectedNotif.reqId;
+      const title = selectedNotif.title;
+      
+      // Update local storage approvals if needed
+      // (Optional - but let's make it look like it did something)
+      showToast(`${actionType}ed Request ${targetId} successfully!`);
+      
+      // Remove this action notification since it's completed
+      let notifs = getNotifications();
+      notifs = notifs.filter(n => n.id !== selectedNotif.id);
+      saveNotifications(notifs);
+      
+      closeDrawer();
+      applyFilters();
+    }
+
+    // Toast Notifications System
+    function showToast(msg, icon = 'ti-circle-check') {
+      const toast = document.getElementById("toast");
+      const message = document.getElementById("toastMessage");
+      const toastIcon = document.getElementById("toastIcon");
+
+      message.textContent = msg;
+      
+      // Reset icon classes
+      toastIcon.className = `ti ${icon}`;
+
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    // Notification Preference Modal Controls
+    function openPreferencesModal() {
+      // Load current settings from localStorage
+      const prefs = getPreferences();
+      document.getElementById("pref-new-requests").checked = prefs.newRequests;
+      document.getElementById("pref-approvals").checked = prefs.approvals;
+      document.getElementById("pref-effectiveness").checked = prefs.effectiveness;
+      document.getElementById("pref-system").checked = prefs.system;
+
+      // Channels Buttons Active Status
+      setupChannelBtn("inapp", prefs.channels.inapp);
+      setupChannelBtn("email", prefs.channels.email);
+      setupChannelBtn("sms", prefs.channels.sms);
+
+      document.getElementById("preferencesModal").classList.add("show");
+    }
+
+    function closePreferencesModal() {
+      document.getElementById("preferencesModal").classList.remove("show");
+    }
+
+    let tempChannels = null;
+
+    function getPreferences() {
+      const defaultPrefs = {
+        newRequests: true,
+        approvals: true,
+        effectiveness: true,
+        system: true,
+        channels: {
+          inapp: true,
+          email: true,
+          sms: false
+        }
+      };
+      const stored = localStorage.getItem("cms_notif_prefs");
+      if (!stored) {
+        localStorage.setItem("cms_notif_prefs", JSON.stringify(defaultPrefs));
+        return defaultPrefs;
+      }
+      return JSON.parse(stored);
+    }
+
+    function toggleChannel(channel) {
+      if (!tempChannels) {
+        tempChannels = { ...getPreferences().channels };
+      }
+      tempChannels[channel] = !tempChannels[channel];
+      setupChannelBtn(channel, tempChannels[channel]);
+    }
+
+    function setupChannelBtn(id, isActive) {
+      const btn = document.getElementById(`chan-${id}`);
+      if (isActive) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    }
+
+    function savePreferences() {
+      const newRequests = document.getElementById("pref-new-requests").checked;
+      const approvals = document.getElementById("pref-approvals").checked;
+      const effectiveness = document.getElementById("pref-effectiveness").checked;
+      const system = document.getElementById("pref-system").checked;
+
+      const channels = tempChannels || getPreferences().channels;
+
+      const newPrefs = {
+        newRequests,
+        approvals,
+        effectiveness,
+        system,
+        channels
+      };
+
+      localStorage.setItem("cms_notif_prefs", JSON.stringify(newPrefs));
+      tempChannels = null;
+      closePreferencesModal();
+      showToast("Notification preferences saved successfully!");
+    }
+
+    // Initialization
+    document.addEventListener("DOMContentLoaded", () => {
+      // Force initial load check
+      updateBadgeCounts();
+      applyFilters();
+    });
+  </script>
+</body>
+</html>
