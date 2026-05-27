@@ -113,7 +113,34 @@
       color: var(--text3) !important;
       opacity: 0.4;
     }
+.submit-btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
 
+.submit-btn {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #fff;
+  border: none;
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
     body {
       height: 100vh;
       width: 100%;
@@ -416,33 +443,6 @@
       <div class="page-title">New L1 Change Request</div>
       <div class="page-sub" id="change-no-display">Auto-ID will be assigned on submission</div>
 
-      <!-- ── Stepper ── -->
-      <div class="step-bar" style="margin-bottom:20px;" id="stepper">
-        <div class="step-col">
-          <div class="step-dot active" id="dot-1">1</div>
-          <div class="step-name">Details</div>
-        </div>
-        <div class="step-line" id="line-1"></div>
-        <div class="step-col">
-          <div class="step-dot todo" id="dot-2">2</div>
-          <div class="step-name">Categories</div>
-        </div>
-        <div class="step-line" id="line-2"></div>
-        <div class="step-col">
-          <div class="step-dot todo" id="dot-3">3</div>
-          <div class="step-name">Risk & Docs</div>
-        </div>
-        <div class="step-line" id="line-3"></div>
-        <div class="step-col">
-          <div class="step-dot todo" id="dot-4">4</div>
-          <div class="step-name">Approvals</div>
-        </div>
-        <div class="step-line" id="line-4"></div>
-        <div class="step-col">
-          <div class="step-dot todo" id="dot-5">5</div>
-          <div class="step-name">Submit</div>
-        </div>
-      </div>
 
       <!-- ══════════════════════════════════════
            STEP 1 — Request Details
@@ -943,6 +943,16 @@
             </div>
           </div>
         </div>
+
+  
+  <!-- Submit Button -->
+
+<!-- Submit Button -->
+<div class="submit-btn-wrapper">
+  <button type="submit" class="submit-btn">
+    Submit
+  </button>
+
       </div>
 
 
