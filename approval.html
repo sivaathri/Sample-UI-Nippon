@@ -617,9 +617,14 @@
           <td><span class="badge ${decisionBadgeClass}">${req.l2Decision}</span></td>
           <td style="max-width: 200px; line-height: 1.4; font-size: 12px; color: var(--text2);">${req.remarks || `<span style="color:var(--text3); font-style:italic;">None</span>`}</td>
           <td style="text-align: right; padding-right: 12px;">
-            <button class="btn btn-outline" style="padding: 4px 8px; border: none; background: transparent;" onclick="deleteLog('${req.id}')" title="Delete Log Record">
-              <i class="ti ti-trash" style="color: var(--danger); font-size: 15px;"></i>
-            </button>
+           <button 
+  class="btn btn-outline"
+  style="padding: 4px 8px; border: none; background: transparent;"
+  onclick="viewLog('${req.id}')"
+  title="View Log Record"
+>
+  <i class="ti ti-eye" style="color: var(--primary); font-size: 15px;"></i>
+</button>
           </td>
         `;
         tbody.appendChild(tr);
