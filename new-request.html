@@ -306,7 +306,15 @@
       width: 100%;
       cursor: pointer;
     }
-
+select.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+}
     /* ── Traceability row ── */
     .trace-row {
       display: flex;
@@ -419,8 +427,8 @@
       </div>
       <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i
           class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
-          class="ti ti-user-plus"></i> Account Creation</div>
+      <!-- <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
+          class="ti ti-user-plus"></i> Account Creation</div> -->
       <div class="nav-item"
         style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;"
         onclick="window.location.href='notifications.html'">
@@ -496,7 +504,7 @@
             </div>
             <!-- Change Categories -->
             <div class="form-group">
-              <label class="form-label">Change In *</label>
+              <label class="form-label">Change in<span class="required"> *</span></label>
 
               <div class="checkbox-grid">
                 <label><input type="checkbox" name="changein" value="Man"> Man</label>
@@ -532,11 +540,28 @@
               <div class="field-error" id="err-req-dept">Please select a department.</div>
             </div>
             <!-- Field 12: Change Request By -->
-            <div class="form-group" id="grp-req-by">
-              <div class="form-label">Change Request By <span class="required">*</span></div>
-              <input class="form-input" id="inp-req-by" type="text" placeholder="e.g. Ramanan P" autocomplete="off" />
-              <div class="field-error" id="err-req-by">Required. Alphabets only.</div>
-            </div>
+           <div class="form-group" id="grp-req-by">
+  <div class="form-label">
+    Change Request By <span class="required">*</span>
+  </div>
+
+  <select class="form-input" id="inp-req-by">
+    <option value="">-- Select Name --</option>
+    <option value="Mr. Vetrivel">Mr. Vetrivel</option>
+    <option value="Mr. Ramasamy">Mr. Ramasamy</option>
+    <option value="Mr. Dhanaraj">Mr. Dhanaraj</option>
+    <option value="Mr. Anandhan">Mr. Anandhan</option>
+    <option value="Mr. Shanmugam">Mr. Shanmugam</option>
+    <option value="Mr. Arumugam">Mr. Arumugam</option>
+    <option value="Mr. Velmurugan">Mr. Velmurugan</option>
+    <option value="Mr. Sathish">Mr. Sathish</option>
+    <option value="Mr. Sakthivel">Mr. Sakthivel</option>
+  </select>
+
+  <div class="field-error" id="err-req-by">
+    Please select a name.
+  </div>
+</div>
             <!-- Field 13: Process Name -->
             <div class="form-group" id="grp-process-name">
               <div class="form-label">Process Name <span class="required">*</span></div>
