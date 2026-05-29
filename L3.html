@@ -28,11 +28,19 @@
       <div class="nav-section">Main</div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='index.html#dashboard'"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='index.html#all-requests'"><i class="ti ti-list-check"></i> All Requests</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='new-request.html'"><i class="ti ti-file-plus"></i> L1 </div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2 </div>
-      <div class="nav-item active" style="cursor: pointer;" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3 </div>
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span style="flex:1;">Level</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='new-request.html'"><i class="ti ti-circle-check"></i> L1</div>
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item active" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
       <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div>
       <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="window.location.href='notifications.html'">
         <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
         <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>

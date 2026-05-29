@@ -64,14 +64,15 @@
       <div class="nav-section">Main</div>
       <div class="nav-item active" style="cursor: pointer;" id="sidebar-dash-btn" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
       <div class="nav-item" style="cursor: pointer;" id="sidebar-all-btn" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
-      <!-- L1 expandable group -->
+      <!-- Level expandable group -->
       <div class="nav-group open" id="l1-nav-group">
         <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
           <i class="ti ti-file-plus"></i>
-          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <span style="flex:1;">Level</span>
           <i class="ti ti-chevron-right nav-chevron"></i>
         </div>
         <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='new-request.html'"><i class="ti ti-circle-check"></i> L1</div>
           <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
           <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
         </div>
