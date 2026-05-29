@@ -207,10 +207,10 @@
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#dashboard'">
         <i class="ti ti-layout-dashboard"></i> Dashboard
       </div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#all-requests'">
         <i class="ti ti-list-check"></i> All Requests
       </div>
       <div class="nav-group open" id="l1-nav-group">
@@ -281,15 +281,15 @@
 
               <div class="form-group">
                 <label class="form-label" for="pedAttachment">
-                  Requester Validation(PED) Attachment
+                  Requester Validation(PED) Attachment <span class="required">*</span>
                 </label>
 
-                <input class="form-input" id="pedAttachment" type="file" accept=".pdf,.doc,.docx,.jpg,.png" />
+                <input class="form-input" id="pedAttachment" type="file" accept=".pdf,.doc,.docx,.jpg,.png" required />
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="qaAttachment">Approver Set UP verification(QA) Attachment</label>
-                               <input class="form-input" id="pedAttachment" type="file" accept=".pdf,.doc,.docx,.jpg,.png" />
+                <label class="form-label" for="qaAttachment">Approver Set UP verification(QA) Attachment <span class="required">*</span></label>
+                               <input class="form-input" id="qaAttachment" type="file" accept=".pdf,.doc,.docx,.jpg,.png" required />
 
               </div>
 
@@ -699,7 +699,7 @@
       const remarks = document.getElementById("remarks").value.trim();
       const l2Decision = document.getElementById("l2Decision").value;
 
-      if (!remarks || !l2Decision) return;
+      if (!remarks || !l2Decision || !pedAttachment || !qaAttachment) return;
 
       const requests = getRequests();
       const reqIndex = requests.findIndex(r => r.id === editingLogId);

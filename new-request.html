@@ -407,10 +407,10 @@ select.form-input {
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#dashboard'">
         <i class="ti ti-layout-dashboard"></i> Dashboard
       </div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#all-requests'">
         <i class="ti ti-list-check"></i> All Requests
       </div>
       <div class="nav-group open" id="l1-nav-group">
@@ -473,7 +473,7 @@ select.form-input {
             </div>
             <!-- Field 2: 4M Change No (Auto Generated) -->
             <div class="form-group">
-              <div class="form-label">4M Change No</div>
+              <div class="form-label">4M Change No <span class="required">*</span></div>
               <div class="auto-field">
                 <i class="ti ti-hash" style="font-size:15px;color:var(--accent);"></i>
                 <span id="change-no-val">1</span>
@@ -484,7 +484,7 @@ select.form-input {
 
             <!-- Field 3: Requested Date (Auto — current date, readonly) -->
             <div class="form-group">
-              <div class="form-label">Requested Date</div>
+              <div class="form-label">Requested Date <span class="required">*</span></div>
               <div class="auto-field">
                 <i class="ti ti-calendar" style="font-size:15px;color:var(--accent);"></i>
                 <span id="auto-req-date-val">--/--/----</span>
@@ -494,7 +494,7 @@ select.form-input {
             </div>
             <!-- Field 4: Time (Auto) -->
             <div class="form-group">
-              <div class="form-label">Time</div>
+              <div class="form-label">Time <span class="required">*</span></div>
               <div class="auto-field">
                 <i class="ti ti-clock" style="font-size:15px;color:var(--accent);"></i>
                 <span id="auto-time-val">--:--</span>
@@ -576,9 +576,8 @@ select.form-input {
             </div>
             <!-- Field 15: Machine No -->
             <div class="form-group">
-              <div class="form-label">Machine No <span style="color:var(--text3);font-size:10px;">(optional)</span>
-              </div>
-              <input class="form-input" id="inp-machine-no" type="text" placeholder="e.g. MFG-MC-1042" />
+              <div class="form-label">Machine No <span class="required">*</span></div>
+              <input class="form-input" id="inp-machine-no" type="text" placeholder="e.g. MFG-MC-1042" required />
             </div>
           </div>
         </div>
@@ -627,7 +626,7 @@ select.form-input {
               <div style="margin-top:16px;">
 
                 <div class="form-label">
-                  Upload Supporting Files
+                  Upload Supporting Files <span class="required">*</span>
                 </div>
 
                 <div class="upload-box">
@@ -680,7 +679,7 @@ select.form-input {
             <div style="margin-top:16px;">
 
               <div class="form-label">
-                Upload Supporting Files
+                Upload Supporting Files <span class="required">*</span>
               </div>
 
               <div class="upload-box">
@@ -725,7 +724,7 @@ select.form-input {
           <div>
 
 
-            <div class="form-label">Part Traceability details (From changes)</div>
+            <div class="form-label">Part Traceability details (From changes) <span class="required">*</span></div>
             <!-- Textarea -->
             <textarea class="form-textarea" id="inp-detail-desc" rows="4"
               placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
@@ -781,7 +780,7 @@ select.form-input {
           <div>
 
 
-            <div class="form-label">Part Traceability details (To changes)</div>
+            <div class="form-label">Part Traceability details (To changes) <span class="required">*</span></div>
             <!-- Textarea -->
             <textarea class="form-textarea" id="inp-detail-desc" rows="4"
               placeholder="Describe the change — what, why, how, and expected outcome (min 20 characters)…"></textarea>
@@ -803,7 +802,7 @@ select.form-input {
             <div style="margin-top:16px;">
 
               <div class="form-label">
-                Upload Supporting Files
+                Upload Supporting Files <span class="required">*</span>
               </div>
 
               <div class="upload-box">
@@ -842,7 +841,7 @@ select.form-input {
         <div style="margin-top:16px;">
 
           <div class="form-label">
-            Upload Supporting Files
+            Upload Supporting Files <span class="required">*</span>
           </div>
 
           <div class="upload-box">
@@ -870,8 +869,7 @@ select.form-input {
         <!-- Field 25: Update in SOP / WI / Control Plan / FMEA -->
         <div class="form-group">
           <div class="form-label">
-            Update in SOP / WI / Control Plan / FMEA
-            <span style="color:var(--text3);font-size:10px;font-family:var(--mono);margin-left:6px;">Recommended</span>
+            Update in SOP / WI / Control Plan / FMEA <span class="required">*</span>
           </div>
           <textarea class="form-textarea" id="inp-risk" rows="5"
             placeholder="Describe potential risks, their likelihood, impact, and mitigation measures…"></textarea>
@@ -916,7 +914,7 @@ select.form-input {
         <div style="margin-top:16px;">
 
           <div class="form-label">
-            Upload Supporting Files
+            Upload Supporting Files <span class="required">*</span>
           </div>
 
           <div class="upload-box">
@@ -1049,8 +1047,7 @@ select.form-input {
         <div class="form-grid">
           <!-- Field 21: Part Traceability From Change -->
           <div class="form-group">
-            <div class="form-label">From Change <span style="color:var(--text3);font-size:10px;">(optional)</span>
-            </div>
+            <div class="form-label">From Change <span class="required">*</span></div>
             <div class="trace-row">
               <label class="file-zone" id="zone-trace-from" for="file-trace-from">
                 <i class="ti ti-upload file-zone-icon"></i>
@@ -1065,7 +1062,7 @@ select.form-input {
           </div>
           <!-- Field 23: Part Traceability To Change -->
           <div class="form-group">
-            <div class="form-label">To Change <span style="color:var(--text3);font-size:10px;">(optional)</span></div>
+            <div class="form-label">To Change <span class="required">*</span></div>
             <div class="trace-row">
               <label class="file-zone" id="zone-trace-to" for="file-trace-to">
                 <i class="ti ti-upload file-zone-icon"></i>
@@ -1169,7 +1166,7 @@ select.form-input {
               style="color:var(--accent);font-family:var(--mono);"></strong> has been created and sent for L2 review.
           </div>
         </div>
-        <button class="btn btn-primary" onclick="window.location.href='dashboard.html'"><i
+        <button class="btn btn-primary" onclick="window.location.href='index.html'"><i
             class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
       </div>
 

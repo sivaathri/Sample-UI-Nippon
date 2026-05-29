@@ -1,966 +1,1839 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4M Change Management System — Interactive UI Sandbox</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Management Dashboard — KPIs, Charts &amp; Recent Requests</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* Custom Flatpickr Theme matching Nippon UI */
+    .flatpickr-calendar {
+      background: var(--bg) !important;
+      border: 0.5px solid var(--border) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      border-radius: var(--rad-lg) !important;
+      font-family: var(--font) !important;
     }
-
-    :root {
-      --primary: #185FA5;
-      --primary-light: #E6F1FB;
-      --bg-panel: #ffffff;
-      --bg-app: #f0f2f5;
-      --bg-hover: #f4f7fa;
-      --text-main: #1a1c1e;
-      --text-muted: #5e6266;
-      --text-ghost: #8c9094;
-      --border-color: rgba(0, 0, 0, 0.08);
-      --border-color-dark: rgba(0, 0, 0, 0.15);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --mono-family: 'Space Mono', monospace;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.prevMonthDay.selected, .flatpickr-day.nextMonthDay.selected {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #fff !important;
     }
-
+    .flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+      color: var(--text) !important;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: var(--text) !important;
+    }
+    .flatpickr-day {
+      color: var(--text2) !important;
+      border-radius: var(--rad) !important;
+    }
+    .flatpickr-day.today {
+      border-color: var(--accent-light) !important;
+      background: var(--accent-light) !important;
+      color: var(--accent) !important;
+    }
     body {
-      font-family: var(--font-family);
-      background-color: var(--bg-app);
-      color: var(--text-main);
       height: 100vh;
-      width: 100vw;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* Top Navigation bar */
-    .topbar {
-      height: 64px;
-      background-color: var(--bg-panel);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 10;
-      flex-shrink: 0;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-    }
-
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo {
-      background: linear-gradient(135deg, var(--primary), #3b82f6);
-      color: white;
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-      font-family: var(--mono-family);
-      box-shadow: 0 3px 8px rgba(24, 95, 165, 0.25);
-    }
-
-    .brand-title-wrap {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
-      line-height: 1.2;
-    }
-
-    .brand-subtitle {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .brand-tag {
-      background-color: var(--primary-light);
-      color: var(--primary);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .topbar-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Main Workspace Layout */
-    .workspace {
-      flex: 1;
-      display: flex;
-      min-height: 0;
-    }
-
-    /* Sidebar Styles */
-    .sidebar {
-      width: 340px;
-      background-color: var(--bg-panel);
-      border-right: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-
-    .sidebar-header {
-      padding: 16px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .search-input-wrapper {
-      position: relative;
-    }
-
-    .search-input-wrapper i {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-ghost);
-      font-size: 16px;
-    }
-
-    .search-input {
       width: 100%;
-      padding: 10px 12px 10px 36px;
-      border: 1px solid var(--border-color-dark);
-      border-radius: var(--radius-sm);
-      font-family: var(--font-family);
-      font-size: 13px;
-      outline: none;
-      transition: all 0.2s ease;
-      background-color: var(--bg-hover);
-    }
-
-    .search-input:focus {
-      border-color: var(--primary);
-      background-color: var(--bg-panel);
-      box-shadow: 0 0 0 3px var(--primary-light);
-    }
-
-    .sidebar-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .screen-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 1px solid transparent;
-      user-select: none;
-    }
-
-    .screen-item:hover {
-      background-color: var(--bg-hover);
-    }
-
-    .screen-item.active {
-      background-color: var(--primary-light);
-      border-color: rgba(24, 95, 165, 0.12);
-    }
-
-    .screen-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background-color: var(--bg-hover);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 18px;
-      flex-shrink: 0;
-      transition: all 0.2s ease;
-      border: 0.5px solid var(--border-color);
-    }
-
-    .screen-item.active .screen-icon {
-      background-color: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .screen-details {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .screen-number {
-      font-family: var(--mono-family);
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-ghost);
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .screen-item.active .screen-number {
-      color: var(--primary);
-    }
-
-    .screen-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 2px;
-    }
-
-    .screen-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Main Viewport Styles */
-    .viewport-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      height: 100%;
-    }
-
-    /* Viewport Toolbar */
-    .viewport-toolbar {
-      height: 56px;
-      background-color: var(--bg-panel);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      flex-shrink: 0;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.01);
-    }
-
-    .toolbar-left, .toolbar-right, .toolbar-center {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-group {
-      display: flex;
-      background-color: var(--bg-hover);
-      padding: 3px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-color);
-    }
-
-    .toolbar-btn {
-      background: none;
-      border: none;
-      padding: 6px 12px;
-      font-family: var(--font-family);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .toolbar-btn:hover {
-      color: var(--text-main);
-    }
-
-    .toolbar-btn.active {
-      background-color: var(--bg-panel);
-      color: var(--primary);
-      box-shadow: var(--shadow-sm);
-      font-weight: 600;
-    }
-
-    .action-btn {
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-color-dark);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      height: 32px;
-      font-family: var(--font-family);
-      font-size: 12px;
-      font-weight: 500;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .action-btn:hover {
-      background-color: var(--bg-hover);
-      color: var(--text-main);
-    }
-
-    .action-btn.primary {
-      background-color: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .action-btn.primary:hover {
-      background-color: #134e89;
-      border-color: #134e89;
-    }
-
-    .action-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .viewport-divider {
-      width: 1px;
-      height: 20px;
-      background-color: var(--border-color);
-      margin: 0 4px;
-    }
-
-    /* Device Preview Panel */
-    .preview-area {
-      flex: 1;
-      padding: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 0;
-      overflow: auto;
-      position: relative;
-    }
-
-    .preview-frame-wrapper {
-      background-color: var(--bg-panel);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color-dark);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      height: 100%;
-      width: 100%;
-      max-height: 100%;
-      max-width: 100%;
+      margin: 0;
+      background: var(--bg);
     }
-
-    .frame-header {
-      background-color: var(--bg-hover);
-      border-bottom: 1px solid var(--border-color);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-muted);
-      font-family: var(--mono-family);
-      flex-shrink: 0;
-      user-select: none;
-    }
-
-    .frame-dots {
-      display: flex;
-      gap: 6px;
-    }
-
-    .frame-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: #ddd;
-    }
-
-    .frame-dot:nth-child(1) { background-color: #ff5f56; }
-    .frame-dot:nth-child(2) { background-color: #ffbd2e; }
-    .frame-dot:nth-child(3) { background-color: #27c93f; }
-
-    .frame-title {
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .frame-dimensions {
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    .preview-iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      background-color: white;
-      transition: opacity 0.2s ease;
-    }
-
-    /* Stacked View Mode */
-    .stacked-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 32px;
-      display: none;
-      flex-direction: column;
-      gap: 40px;
-      background-color: var(--bg-app);
-    }
-
-    .stacked-screen-card {
-      background-color: var(--bg-panel);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-      transition: transform 0.2s ease;
-    }
-
-    .stacked-screen-card:hover {
-      box-shadow: var(--shadow-lg);
-    }
-
-    .stacked-screen-header {
-      background-color: var(--bg-hover);
-      border-bottom: 1px solid var(--border-color);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-
-    .stacked-screen-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-family: var(--mono-family);
-    }
-
-    .stacked-screen-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-left: 12px;
-    }
-
-    .stacked-screen-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Portal Footer */
-    .portal-footer {
-      padding: 12px 16px;
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-ghost);
-      font-family: var(--mono-family);
-      border-top: 1px solid var(--border-color);
-      background-color: var(--bg-panel);
-      flex-shrink: 0;
-    }
-
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      display: inline-block;
-      margin-right: 4px;
-      box-shadow: 0 0 8px var(--primary);
+    @keyframes fadeInNotif {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 
 <body>
-  <!-- Top header -->
-  <header class="topbar">
-    <div class="topbar-brand">
-      <div class="brand-logo">4M</div>
-      <div class="brand-title-wrap">
-        <span class="brand-title">Change Management System</span>
-        <span class="brand-subtitle">Interactive UI Blueprint Sandbox</span>
+  <div class="sidebar-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">4M·CMS</div>
+        <div class="logo-sub">Change Management</div>
       </div>
-      <span class="brand-tag">10 Screens</span>
+      <div class="nav-section">Main</div>
+      <div class="nav-item active" style="cursor: pointer;" id="sidebar-dash-btn" onclick="showView('dashboard')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="nav-item" style="cursor: pointer;" id="sidebar-all-btn" onclick="showView('all-requests')"><i class="ti ti-list-check"></i> All Requests</div>
+      <!-- L1 expandable group -->
+      <div class="nav-group open" id="l1-nav-group">
+        <div class="nav-item" style="cursor: pointer;" onclick="toggleL1Group(event)">
+          <i class="ti ti-file-plus"></i>
+          <span onclick="event.stopPropagation(); window.location.href='new-request.html'" style="flex:1;">L1</span>
+          <i class="ti ti-chevron-right nav-chevron"></i>
+        </div>
+        <div class="nav-sub-items">
+          <div class="nav-sub-item" onclick="window.location.href='approval.html'"><i class="ti ti-checks"></i> L2</div>
+          <div class="nav-sub-item" onclick="window.location.href='tracker.html'"><i class="ti ti-list-check"></i> L3</div>
+        </div>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='effectiveness.html'"><i class="ti ti-chart-line"></i> Effectiveness</div>
+      <!-- <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='login.html'"><i class="ti ti-user-plus"></i> Account Creation</div> -->
+      <div class="nav-item" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;" onclick="window.location.href='notifications.html'">
+        <span style="display: flex; align-items: center; gap: 8px;"><i class="ti ti-bell"></i> Notifications</span>
+        <span id="sidebar-notif-badge" style="background: var(--danger); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: auto;">1</span>
+      </div>
+      <div class="nav-item" style="cursor: pointer;" onclick="window.location.href='user-creation.html'"><i class="ti ti-users"></i> Users</div>
+
+      <div class="sidebar-user">
+        <div class="avatar av-blue" style="width:32px;height:32px;font-size:12px;">A</div>
+        <div>
+          <!-- <div class="sidebar-user-name">ABCD</div> -->
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+      </div>
     </div>
-    <div class="topbar-meta">
-      <a href="style.css" class="topbar-link" target="_blank">
-       
-      </a>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="workspace">
-    <!-- Sidebar: Screen Selection -->
-    <section class="sidebar">
-      <div class="sidebar-search">
-        <div class="search-input-wrapper">
-          <i class="ti ti-search"></i>
-          <input type="text" id="search-box" class="search-input" placeholder="Search screens..." oninput="filterScreens()" />
+    <div class="main-content">
+      <div id="dashboard-view">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px;">
+        <div>
+          <div class="page-title">Overview</div>
+        
         </div>
-      </div>
-      <div class="sidebar-list" id="sidebar-list">
-        <!-- Rendered dynamically -->
-      </div>
-    </section>
-
-    <!-- Content Viewport -->
-    <section class="viewport-container">
-      <!-- Toolbar -->
-      <div class="viewport-toolbar">
-        <div class="toolbar-left">
-          <div class="btn-group">
-            <button id="mode-single-btn" class="toolbar-btn active" onclick="setViewMode('single')">
-              <i class="ti ti-device-laptop"></i> Single Screen
-            </button>
-            <button id="mode-all-btn" class="toolbar-btn" onclick="setViewMode('all')">
-              <i class="ti ti-layout-grid"></i> All Screens Stacked
-            </button>
+        <div style="position: relative; z-index: 100;">
+          <div class="notification-bell" onclick="toggleHeaderNotifications(event)" style="position: relative; cursor: pointer; padding: 6px; border-radius: 50%; background: var(--bg); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; transition: all 0.2s ease;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'">
+            <i class="ti ti-bell" style="font-size: 18px; color: var(--text2);"></i>
+            <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--bg);">1</span>
           </div>
-        </div>
-
-        <div class="toolbar-center" id="device-controls">
-          <div class="btn-group">
-            <button class="toolbar-btn active" data-size="desktop" onclick="setDeviceSize('desktop')">
-              <i class="ti ti-device-desktop"></i> Desktop (Fit)
-            </button>
-            <button class="toolbar-btn" data-size="laptop" onclick="setDeviceSize('laptop')">
-              <i class="ti ti-device-laptop"></i> Laptop (1280px)
-            </button>
-            <button class="toolbar-btn" data-size="tablet" onclick="setDeviceSize('tablet')">
-              <i class="ti ti-device-tablet"></i> Tablet (768px)
-            </button>
-            <button class="toolbar-btn" data-size="mobile" onclick="setDeviceSize('mobile')">
-              <i class="ti ti-device-mobile"></i> Mobile (375px)
-            </button>
-          </div>
-          <button class="action-btn" id="rotate-btn" onclick="toggleOrientation()" title="Rotate Device" disabled>
-            <i class="ti ti-rotate-clockwise"></i>
-          </button>
-        </div>
-
-        <div class="toolbar-right">
-          <button class="action-btn" onclick="reloadActiveFrame()" title="Refresh Frame">
-            <i class="ti ti-refresh"></i>
-          </button>
-          <button class="action-btn primary" id="open-btn" onclick="openActiveStandalone()" title="Open Standalone page in new tab">
-            <i class="ti ti-external-link"></i> Open Standalone
-          </button>
-        </div>
-      </div>
-
-      <!-- Preview Area (Single Screen) -->
-      <div class="preview-area" id="preview-area">
-        <div class="preview-frame-wrapper" id="preview-frame-wrapper">
-          <div class="frame-header">
-            <div class="frame-dots">
-              <span class="frame-dot"></span>
-              <span class="frame-dot"></span>
-              <span class="frame-dot"></span>
+          <!-- Dropdown container -->
+          <div id="header-notif-dropdown" style="display: none; position: absolute; top: 42px; right: 0; background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--rad); box-shadow: 0 6px 16px rgba(0,0,0,0.12); width: 280px; padding: 12px; z-index: 110; animation: fadeInNotif 0.2s ease;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 600; color: var(--text);">Notifications</span>
+              <span onclick="clearNotif(event)" style="font-size: 10px; color: var(--accent); cursor: pointer; font-weight: 500;">Mark read</span>
             </div>
-            <span class="frame-title" id="frame-title">Login — Role-based Sign In</span>
-            <span class="frame-dimensions" id="frame-dimensions">Desktop (Fit)</span>
+            <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px; cursor: pointer; border-radius: var(--rad); transition: background 0.15s;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='var(--bg)'" onclick="window.location.href='notifications.html'">
+              <div style="background: var(--accent-light); color: var(--accent); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class="ti ti-file-plus" style="font-size: 14px;"></i>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3;">New Request Created</div>
+                <div style="font-size: 11px; color: var(--text2); margin-top: 2px;">Change Request 4M-2026-248 awaits validation.</div>
+                <div style="font-size: 10px; color: var(--text3); margin-top: 4px; font-family: var(--mono);">Just now</div>
+              </div>
+            </div>
           </div>
-          <iframe id="preview-iframe" class="preview-iframe" src="about:blank"></iframe>
         </div>
       </div>
-
-      <!-- Stacked Scroll Area (All Screens) -->
-      <div class="stacked-area" id="stacked-area">
-        <!-- Rendered dynamically -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Requests</div>
+          <div class="stat-value">10</div>
+          <!-- <div class="stat-delta delta-up"><i class="ti ti-trending-up" style="font-size:10px;"></i> +18 this
+            month</div> -->
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value" style="color:var(--success);">8</div>
+          <!-- <div class="stat-delta delta-up">76% approval rate</div> -->
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Approval</div>
+          <div class="stat-value" style="color:var(--warn);">2</div>
+          <!-- <div class="stat-delta" style="color:var(--text3);">Awaiting action</div> -->
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value" style="color:var(--danger);">0</div>
+          <!-- <div class="stat-delta" style="color:var(--text3);">Needs review</div> -->
+        </div>
       </div>
-    </section>
-  </main>
-
-  <footer class="portal-footer">
-    <span><span class="pulse-dot"></span>4M Change Management System · UI Design Blueprint · Prepared for Plant A · May 2026</span>
-  </footer>
-
-  <script>
-    // List of screens matching exact files
-    const screens = [
-      {
-        id: "login",
-        num: "Screen 01",
-        name: "Login — Role-based Sign In",
-        file: "login.html",
-        icon: "ti-login",
-        desc: "Role selection and plant authorization",
-        tags: ["Form", "Identity"]
-      },
-      {
-        id: "dashboard",
-        num: "Screen 02",
-        name: "Management Dashboard",
-        file: "dashboard.html",
-        icon: "ti-layout-dashboard",
-        desc: "KPIs, department/process analytics and charts",
-        tags: ["Dashboard", "Charts"]
-      },
-      {
-        id: "new-request",
-        num: "Screen 03",
-        name: "L1",
-        file: "new-request.html",
-        icon: "ti-file-plus",
-        desc: "Multi-step request wizard with 4M categorization",
-        tags: ["Form", "Wizard"]
-      },
-      {
-        id: "approval",
-        num: "Screen 04",
-        name: "L2",
-        file: "approval.html",
-        icon: "ti-checks",
-        desc: "L2/L3 HOD approval chain and validation logs",
-        tags: ["Workflow", "HOD"]
-      },
-      {
-        id: "tracker",
-        num: "Screen 05",
-        name: "L3",
-        file: "tracker.html",
-        icon: "ti-list-check",
-        desc: "All requests list with status chips and search filters",
-        tags: ["Table", "Search"]
-      },
-      {
-        id: "effectiveness",
-        num: "Screen 06",
-        name: "Effectiveness",
-        file: "effectiveness.html",
-        icon: "ti-chart-line",
-        desc: "3-Month QA post-implementation observation logs",
-        tags: ["Log", "QA"]
-      },
-      {
-        id: "audit-log",
-        num: "Screen 07",
-        name: "Account creation",
-        file: "audit-log.html",
-        icon: "ti-shield-check",
-        desc: "Immutable change action trails and timeline audits",
-        tags: ["Timeline", "Security"]
-      },
-      {
-        id: "reports",
-        num: "Screen 08",
-        name: "Reports & Exports",
-        file: "reports.html",
-        icon: "ti-report",
-        desc: "Statistical charts, avg approval times, export options",
-        tags: ["Report", "Export"]
-      } , {
-        id: "user-creation",
-        num: "Screen 09",
-        name: "User Account Creation",
-        file: "user-creation.html",
-        icon: "ti-user-plus",
-        desc: "Creation, Approval and Rejection of User Account Creation",
-        tags: ["Log", "QA"]
-      }, {
-        id: "notifications",
-        num: "Screen 10",
-        name: "Notifications Centre",
-        file: "notifications.html",
-        icon: "ti-bell",
-        desc: "Interactive notifications feed, unread/read states, detail drawer, and notification preferences",
-        tags: ["Notifications", "Center"]
-      },
-    ];
-
-    let activeScreen = screens[0];
-    let viewMode = 'single'; // 'single' or 'all'
-    let deviceSize = 'desktop'; // 'desktop', 'laptop', 'tablet', 'mobile'
-    let isLandscape = false;
-
-    // Dimensions Map
-    const deviceDimensions = {
-      desktop: { w: '100%', h: '100%', label: 'Desktop (Fit)' },
-      laptop: { w: '1280px', h: '768px', label: 'Laptop (1280x768)' },
-      tablet: { w: '768px', h: '1024px', label: 'Tablet (768x1024)' },
-      mobile: { w: '375px', h: '667px', label: 'Mobile (375x667)' }
-    };
-
-    // Render screen list in sidebar
-    function renderSidebar() {
-      const listContainer = document.getElementById('sidebar-list');
-      listContainer.innerHTML = '';
-      
-      screens.forEach(screen => {
-        const item = document.createElement('div');
-        item.className = `screen-item ${screen.id === activeScreen.id ? 'active' : ''}`;
-        item.onclick = () => selectScreen(screen);
-        
-        item.innerHTML = `
-          <div class="screen-icon">
-            <i class="ti ${screen.icon}"></i>
-          </div>
-          <div class="screen-details">
-            <div class="screen-number">${screen.num}</div>
-            <div class="screen-name">${screen.name}</div>
-            <div class="screen-desc">${screen.desc}</div>
-          </div>
-        `;
-        listContainer.appendChild(item);
-      });
-    }
-
-    // Filter screens from search input
-    function filterScreens() {
-      const query = document.getElementById('search-box').value.toLowerCase();
-      const items = document.querySelectorAll('.screen-item');
-      
-      screens.forEach((screen, index) => {
-        const matches = screen.name.toLowerCase().includes(query) || 
-                        screen.num.toLowerCase().includes(query) || 
-                        screen.desc.toLowerCase().includes(query) ||
-                        screen.tags.some(tag => tag.toLowerCase().includes(query));
-        
-        items[index].style.display = matches ? 'flex' : 'none';
-      });
-    }
-
-    // Select active screen
-    function selectScreen(screen) {
-      if (viewMode === 'all') {
-        // Switch to single screen view mode
-        setViewMode('single');
-      }
-      activeScreen = screen;
-      renderSidebar();
-      
-      // Update iframe source
-      const iframe = document.getElementById('preview-iframe');
-      iframe.style.opacity = '0';
-      setTimeout(() => {
-        iframe.src = screen.file;
-        iframe.onload = () => { iframe.style.opacity = '1'; };
-      }, 150);
-
-      // Update frame title
-      document.getElementById('frame-title').innerText = `${screen.num} — ${screen.name}`;
-      updateDimensionLabel();
-    }
-
-    // Set preview orientation
-    function toggleOrientation() {
-      if (deviceSize === 'desktop' || deviceSize === 'laptop') return;
-      isLandscape = !isLandscape;
-      applyDeviceSize();
-    }
-
-    // Set viewport dimensions
-    function setDeviceSize(size) {
-      deviceSize = size;
-      
-      // Update UI active buttons
-      const buttons = document.querySelectorAll('#device-controls .toolbar-btn');
-      buttons.forEach(btn => {
-        if (btn.getAttribute('data-size') === size) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-
-      // Enable/disable rotation
-      const rotateBtn = document.getElementById('rotate-btn');
-      if (size === 'tablet' || size === 'mobile') {
-        rotateBtn.disabled = false;
-      } else {
-        rotateBtn.disabled = true;
-        isLandscape = false;
-      }
-
-      applyDeviceSize();
-    }
-
-    // Apply dimensions to preview element
-    function applyDeviceSize() {
-      const wrapper = document.getElementById('preview-frame-wrapper');
-      const dimensions = deviceDimensions[deviceSize];
-      
-      if (deviceSize === 'desktop') {
-        wrapper.style.width = '100%';
-        wrapper.style.height = '100%';
-        wrapper.style.borderRadius = 'var(--radius-lg)';
-      } else {
-        let width = dimensions.w;
-        let height = dimensions.h;
-        
-        if (isLandscape) {
-          width = dimensions.h;
-          height = dimensions.w;
-        }
-        
-        wrapper.style.width = width;
-        wrapper.style.height = height;
-        wrapper.style.borderRadius = '14px';
-      }
-      
-      updateDimensionLabel();
-    }
-
-    // Update dimensions text in bar
-    function updateDimensionLabel() {
-      const labelElement = document.getElementById('frame-dimensions');
-      const dimensions = deviceDimensions[deviceSize];
-      
-      if (deviceSize === 'desktop') {
-        labelElement.innerText = dimensions.label;
-      } else {
-        let w = dimensions.w;
-        let h = dimensions.h;
-        if (isLandscape) {
-          w = dimensions.h;
-          h = dimensions.w;
-        }
-        labelElement.innerText = `${deviceSize.charAt(0).toUpperCase() + deviceSize.slice(1)} (${w} x ${h}) ${isLandscape ? 'Landscape' : 'Portrait'}`;
-      }
-    }
-
-    // Toggle view mode: Single or Stacked
-    function setViewMode(mode) {
-      viewMode = mode;
-      
-      const singleBtn = document.getElementById('mode-single-btn');
-      const allBtn = document.getElementById('mode-all-btn');
-      const previewArea = document.getElementById('preview-area');
-      const stackedArea = document.getElementById('stacked-area');
-      const deviceControls = document.getElementById('device-controls');
-      const openBtn = document.getElementById('open-btn');
-
-      if (mode === 'single') {
-        singleBtn.classList.add('active');
-        allBtn.classList.remove('active');
-        previewArea.style.display = 'flex';
-        stackedArea.style.display = 'none';
-        deviceControls.style.opacity = '1';
-        deviceControls.style.pointerEvents = 'all';
-        openBtn.disabled = false;
-        
-        // Reload single screen
-        selectScreen(activeScreen);
-      } else {
-        singleBtn.classList.remove('active');
-        allBtn.classList.add('active');
-        previewArea.style.display = 'none';
-        stackedArea.style.display = 'flex';
-        deviceControls.style.opacity = '0.3';
-        deviceControls.style.pointerEvents = 'none';
-        openBtn.disabled = true;
-
-        renderStackedScreens();
-      }
-    }
-
-    // Render all screens stacked in All Screens mode
-    function renderStackedScreens() {
-      const container = document.getElementById('stacked-area');
-      container.innerHTML = '';
-      
-      screens.forEach(screen => {
-        const card = document.createElement('div');
-        card.className = 'stacked-screen-card';
-        
-        card.innerHTML = `
-          <div class="stacked-screen-header">
-            <div>
-              <span class="stacked-screen-title">${screen.num}</span>
-              <span class="stacked-screen-name">${screen.name}</span>
-            </div>
-            <div class="stacked-screen-actions">
-              <button class="action-btn" onclick="window.open('${screen.file}', '_blank')">
-                <i class="ti ti-external-link"></i> Standalone
+      <div style="margin-bottom:12px;">
+        <div class="card" style="padding: 14px 16px;">
+          <div class="card-header-tabs">
+            <div class="card-title" style="margin-bottom:0;">Plant Change Analytics <i class="ti ti-chart-bar"
+                style="font-size:16px;color:var(--text3);margin-left:2px;"></i></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="chart-tabs" id="analytics-tabs">
+                <button class="chart-tab active" data-chart="dept" onclick="switchChart('dept')">Department</button>
+                <button class="chart-tab" data-chart="process" onclick="switchChart('process')">Process</button>
+                <button class="chart-tab" data-chart="six-m" onclick="switchChart('six-m')">6M Category</button>
+                <button class="chart-tab" data-chart="monthly" onclick="switchChart('monthly')">Monthly</button>
+                <button class="chart-tab" data-chart="status" onclick="switchChart('status')">Approval Status</button>
+              </div>
+              <button class="btn btn-outline"
+                style="padding: 4px 8px; font-size: 11px; height: 24px; display: inline-flex; align-items: center; gap: 3px;"
+                onclick="toggleChartView()" id="view-mode-btn">
+                <i class="ti ti-grid-dots" style="font-size:11px;"></i> Grid View
               </button>
             </div>
           </div>
-          <iframe class="preview-iframe" src="${screen.file}"></iframe>
-        `;
-        container.appendChild(card);
-      });
+
+          <div class="analytics-container">
+            <!-- Tab View -->
+            <div id="analytics-tab-content">
+
+              <!-- Department Chart -->
+              <div class="chart-view active" id="chart-dept">
+                <div class="chart-filter-bar" data-chart="dept" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PED</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">QAD</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PRODUCTION</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MAINTENANCE</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">PC & L</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.75;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MATERIALS</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">MARKETING</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.65;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">HR</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                    <div class="bar-label" style="font-size: 8px; letter-spacing: -0.3px; text-align: center;">SAFETY</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Process Chart -->
+              <div class="chart-view" id="chart-process">
+                <div class="chart-filter-bar" data-chart="process" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">10</div>
+                    <div class="bar" style="height:120px;background:var(--teal);"></div>
+                    <div class="bar-label">Winding</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">6</div>
+                    <div class="bar" style="height:72px;background:var(--teal);opacity:.85;"></div>
+                    <div class="bar-label">Soldering</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">4</div>
+                    <div class="bar" style="height:48px;background:var(--teal);opacity:.7;"></div>
+                    <div class="bar-label">EOL Testing</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--teal);opacity:.95;"></div>
+                    <div class="bar-label">Potting</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">2</div>
+                    <div class="bar" style="height:24px;background:var(--teal);opacity:.5;"></div>
+                    <div class="bar-label">Loading</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 6M Chart -->
+              <div class="chart-view" id="chart-six-m">
+                <div class="chart-filter-bar" data-chart="six-m" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--accent);"></div>
+                    <div class="bar-label">Man</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">10</div>
+                    <div class="bar" style="height:120px;background:var(--purple);"></div>
+                    <div class="bar-label">Machine</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">9</div>
+                    <div class="bar" style="height:108px;background:var(--warn);"></div>
+                    <div class="bar-label">Method</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">6</div>
+                    <div class="bar" style="height:72px;background:var(--teal);"></div>
+                    <div class="bar-label">Materials</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">7</div>
+                    <div class="bar" style="height:84px;background:var(--success);"></div>
+                    <div class="bar-label">Measure</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">8</div>
+                    <div class="bar" style="height:96px;background:var(--danger);"></div>
+                    <div class="bar-label">Nature</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly Chart -->
+              <div class="chart-view" id="chart-monthly">
+                <div class="chart-filter-bar" data-chart="monthly" data-view="tab"></div>
+                <div class="chart-bars" style="height: 120px; padding-top: 10px;">
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.5;"></div>
+                    <div class="bar-label">Jan-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                    <div class="bar-label">Feb-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                    <div class="bar-label">Mar-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                    <div class="bar-label">Apr-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">May-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                    <div class="bar-label">Jun-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label">Jul-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);"></div>
+                    <div class="bar-label">Aug-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                    <div class="bar-label">Sep-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                    <div class="bar-label">Oct-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                    <div class="bar-label">Nov-26</div>
+                  </div>
+                  <div class="bar-wrap">
+                    <div class="bar-count">0</div>
+                    <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                    <div class="bar-label">Dec-26</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status Chart -->
+              <div class="chart-view" id="chart-status">
+                <div class="chart-filter-bar" data-chart="status" data-view="tab"></div>
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#185FA5;"></div> Approved
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#E27D2F;"></div> Rejected
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#A3A29E;"></div> Pending
+                  </div>
+                </div>
+                <div class="chart-bars grouped-bars" style="height: 120px;">
+                  <!-- Jan-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jan-26</div>
+                  </div>
+                  <!-- Feb-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Feb-26</div>
+                  </div>
+                  <!-- Mar-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Mar-26</div>
+                  </div>
+                  <!-- Apr-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Apr-26</div>
+                  </div>
+                  <!-- May-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">May-26</div>
+                  </div>
+                  <!-- Jun-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jun-26</div>
+                  </div>
+                  <!-- Jul-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Jul-26</div>
+                  </div>
+                  <!-- Aug-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Aug-26</div>
+                  </div>
+                  <!-- Sep-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Sep-26</div>
+                  </div>
+                  <!-- Oct-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Oct-26</div>
+                  </div>
+                  <!-- Nov-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Nov-26</div>
+                  </div>
+                  <!-- Dec-26 -->
+                  <div class="group-wrap">
+                    <div class="group-bars-row">
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#185FA5;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                      </div>
+                      <div class="group-bar-sub">
+                        <div class="bar-count">0</div>
+                        <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                      </div>
+                    </div>
+                    <div class="bar-label" style="font-size:10px;margin-top:2px;">Dec-26</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Grid View -->
+            <div id="analytics-grid-content" style="display: none;">
+              <div class="charts-grid-layout">
+
+                <!-- Mini Dept -->
+                <div class="mini-chart-card" id="grid-chart-dept">
+                  <div class="mini-chart-title">Department Wise Change <i class="ti ti-building"
+                      style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="dept" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PED</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">QAD</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PRODUCTION</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MAINTENANCE</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">PC & L</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.75;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MATERIALS</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">MARKETING</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.65;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">HR</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                      <div class="bar-label" style="font-size: 7px; letter-spacing: -0.3px; text-align: center;">SAFETY</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Process -->
+                <div class="mini-chart-card" id="grid-chart-process">
+                  <div class="mini-chart-title">Process Wise Change <i class="ti ti-cpu"
+                      style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="process" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 4px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">10</div>
+                      <div class="bar" style="height:70px;background:var(--teal);"></div>
+                      <div class="bar-label" style="font-size:9px;">Wind</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">6</div>
+                      <div class="bar" style="height:42px;background:var(--teal);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:9px;">Sold</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">4</div>
+                      <div class="bar" style="height:28px;background:var(--teal);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:9px;">EOL</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--teal);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:9px;">Pott</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">2</div>
+                      <div class="bar" style="height:14px;background:var(--teal);opacity:.5;"></div>
+                      <div class="bar-label" style="font-size:9px;">Load</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini 6M -->
+                <div class="mini-chart-card" id="grid-chart-six-m">
+                  <div class="mini-chart-title">6M Category Change <i class="ti ti-sitemap"
+                      style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="six-m" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 3px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:8px;">Man</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">10</div>
+                      <div class="bar" style="height:70px;background:var(--purple);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mac</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">9</div>
+                      <div class="bar" style="height:63px;background:var(--warn);"></div>
+                      <div class="bar-label" style="font-size:8px;">Met</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">6</div>
+                      <div class="bar" style="height:42px;background:var(--teal);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mat</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">7</div>
+                      <div class="bar" style="height:49px;background:var(--success);"></div>
+                      <div class="bar-label" style="font-size:8px;">Mea</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:9px;">8</div>
+                      <div class="bar" style="height:56px;background:var(--danger);"></div>
+                      <div class="bar-label" style="font-size:8px;">Nat</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Monthly -->
+                <div class="mini-chart-card" id="grid-chart-monthly">
+                  <div class="mini-chart-title">Monthly Change <i class="ti ti-calendar-event"
+                      style="color:var(--text3);"></i></div>
+                  <div class="chart-filter-bar" data-chart="monthly" data-view="grid"></div>
+                  <div class="chart-bars" style="height: 80px; gap: 2px;">
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.5;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jan</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.6;"></div>
+                      <div class="bar-label" style="font-size:8px;">Feb</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.7;"></div>
+                      <div class="bar-label" style="font-size:8px;">Mar</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                      <div class="bar-label" style="font-size:8px;">Apr</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:8px;">May</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jun</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:8px;">Jul</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);"></div>
+                      <div class="bar-label" style="font-size:8px;">Aug</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.95;"></div>
+                      <div class="bar-label" style="font-size:8px;">Sep</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.9;"></div>
+                      <div class="bar-label" style="font-size:8px;">Oct</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.85;"></div>
+                      <div class="bar-label" style="font-size:8px;">Nov</div>
+                    </div>
+                    <div class="bar-wrap">
+                      <div class="bar-count" style="font-size:8px;">0</div>
+                      <div class="bar" style="height:0px;background:var(--accent);opacity:.8;"></div>
+                      <div class="bar-label" style="font-size:8px;">Dec</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini Status (Full Width) -->
+                <div class="mini-chart-card full-width" id="grid-chart-status">
+                  <div class="mini-chart-title" style="margin-bottom: 4px;">
+                    <span>Overall Change Approval Status <i class="ti ti-clipboard-check"
+                        style="color:var(--text3);"></i></span>
+                    <div style="display: flex; gap: 8px; font-size: 9px; font-family: var(--mono);">
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#185FA5;border-radius:50%;"></span>
+                        Appr</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#E27D2F;border-radius:50%;"></span>
+                        Rej</span>
+                      <span style="display:flex;align-items:center;gap:2px;"><span
+                          style="display:inline-block;width:5px;height:5px;background:#A3A29E;border-radius:50%;"></span>
+                        Pend</span>
+                    </div>
+                  </div>
+                  <div class="chart-filter-bar" data-chart="status" data-view="grid"></div>
+                  <div class="chart-bars grouped-bars" style="height: 70px; gap: 4px;">
+                    <!-- Jan -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jan</div>
+                    </div>
+                    <!-- Feb -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Feb</div>
+                    </div>
+                    <!-- Mar -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Mar</div>
+                    </div>
+                    <!-- Apr -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Apr</div>
+                    </div>
+                    <!-- May -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">May</div>
+                    </div>
+                    <!-- Jun -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jun</div>
+                    </div>
+                    <!-- Jul -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Jul</div>
+                    </div>
+                    <!-- Aug -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Aug</div>
+                    </div>
+                    <!-- Sep -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Sep</div>
+                    </div>
+                    <!-- Oct -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Oct</div>
+                    </div>
+                    <!-- Nov -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Nov</div>
+                    </div>
+                    <!-- Dec -->
+                    <div class="group-wrap">
+                      <div class="group-bars-row" style="gap:1px;">
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#185FA5;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#E27D2F;"></div>
+                        </div>
+                        <div class="group-bar-sub" style="width:7px;">
+                          <div class="bar-count" style="font-size:8px;">0</div>
+                          <div class="bar" style="height:0px;background:#A3A29E;"></div>
+                        </div>
+                      </div>
+                      <div class="bar-label" style="font-size:8px;">Dec</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="card" style="margin-bottom:0;padding:0;overflow:hidden;">
+        <div style="padding:12px 14px 8px;">
+          <div class="card-title" style="margin-bottom:0;">Recent change requests <i class="ti ti-clock"
+              style="font-size:16px;color:var(--text3);"></i></div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="padding-left:14px; width: 60px;">Sl. No.</th>
+              <th>Change No.</th>
+              <th>Machine No.</th>
+              <th>Department</th>
+              <th>Request Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">1</td>
+              <td><span class="mini-id">4M-2026-248</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-1042</td>
+              <td>PED</td>
+              <td>20/05/2026</td>
+              <td><span class="badge badge-pending">Pending L2</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">2</td>
+              <td><span class="mini-id">4M-2026-247</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-0882</td>
+              <td>QAD</td>
+              <td>19/05/2026</td>
+              <td><span class="badge badge-approved">Approved</span></td>
+            </tr>
+          
+            <tr>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">4</td>
+              <td><span class="mini-id">4M-2026-244</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-0915</td>
+              <td>MAINTENANCE</td>
+              <td>17/05/2026</td>
+              <td><span class="badge badge-rejected">Rejected</span></td>
+            </tr>
+            <tr>
+              <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">5</td>
+              <td><span class="mini-id">4M-2026-243</span></td>
+              <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">MFG-MC-1042</td>
+              <td>PC & L</td>
+              <td>16/05/2026</td>
+              <td><span class="badge badge-closed">Closed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> <!-- Closes #dashboard-view -->
+
+    <!-- All Requests View -->
+    <div id="all-requests-view" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+        <div>
+          <div class="page-title">All Change Requests</div>
+       
+        </div>
+      </div>
+      
+      <!-- Filter Bar -->
+      <div class="chart-filter-bar" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <div class="filter-select-wrap" style="flex: 2; min-width: 150px;">
+          <label>Search Query</label>
+          <input type="text" id="req-filter-search" class="filter-select" placeholder="Search ID, Dept, Person, Category..." style="padding: 2px 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1; min-width: 90px;">
+          <label>By Month</label>
+          <select class="filter-select" id="req-filter-month">
+            <option value="All">All Months</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="text" class="filter-select datepicker" id="req-filter-from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="text" class="filter-select datepicker" id="req-filter-to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Person</label>
+          <select class="filter-select" id="req-filter-person">
+            <option value="All">All Persons</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By Process</label>
+          <select class="filter-select" id="req-filter-process">
+            <option value="All">All Processes</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>By M/c no</label>
+          <select class="filter-select" id="req-filter-machine">
+            <option value="All">All Machines</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:0;">
+        <div style="padding:12px 14px 8px;border-bottom:0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <div class="card-title" style="margin-bottom:0;">All change requests <i class="ti ti-list-check" style="font-size:16px;color:var(--text3);"></i></div>
+          <div id="requests-count-badge" style="font-size: 11px; font-family: var(--mono); color: var(--text2); background: var(--bg2); padding: 2px 8px; border-radius: 12px; border: 0.5px solid var(--border);">Showing 0 of 0</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="padding-left:14px; width: 60px;">Sl. No.</th>
+              <th>Change No.</th>
+              <th>Machine No.</th>
+              <th>Department</th>
+              <th>Request Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="all-requests-table-body">
+            <!-- Dynamic rows will be inserted by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const people = ["Kumar Selvam", "Priya Venkat", "Ravi QA", "Rajesh Murthy", "Anand K", "Ramanan P"];
+    const depts = ["PED", "QAD", "PRODUCTION", "MAINTENANCE", "PC & L", "MATERIALS", "MARKETING", "HR", "SAFETY"];
+    const processes = ["Winding", "Soldering", "EOL Testing", "Potting", "Loading"];
+    const machines = ["MFG-MC-1042", "MFG-MC-0882", "MFG-MC-0711", "MFG-MC-0915"];
+    const sixMs = ["Man", "Machine", "Method", "Materials", "Measure", "Nature"];
+    const months = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
+
+    // Generate deterministic records using a simple pseudo-random generator
+    function generateMockData() {
+      const data = [];
+      let seed = 42;
+      function random() {
+        let x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+      }
+      for (let i = 0; i < 75; i++) {
+        const person = people[Math.floor(random() * people.length)];
+        const dept = depts[Math.floor(random() * depts.length)];
+        const process = processes[Math.floor(random() * processes.length)];
+        const machineNo = machines[Math.floor(random() * machines.length)];
+        const sixM = sixMs[Math.floor(random() * sixMs.length)];
+
+        // Status probability: Approved (60%), Pending (25%), Rejected (15%)
+        let statusVal = "Approved";
+        const rStatus = random();
+        if (rStatus > 0.75) statusVal = "Pending";
+        else if (rStatus > 0.6) statusVal = "Rejected";
+
+        let month = months[Math.floor(random() * months.length)];
+
+        // Generate deterministic day and map month string to two-digit month
+        const monthMap = {
+          "Jan-26": "01",
+          "Feb-26": "02",
+          "Mar-26": "03",
+          "Apr-26": "04",
+          "May-26": "05",
+          "Jun-26": "06",
+          "Jul-26": "07",
+          "Aug-26": "08",
+          "Sep-26": "09",
+          "Oct-26": "10",
+          "Nov-26": "11",
+          "Dec-26": "12"
+        };
+        const monthStr = monthMap[month];
+        const day = Math.floor(random() * 28) + 1;
+        const dayStr = day < 10 ? '0' + day : day;
+        const fullDate = `2026-${monthStr}-${dayStr}`;
+
+        data.push({
+          id: `4M-2026-${100 + i}`,
+          person,
+          dept,
+          process,
+          machineNo,
+          sixM,
+          status: statusVal,
+          date: month,
+          fullDate: fullDate
+        });
+      }
+      return data;
+    }
+    const changeRequests = generateMockData();
+
+    function normalizeDept(d) {
+      const normalized = d.replace(/\s+/g, '').toUpperCase();
+      if (normalized === 'PROD' || normalized === 'PRODUCTION') return 'PRODUCTION';
+      if (normalized === 'QA' || normalized === 'QUALITY' || normalized === 'QAD') return 'QAD';
+      if (normalized === 'MAINT' || normalized === 'MAINTENANCE') return 'MAINTENANCE';
+      if (normalized === 'ASSEMBLY' || normalized === 'PED') return 'PED';
+      if (normalized === 'LOGISTICS' || normalized === 'PC&L' || normalized === 'PCL') return 'PC&L';
+      if (normalized === 'MATERIALS' || normalized === 'MAT') return 'MATERIALS';
+      if (normalized === 'MARKETING' || normalized === 'MKTG') return 'MARKETING';
+      if (normalized === 'SAFETY' || normalized === 'SAFE') return 'SAFETY';
+      return normalized;
     }
 
-    // Reload active iframe
-    function reloadActiveFrame() {
-      if (viewMode === 'single') {
-        const iframe = document.getElementById('preview-iframe');
-        iframe.src = iframe.src;
-      } else {
-        const iframes = document.querySelectorAll('.stacked-screen-card iframe');
-        iframes.forEach(iframe => {
-          iframe.src = iframe.src;
+    function matchProcess(label, processVal) {
+      const lbl = label.toLowerCase();
+      const val = processVal.toLowerCase();
+      if (lbl === val) return true;
+      if (lbl === 'wind' && val === 'winding') return true;
+      if (lbl === 'sold' && val === 'soldering') return true;
+      if (lbl === 'eol' && val === 'eol testing') return true;
+      if (lbl === 'pott' && val === 'potting') return true;
+      if (lbl === 'load' && val === 'loading') return true;
+      return false;
+    }
+
+    function matchSixM(label, val) {
+      const lbl = label.toLowerCase();
+      const v = val.toLowerCase();
+      if (lbl === v) return true;
+      if (lbl === 'mac' && v === 'machine') return true;
+      if (lbl === 'met' && v === 'method') return true;
+      if (lbl === 'mat' && v === 'materials') return true;
+      if (lbl === 'mea' && v === 'measure') return true;
+      if (lbl === 'nat' && v === 'nature') return true;
+      return false;
+    }
+
+    function matchMonth(label, val) {
+      const lbl = label.toLowerCase();
+      const v = val.toLowerCase();
+      return v.startsWith(lbl);
+    }
+
+    function buildFilterHTML() {
+      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
+      const peopleOpt = people.map(p => `<option value="${p}">${p}</option>`).join('');
+      const processesOpt = processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
+      const machinesOpt = machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+
+      return `
+        <div class="filter-select-wrap">
+          <label>By Month</label>
+          <select class="filter-select" data-filter="date">
+            <option value="All">All Months</option>
+            ${monthsOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Person</label>
+          <select class="filter-select" data-filter="person">
+            <option value="All">All Persons</option>
+            ${peopleOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Process</label>
+          <select class="filter-select" data-filter="process">
+            <option value="All">All Processes</option>
+            ${processesOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <label>By M/c no</label>
+          <select class="filter-select" data-filter="machine">
+            <option value="All">All Machines</option>
+            ${machinesOpt}
+          </select>
+        </div>
+      `;
+    }
+
+    function buildStatusFilterHTML() {
+      const monthsOpt = months.map(m => `<option value="${m}">${m}</option>`).join('');
+      return `
+        <div class="filter-select-wrap">
+          <label>By Month</label>
+          <select class="filter-select" data-filter="date">
+            <option value="All">All Months</option>
+            ${monthsOpt}
+          </select>
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>From Date</label>
+          <input type="text" class="filter-select datepicker" data-filter="from-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap" style="flex: 1.2; min-width: 100px;">
+          <label>To Date</label>
+          <input type="text" class="filter-select datepicker" data-filter="to-date" placeholder="dd/mm/yyyy" style="padding: 0 8px;" />
+        </div>
+        <div class="filter-select-wrap">
+          <label>By Status</label>
+          <select class="filter-select" data-filter="status-val">
+            <option value="All">All Statuses</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+      `;
+    }
+
+    function updateChart(chartId, viewType) {
+      const containerId = viewType === 'tab' ? `chart-${chartId}` : `grid-chart-${chartId}`;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const dateSelect = container.querySelector('select[data-filter="date"]');
+      const fromDateInput = container.querySelector('input[data-filter="from-date"]');
+      const toDateInput = container.querySelector('input[data-filter="to-date"]');
+      const personSelect = container.querySelector('select[data-filter="person"]');
+      const processSelect = container.querySelector('select[data-filter="process"]');
+      const machineSelect = container.querySelector('select[data-filter="machine"]');
+
+      const dateVal = dateSelect ? dateSelect.value : 'All';
+      const fromDateVal = fromDateInput ? convertInputDate(fromDateInput.value) : '';
+      const toDateVal = toDateInput ? convertInputDate(toDateInput.value) : '';
+      const personVal = personSelect ? personSelect.value : 'All';
+      const processVal = processSelect ? processSelect.value : 'All';
+      const machineVal = machineSelect ? machineSelect.value : 'All';
+
+      let filtered = changeRequests;
+      if (dateVal !== 'All') {
+        filtered = filtered.filter(r => r.date === dateVal);
+      }
+      if (fromDateVal) {
+        filtered = filtered.filter(r => r.fullDate >= fromDateVal);
+      }
+      if (toDateVal) {
+        filtered = filtered.filter(r => r.fullDate <= toDateVal);
+      }
+      if (personVal !== 'All') {
+        filtered = filtered.filter(r => r.person === personVal);
+      }
+      if (processVal !== 'All') {
+        filtered = filtered.filter(r => r.process === processVal);
+      }
+      if (machineVal !== 'All') {
+        filtered = filtered.filter(r => r.machineNo === machineVal);
+      }
+
+      const statusSelect = container.querySelector('select[data-filter="status-val"]');
+      const statusVal = statusSelect ? statusSelect.value : 'All';
+      if (statusVal !== 'All') {
+        filtered = filtered.filter(r => r.status === statusVal);
+      }
+
+      const maxHeight = viewType === 'tab' ? 70 : 50;
+
+      if (chartId === 'dept') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => normalizeDept(r.dept) === normalizeDept(label)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'process') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchProcess(label, r.process)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'six-m') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchSixM(label, r.sixM)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'monthly') {
+        const barWraps = container.querySelectorAll('.bar-wrap');
+        const counts = Array.from(barWraps).map(wrap => {
+          const label = wrap.querySelector('.bar-label').textContent.trim();
+          const count = filtered.filter(r => matchMonth(label, r.date)).length;
+          return { wrap, count };
+        });
+
+        const maxCount = Math.max(...counts.map(c => c.count), 5);
+        counts.forEach(c => {
+          const h = Math.round(c.count * (maxHeight / maxCount));
+          c.wrap.querySelector('.bar-count').textContent = c.count;
+          c.wrap.querySelector('.bar').style.height = h + 'px';
+        });
+
+      } else if (chartId === 'status') {
+        const groupWraps = container.querySelectorAll('.group-wrap');
+        const monthData = Array.from(groupWraps).map(group => {
+          const label = group.querySelector('.bar-label').textContent.trim();
+          const monthFiltered = filtered.filter(r => matchMonth(label, r.date));
+          const approved = monthFiltered.filter(r => r.status === 'Approved').length;
+          const rejected = monthFiltered.filter(r => r.status === 'Rejected').length;
+          const pending = monthFiltered.filter(r => r.status === 'Pending').length;
+          return { group, approved, rejected, pending };
+        });
+
+        const maxCount = Math.max(
+          ...monthData.flatMap(m => [m.approved, m.rejected, m.pending]),
+          5
+        );
+
+        monthData.forEach(m => {
+          const subs = m.group.querySelectorAll('.group-bar-sub');
+          if (subs[0]) {
+            subs[0].querySelector('.bar-count').textContent = m.approved;
+            subs[0].querySelector('.bar').style.height = Math.round(m.approved * (maxHeight / maxCount)) + 'px';
+          }
+          if (subs[1]) {
+            subs[1].querySelector('.bar-count').textContent = m.rejected;
+            subs[1].querySelector('.bar').style.height = Math.round(m.rejected * (maxHeight / maxCount)) + 'px';
+          }
+          if (subs[2]) {
+            subs[2].querySelector('.bar-count').textContent = m.pending;
+            subs[2].querySelector('.bar').style.height = Math.round(m.pending * (maxHeight / maxCount)) + 'px';
+          }
         });
       }
     }
 
-    // Open active screen standalone in a new tab
-    function openActiveStandalone() {
-      if (viewMode === 'single') {
-        window.open(activeScreen.file, '_blank');
+    function switchChart(chartId) {
+      const tabs = document.querySelectorAll('.chart-tab');
+      tabs.forEach(tab => {
+        if (tab.getAttribute('data-chart') === chartId) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      const views = document.querySelectorAll('.chart-view');
+      views.forEach(view => {
+        if (view.id === 'chart-' + chartId) {
+          view.classList.add('active');
+          const bars = view.querySelectorAll('.bar');
+          bars.forEach(bar => {
+            const h = bar.style.height;
+            bar.style.height = '0';
+            void bar.offsetWidth; // Force layout reflow
+            bar.style.height = h;
+          });
+        } else {
+          view.classList.remove('active');
+        }
+      });
+    }
+
+    let isGridView = false;
+    function toggleChartView() {
+      isGridView = !isGridView;
+      const tabContent = document.getElementById('analytics-tab-content');
+      const gridContent = document.getElementById('analytics-grid-content');
+      const tabsContainer = document.getElementById('analytics-tabs');
+      const btn = document.getElementById('view-mode-btn');
+
+      if (isGridView) {
+        tabContent.style.display = 'none';
+        gridContent.style.display = 'block';
+        tabsContainer.style.display = 'none';
+        btn.innerHTML = '<i class="ti ti-layout-tab" style="font-size:13px;"></i> Tab View';
+
+        const gridBars = gridContent.querySelectorAll('.bar');
+        gridBars.forEach(bar => {
+          const h = bar.style.height;
+          bar.style.height = '0';
+          void bar.offsetWidth; // Force layout reflow
+          bar.style.height = h;
+        });
+      } else {
+        tabContent.style.display = 'block';
+        gridContent.style.display = 'none';
+        tabsContainer.style.display = 'flex';
+        btn.innerHTML = '<i class="ti ti-grid-dots" style="font-size:13px;"></i> Grid View';
+
+        switchChart('dept');
       }
     }
 
-    // Initialize Page
+    function toggleL1Group(event) {
+      if (event) event.stopPropagation();
+      const group = document.getElementById('l1-nav-group');
+      if (group) group.classList.toggle('open');
+    }
+
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) headerDropdown.style.display = 'none';
+    }
+
+    function toggleHeaderNotifications(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('header-notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+      const sidebarDropdown = document.getElementById('notif-dropdown');
+      if (sidebarDropdown) sidebarDropdown.style.display = 'none';
+    }
+
+    function clearNotif(event) {
+      event.stopPropagation();
+      const badge = document.getElementById('notif-badge');
+      if (badge) {
+        badge.style.display = 'none';
+      }
+      const sidebarBadge = document.getElementById('sidebar-notif-badge');
+      if (sidebarBadge) {
+        sidebarBadge.style.display = 'none';
+      }
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('click', () => {
+      const dropdown = document.getElementById('notif-dropdown');
+      if (dropdown) {
+        dropdown.style.display = 'none';
+      }
+      const headerDropdown = document.getElementById('header-notif-dropdown');
+      if (headerDropdown) {
+        headerDropdown.style.display = 'none';
+      }
+    });
+
+    function showView(viewId) {
+      const navItems = document.querySelectorAll('.sidebar .nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      document.getElementById('dashboard-view').style.display = 'none';
+      document.getElementById('all-requests-view').style.display = 'none';
+
+      if (viewId === 'dashboard') {
+        const dashBtn = document.getElementById('sidebar-dash-btn');
+        if (dashBtn) dashBtn.classList.add('active');
+        document.getElementById('dashboard-view').style.display = 'block';
+        if (window.location.hash !== '#dashboard') {
+          window.location.hash = 'dashboard';
+        }
+      } else if (viewId === 'all-requests') {
+        const reqBtn = document.getElementById('sidebar-all-btn');
+        if (reqBtn) reqBtn.classList.add('active');
+        document.getElementById('all-requests-view').style.display = 'block';
+        if (window.location.hash !== '#all-requests') {
+          window.location.hash = 'all-requests';
+        }
+      }
+    }
+
+    function convertInputDate(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('/');
+      if (parts.length !== 3) return '';
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatShortDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const year = parts[0];
+      const month = parts[1];
+      const day = parts[2];
+      return `${day}/${month}/${year}`;
+    }
+
+    function initAllRequestsView() {
+      const monthSel = document.getElementById('req-filter-month');
+      const personSel = document.getElementById('req-filter-person');
+      const processSel = document.getElementById('req-filter-process');
+      const machineSel = document.getElementById('req-filter-machine');
+
+      if (monthSel) {
+        monthSel.innerHTML = '<option value="All">All Months</option>' + 
+          months.map(m => `<option value="${m}">${m}</option>`).join('');
+      }
+      if (personSel) {
+        personSel.innerHTML = '<option value="All">All Persons</option>' + 
+          people.map(p => `<option value="${p}">${p}</option>`).join('');
+      }
+      if (processSel) {
+        processSel.innerHTML = '<option value="All">All Processes</option>' + 
+          processes.map(pr => `<option value="${pr}">${pr}</option>`).join('');
+      }
+      if (machineSel) {
+        machineSel.innerHTML = '<option value="All">All Machines</option>' + 
+          machines.map(mc => `<option value="${mc}">${mc}</option>`).join('');
+      }
+
+      const inputs = [
+        document.getElementById('req-filter-search'),
+        document.getElementById('req-filter-month'),
+        document.getElementById('req-filter-from-date'),
+        document.getElementById('req-filter-to-date'),
+        document.getElementById('req-filter-person'),
+        document.getElementById('req-filter-process'),
+        document.getElementById('req-filter-machine')
+      ];
+
+      inputs.forEach(input => {
+        if (input) {
+          const eventType = input.tagName === 'INPUT' ? 'input' : 'change';
+          input.addEventListener(eventType, renderRequestsTable);
+        }
+      });
+
+      renderRequestsTable();
+    }
+
+    function renderRequestsTable() {
+      const searchVal = (document.getElementById('req-filter-search')?.value || '').toLowerCase().trim();
+      const monthVal = document.getElementById('req-filter-month')?.value || 'All';
+      const fromDateRaw = document.getElementById('req-filter-from-date')?.value || '';
+      const toDateRaw = document.getElementById('req-filter-to-date')?.value || '';
+      const fromDateVal = convertInputDate(fromDateRaw);
+      const toDateVal = convertInputDate(toDateRaw);
+      const personVal = document.getElementById('req-filter-person')?.value || 'All';
+      const processVal = document.getElementById('req-filter-process')?.value || 'All';
+      const machineVal = document.getElementById('req-filter-machine')?.value || 'All';
+
+      let filtered = changeRequests;
+
+      if (searchVal) {
+        filtered = filtered.filter(r => {
+          return r.id.toLowerCase().includes(searchVal) ||
+                 r.dept.toLowerCase().includes(searchVal) ||
+                 r.sixM.toLowerCase().includes(searchVal) ||
+                 r.person.toLowerCase().includes(searchVal) ||
+                 r.process.toLowerCase().includes(searchVal) ||
+                 r.machineNo.toLowerCase().includes(searchVal) ||
+                 r.status.toLowerCase().includes(searchVal);
+        });
+      }
+
+      if (monthVal !== 'All') {
+        filtered = filtered.filter(r => r.date === monthVal);
+      }
+      if (fromDateVal) {
+        filtered = filtered.filter(r => r.fullDate >= fromDateVal);
+      }
+      if (toDateVal) {
+        filtered = filtered.filter(r => r.fullDate <= toDateVal);
+      }
+      if (personVal !== 'All') {
+        filtered = filtered.filter(r => r.person === personVal);
+      }
+      if (processVal !== 'All') {
+        filtered = filtered.filter(r => r.process === processVal);
+      }
+      if (machineVal !== 'All') {
+        filtered = filtered.filter(r => r.machineNo === machineVal);
+      }
+
+      const countBadge = document.getElementById('requests-count-badge');
+      if (countBadge) {
+        countBadge.textContent = `Showing ${filtered.length} of ${changeRequests.length}`;
+      }
+
+      const tbody = document.getElementById('all-requests-table-body');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 24px 0; color: var(--text3); font-style: italic;">
+              No matching change requests found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((r, idx) => {
+        const catClass = r.sixM.toLowerCase() === 'materials' ? 'material' : r.sixM.toLowerCase();
+        let badgeClass = 'badge-pending';
+        if (r.status === 'Approved') badgeClass = 'badge-approved';
+        if (r.status === 'Rejected') badgeClass = 'badge-rejected';
+
+        return `
+          <tr>
+            <td style="padding-left:14px; color: var(--text3); font-family: var(--mono);">${idx + 1}</td>
+            <td><span class="mini-id">${r.id}</span></td>
+            <td style="font-family: var(--mono); font-size: 12px; color: var(--text2);">${r.machineNo}</td>
+            <td>${r.dept}</td>
+            <td>${formatShortDate(r.fullDate)}</td>
+            <td><span class="badge ${badgeClass}">${r.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      renderSidebar();
-      selectScreen(screens[0]);
+      // Inject filters
+      const filterBars = document.querySelectorAll('.chart-filter-bar');
+      filterBars.forEach(bar => {
+        const chartId = bar.getAttribute('data-chart');
+        const viewType = bar.getAttribute('data-view');
+        if (!chartId) return; // Skip requests table filter bar
+        
+        if (chartId === 'status') {
+          bar.innerHTML = buildStatusFilterHTML();
+        } else {
+          bar.innerHTML = buildFilterHTML();
+        }
+
+        const selects = bar.querySelectorAll('.filter-select');
+        selects.forEach(select => {
+          const eventType = select.tagName === 'INPUT' ? 'input' : 'change';
+          select.addEventListener(eventType, () => {
+            updateChart(chartId, viewType);
+          });
+        });
+      });
+
+      // Initial render for all charts
+      const charts = ['dept', 'process', 'six-m', 'monthly', 'status'];
+      charts.forEach(c => {
+        updateChart(c, 'tab');
+        updateChart(c, 'grid');
+      });
+
+      // Initialize all requests view
+      initAllRequestsView();
+
+      // Hash Routing
+      function handleHashRoute() {
+        if (window.location.hash === '#all-requests') {
+          showView('all-requests');
+        } else {
+          showView('dashboard');
+          switchChart('dept');
+        }
+      }
+      window.addEventListener('hashchange', handleHashRoute);
+      handleHashRoute();
+
+      // Initialize datepicker (Flatpickr) on all date inputs
+      flatpickr(".datepicker", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          instance.element.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      });
     });
   </script>
 </body>
+
 </html>

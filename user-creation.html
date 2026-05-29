@@ -192,10 +192,10 @@
         <div class="logo-sub">Change Management</div>
       </div>
       <div class="nav-section">Main</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#dashboard'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#dashboard'">
         <i class="ti ti-layout-dashboard"></i> Dashboard
       </div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='dashboard.html#all-requests'">
+      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='index.html#all-requests'">
         <i class="ti ti-list-check"></i> All Requests
       </div>
       <div class="nav-group open" id="l1-nav-group">
@@ -212,8 +212,8 @@
       </div>
       <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='effectiveness.html'"><i
           class="ti ti-chart-line"></i> Effectiveness</div>
-      <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
-          class="ti ti-user-plus"></i> Account Creation</div>
+      <!-- <div class="nav-item" style="cursor:pointer;" onclick="window.location.href='login.html'"><i
+          class="ti ti-user-plus"></i> Account Creation</div> -->
       <div class="nav-item"
         style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;position:relative;"
         onclick="window.location.href='notifications.html'">
@@ -434,19 +434,19 @@
     // Standard starting user list
     const defaultUsers = [
       { id: "USR-001", name: "Ramanan Prabakaran", email: "ramanan.p@plant.com", password: "password123", role: "Admin", dept: "Management", status: "Active" },
-      { id: "USR-002", name: "Priya Venkat", email: "priya.v@plant.com", password: "pass456", role: "HOD", dept: "PED Team", status: "Active" },
-      { id: "USR-003", name: "Kumar Selvam", email: "kumar.s@plant.com", password: "selvam789", role: "Operator", dept: "Assembly", status: "Active" },
-      { id: "USR-004", name: "Ravi QA", email: "ravi.qa@plant.com", password: "raviqa321", role: "QA Team", dept: "Quality", status: "Active" }
+      { id: "USR-002", name: "Priya Venkat", email: "priya.v@plant.com", password: "pass456", role: "User", dept: "PED Team", status: "Active" },
+      { id: "USR-003", name: "Kumar Selvam", email: "kumar.s@plant.com", password: "selvam789", role: "User", dept: "Assembly", status: "Active" },
+      { id: "USR-004", name: "Ravi QA", email: "ravi.qa@plant.com", password: "raviqa321", role: "User", dept: "Quality", status: "Active" }
     ];
 
-    const defaultRoles = ["Operator", "QA Team", "HOD", "Admin"];
+    const defaultRoles = ["Admin", "User"];
     const defaultDepts = ["Assembly", "Quality", "Production", "Maintenance", "PED Team", "Management"];
 
     // Load users from localStorage
     function getUsers() {
-      const stored = localStorage.getItem("cms_users");
+      const stored = localStorage.getItem("cms_users_v2");
       if (!stored) {
-        localStorage.setItem("cms_users", JSON.stringify(defaultUsers));
+        localStorage.setItem("cms_users_v2", JSON.stringify(defaultUsers));
         return defaultUsers;
       }
       return JSON.parse(stored);
@@ -454,14 +454,14 @@
 
     // Save users to localStorage
     function saveUsers(users) {
-      localStorage.setItem("cms_users", JSON.stringify(users));
+      localStorage.setItem("cms_users_v2", JSON.stringify(users));
     }
 
     // Load roles from localStorage
     function getRoles() {
-      const stored = localStorage.getItem("cms_roles");
+      const stored = localStorage.getItem("cms_roles_v2");
       if (!stored) {
-        localStorage.setItem("cms_roles", JSON.stringify(defaultRoles));
+        localStorage.setItem("cms_roles_v2", JSON.stringify(defaultRoles));
         return defaultRoles;
       }
       return JSON.parse(stored);
@@ -469,14 +469,14 @@
 
     // Save roles to localStorage
     function saveRoles(roles) {
-      localStorage.setItem("cms_roles", JSON.stringify(roles));
+      localStorage.setItem("cms_roles_v2", JSON.stringify(roles));
     }
 
     // Load depts from localStorage
     function getDepts() {
-      const stored = localStorage.getItem("cms_depts");
+      const stored = localStorage.getItem("cms_depts_v2");
       if (!stored) {
-        localStorage.setItem("cms_depts", JSON.stringify(defaultDepts));
+        localStorage.setItem("cms_depts_v2", JSON.stringify(defaultDepts));
         return defaultDepts;
       }
       return JSON.parse(stored);
@@ -484,7 +484,7 @@
 
     // Save depts to localStorage
     function saveDepts(depts) {
-      localStorage.setItem("cms_depts", JSON.stringify(depts));
+      localStorage.setItem("cms_depts_v2", JSON.stringify(depts));
     }
 
     // Populate roles and departments in form and filter dropdowns
@@ -617,9 +617,7 @@
       
       let bgClass = "av-blue";
       if (role === "Admin") bgClass = "av-accent";
-      else if (role === "HOD") bgClass = "av-purple";
-      else if (role === "QA Team") bgClass = "av-green";
-      else if (role === "Operator") bgClass = "av-teal";
+      else bgClass = "av-green";
       
       return { initials, bgClass };
     }
@@ -627,9 +625,7 @@
     // Get badge class based on role name
     function getRoleBadgeClass(role) {
       if (role === "Admin") return "badge-rejected"; // uses red
-      if (role === "HOD") return "badge-review"; // uses purple
-      if (role === "QA Team") return "badge-approved"; // uses green
-      return "badge-closed"; // uses teal
+      return "badge-approved"; // uses green for User
     }
 
     // Render table rows
@@ -849,9 +845,9 @@
     });
 
     document.getElementById("confirmResetBtn").addEventListener("click", () => {
-      localStorage.removeItem("cms_users");
-      localStorage.removeItem("cms_roles");
-      localStorage.removeItem("cms_depts");
+      localStorage.removeItem("cms_users_v2");
+      localStorage.removeItem("cms_roles_v2");
+      localStorage.removeItem("cms_depts_v2");
       document.getElementById("searchUser").value = "";
       document.getElementById("filterRole").value = "All";
       populateDropdowns();
