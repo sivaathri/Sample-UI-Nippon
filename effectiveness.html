@@ -267,6 +267,16 @@
                 <input class="form-input" id="startDate" type="text" placeholder="e.g. 17 May" required disabled />
               </div>
 
+              <!-- View L1 / L2 Buttons Row -->
+              <div id="viewButtonsRow" style="display: none; gap: 10px; margin-bottom: 4px;">
+                <button type="button" class="btn btn-outline" style="flex: 1; justify-content: center; font-size: 12px; padding: 8px 10px;" onclick="openDetailsModal('L1')">
+                  <i class="ti ti-info-circle" style="color: var(--accent);"></i> View L1 Data
+                </button>
+                <button type="button" class="btn btn-outline" style="flex: 1; justify-content: center; font-size: 12px; padding: 8px 10px;" onclick="openDetailsModal('L2')">
+                  <i class="ti ti-checks" style="color: var(--success);"></i> View L2 Data
+                </button>
+              </div>
+
               <div class="form-group">
                 <label class="form-label" for="monthWise">Month Wise (Calendar Date) <span class="required">*</span></label>
                 <input class="form-input" id="monthWise" type="month" required disabled />
@@ -413,6 +423,22 @@
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeResetModal()">Cancel</button>
         <button class="btn btn-primary" style="background: var(--warn); border-color: var(--warn);" id="confirmResetBtn">Reset Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details View Modal -->
+  <div id="detailsModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <span class="modal-title" id="detailsModalTitle">Details</span>
+        <button class="modal-close-btn" onclick="closeDetailsModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body" id="detailsModalBody" style="padding: 20px; line-height: 1.5; font-size: 13.5px; color: var(--text);">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeDetailsModal()">Close</button>
       </div>
     </div>
   </div>
@@ -630,10 +656,134 @@
       document.getElementById("effStatus").value = log.status;
       document.getElementById("qaApproval").value = log.qaApproval;
 
+      // Show L1 / L2 View buttons row
+      document.getElementById("viewButtonsRow").style.display = "flex";
+
       document.getElementById("submitBtn").innerHTML = `<i class="ti ti-device-floppy"></i> Save Changes`;
       document.getElementById("cancelEditBtn").style.display = "block";
 
       renderLogs();
+    }
+
+    // Open/Close details modal logic
+    function getBadgeClass(status) {
+      if (!status || status === "undefined") return "badge-pending";
+      let badgeClass = "badge-pending";
+      if (status === "Approved" || status === "Accepted") badgeClass = "badge-approved";
+      if (status === "Rejected") badgeClass = "badge-rejected";
+      if (status === "Closed") badgeClass = "badge-closed";
+      if (status === "Review") badgeClass = "badge-review";
+      return badgeClass;
+    }
+
+    function formatModalDate(dateStr) {
+      if (!dateStr) return "-";
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) {
+        return dateStr;
+      }
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${d.getDate()} ${months[d.getMonth()]}`;
+    }
+
+    function openDetailsModal(type) {
+      const changeNo = document.getElementById("changeNo").value;
+      if (!changeNo) return;
+
+      const storedReqs = localStorage.getItem("cms_requests");
+      if (!storedReqs) return;
+      const requests = JSON.parse(storedReqs);
+      const req = requests.find(r => r.id === changeNo);
+      
+      const titleEl = document.getElementById("detailsModalTitle");
+      const bodyEl = document.getElementById("detailsModalBody");
+
+      if (!req) {
+        titleEl.innerHTML = `<i class="ti ti-info-circle" style="color: var(--accent); margin-right: 6px;"></i> Details`;
+        bodyEl.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text3);">Original change request details not found.</div>`;
+        document.getElementById("detailsModal").classList.add("show");
+        return;
+      }
+
+      if (type === 'L1') {
+        titleEl.innerHTML = `<i class="ti ti-info-circle" style="color: var(--accent); margin-right: 6px;"></i> L1 Request Details`;
+        
+        let catClean = (req.category || "").toLowerCase().trim();
+        if (catClean === "mother nature" || catClean === "mothernature") catClean = "nature";
+        if (catClean === "measurement") catClean = "measure";
+        
+        bodyEl.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 120px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">Change No:</strong>
+              <span style="font-family: var(--mono); font-weight: 600;">${req.id}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">Requested Date:</strong>
+              <span>${formatModalDate(req.reqDate)}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">Requested By:</strong>
+              <span>${req.requester || "-"}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">Department:</strong>
+              <span>${req.dept || "-"}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">Category:</strong>
+              <div><span class="tag tag-${catClean}">${req.category || "-"}</span></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <strong style="color: var(--text2);">Context of Change:</strong>
+              <div style="background: var(--bg2); padding: 10px; border-radius: var(--rad); border: 0.5px solid var(--border); font-style: italic; font-size: 13px;">
+                ${req.context || "No context description provided."}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'L2') {
+        titleEl.innerHTML = `<i class="ti ti-checks" style="color: var(--success); margin-right: 6px;"></i> L2 Validation Details`;
+        
+        let pedLink = "-";
+        if (req.pedAttachment) {
+          pedLink = `📎 <a href="#" onclick="event.preventDefault(); alert('Opening ${req.pedAttachment}');" style="color: var(--teal); text-decoration: underline; font-weight: 500; font-family: var(--mono);">${req.pedAttachment}</a>`;
+        }
+        
+        let qaLink = "-";
+        if (req.qaAttachment) {
+          qaLink = `📎 <a href="#" onclick="event.preventDefault(); alert('Opening ${req.qaAttachment}');" style="color: var(--teal); text-decoration: underline; font-weight: 500; font-family: var(--mono);">${req.qaAttachment}</a>`;
+        }
+
+        bodyEl.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 130px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px; align-items: center;">
+              <strong style="color: var(--text2);">L2 Decision:</strong>
+              <div><span class="badge ${getBadgeClass(req.l2Decision)}">${req.l2Decision || "Pending"}</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 130px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">PED Attachment:</strong>
+              <span>${pedLink}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 130px 1fr; border-bottom: 0.5px solid var(--border); padding-bottom: 8px;">
+              <strong style="color: var(--text2);">QA Attachment:</strong>
+              <span>${qaLink}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <strong style="color: var(--text2);">Validation Remarks:</strong>
+              <div style="background: var(--bg2); padding: 10px; border-radius: var(--rad); border: 0.5px solid var(--border); font-style: italic; font-size: 13px;">
+                ${req.remarks || "No remarks provided."}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById("detailsModal").classList.add("show");
+    }
+
+    function closeDetailsModal() {
+      document.getElementById("detailsModal").classList.remove("show");
     }
 
     // Cancel edit mode (disables everything)
@@ -653,6 +803,10 @@
       document.getElementById("effStatus").disabled = true;
       document.getElementById("qaApproval").disabled = true;
       document.getElementById("submitBtn").disabled = true;
+
+      // Hide view buttons row and modal
+      document.getElementById("viewButtonsRow").style.display = "none";
+      closeDetailsModal();
 
       document.getElementById("submitBtn").innerHTML = `<i class="ti ti-plus"></i> Add Log Entry`;
       document.getElementById("cancelEditBtn").style.display = "none";
@@ -867,6 +1021,7 @@
       if (e.key === "Escape") {
         closeDeleteModal();
         closeResetModal();
+        closeDetailsModal();
       }
     });
 
@@ -875,6 +1030,7 @@
         if (e.target === overlay) {
           closeDeleteModal();
           closeResetModal();
+          closeDetailsModal();
         }
       });
     });
