@@ -10,52 +10,352 @@
     body {
       height: 100vh;
       width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--font);
+      background-image: url('IMG_7876-1 1.JPG');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .login-wrap {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8%; /* Place card on the right side */
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Top left logo */
+    .logo-container {
+      position: absolute;
+      top: 32px;
+      left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+
+
+    .logo-text {
+      font-weight: 700;
+      color: #111827;
+      font-family: var(--font);
+      font-size: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Bottom left copyright */
+    .copyright-container {
+      position: absolute;
+      bottom: 24px;
+      left: 40px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      font-family: var(--font);
+    }
+
+    /* Right side panel */
+    .login-panel {
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      width: 100%;
+      max-width: 410px;
+      z-index: 10;
+    }
+
+    .login-header {
+      margin-bottom: 24px;
+      font-family: var(--font);
+    }
+
+    .welcome-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 6px 0;
+    }
+
+    .welcome-subtitle {
+      font-size: 13.5px;
+      color: #2563eb; /* A vibrant blue under the Welcome Back header */
       margin: 0;
-      background: var(--bg3);
+      font-weight: 500;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    .form-input-custom {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px 12px 42px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: #1e293b;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input-custom:focus {
+      border-color: #5839db;
+      box-shadow: 0 0 0 3px rgba(88, 57, 219, 0.12);
+    }
+
+    .password-toggle-icon {
+      position: absolute;
+      right: 14px;
+      color: #94a3b8;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .password-toggle-icon:hover {
+      color: #475569;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #475569;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-container input {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      accent-color: #5839db;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .btn-signin {
+      background: #5839db;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(88, 57, 219, 0.15);
+      margin-top: 4px;
+    }
+
+    .btn-signin:hover {
+      background: #4c2ed2;
+      box-shadow: 0 8px 12px -3px rgba(88, 57, 219, 0.25);
+    }
+
+    .btn-signin i {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-signin:hover i {
+      transform: translateX(4px);
+    }
+
+    /* Role selector inside card */
+    .role-selector-container {
+      margin-top: 8px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .role-selector-title {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .role-grid-custom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .role-chip-custom {
+      padding: 8px 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    .role-chip-custom:hover:not(.active) {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+
+    .role-chip-custom.active {
+      background: rgba(88, 57, 219, 0.08);
+      border-color: rgba(88, 57, 219, 0.3);
+      color: #5839db;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
+  <!-- Top Left Logo Container -->
+  <div class="logo-container">
+    <img src="Nippon Logo.png" alt="Nippon Logo" style="height: 32px; width: auto; object-fit: contain;" />
+    <span class="logo-text">4M·CMS</span>
+  </div>
+
+  <!-- Bottom Left Copyright -->
+  <div class="copyright-container">
+    © 2026 Change Management System. All rights reserved.
+  </div>
+
+  <!-- Main Login Wrap -->
   <div class="login-wrap">
-    <div class="login-card">
-      <!-- <div class="login-logo">4M·CMS</div> -->
-      <div class="login-tagline">Change Management System — Manufacturing</div>
-      <div class="login-form">
-        <div class="form-group">
-          <div class="form-label">Email address</div>
-          <input class="form-input" type="email" value="abcd@plant.com" readonly />
+    <div class="login-panel">
+      <div class="login-header">
+      
+       
+      </div>
+      <div class="login-card">
+        <div class="login-form">
+          <div class="form-group">
+            <label class="form-label" for="email-input">Email address</label>
+            <div class="input-wrapper">
+              <i class="ti ti-mail input-icon"></i>
+              <input id="email-input" class="form-input-custom" type="email" value="abcd@plant.com" placeholder="name@company.com" readonly />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password-input">Password</label>
+            <div class="input-wrapper">
+              <i class="ti ti-lock input-icon"></i>
+              <input id="password-input" class="form-input-custom" type="password" value="password" placeholder="••••••••" readonly />
+              <i id="password-toggle" class="ti ti-eye password-toggle-icon" onclick="togglePassword()"></i>
+            </div>
+          </div>
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" checked readonly />
+              <span>Remember me</span>
+            </label>
+          </div>
+          <button class="btn-signin" onclick="handleLogin()">
+            <span>Sign In</span>
+            <i class="ti ti-arrow-right"></i>
+          </button>
+          
+          <!-- Sleek role selector included inside the card with low-profile styling -->
+         
         </div>
-        <div class="form-group">
-          <div class="form-label">Password</div>
-          <input class="form-input" type="password" value="password" readonly />
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-          <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);">
-            <input type="checkbox" checked readonly /> Remember me
-          </label>
-        </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:8px;font-size:13.5px;margin-top:6px;" onclick="handleLogin()">
-          <i class="ti ti-login"></i> Sign in
-        </button>
-      <!-- <div style="margin-top:18px;padding-top:14px;border-top:0.5px solid var(--border);">
-        <div
-          style="font-size:10px;color:var(--text3);margin-bottom:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;">
-          Quick role select</div>
-        <div class="role-grid">
-          <div class="role-chip"><i class="ti ti-user" style="font-size:11px;"></i> Operator</div>
-          <div class="role-chip"><i class="ti ti-check" style="font-size:11px;"></i> QA Team</div>
-          <div class="role-chip"><i class="ti ti-users" style="font-size:11px;"></i> HOD</div>
-          <div class="role-chip active"><i class="ti ti-shield" style="font-size:11px;"></i> Admin</div>
-        </div>
-      </div> -->
+      </div>
     </div>
   </div>
+
   <script>
     // Clear session when landing on login page (acting as logout)
     sessionStorage.removeItem('isLoggedIn');
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('password-input');
+      const toggleIcon = document.getElementById('password-toggle');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('ti-eye');
+        toggleIcon.classList.add('ti-eye-off');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('ti-eye-off');
+        toggleIcon.classList.add('ti-eye');
+      }
+    }
+
+    function selectRole(element, email) {
+      document.querySelectorAll('.role-chip-custom').forEach(chip => {
+        chip.classList.remove('active');
+      });
+      element.classList.add('active');
+      document.getElementById('email-input').value = email;
+    }
 
     function handleLogin() {
       sessionStorage.setItem('isLoggedIn', 'true');
